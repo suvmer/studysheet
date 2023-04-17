@@ -20,7 +20,7 @@ a {
 body {
   background-color: var(--gray);
 }
-main {
+#root {
   width: 1000px;
   margin: auto;
 }
@@ -37,11 +37,32 @@ header {
 header a {
   font-size: 2rem;
 }
+
+main {
+  display: flex;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+aside a {
+  font-size: 1.5rem;
+  padding: 1rem;
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+}
+
+
 mark.blue {
   color: var(--blue);
 }
 mark.bold {
-  font-weight: 400;
+  font-weight: 500;
 }
 .calendar svg {
   height: 50px;
