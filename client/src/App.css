@@ -4,6 +4,10 @@
   box-sizing: border-box;
   text-decoration: none;
   background-color: transparent;
+  font-family: -apple-system,BlinkMacSystemFont,segoe ui,Roboto,helvetica neue,Arial,noto sans,sans-serif,apple color emoji,segoe ui emoji,segoe ui symbol,noto color emoji;
+}
+a {
+  color: black;
 }
 
 :root {
@@ -12,8 +16,35 @@
   --blue: rgb(83, 92, 215);
   --green: rgb(237, 189, 81);
 }
-.App {
-  text-align: center;
+
+body {
+  background-color: var(--gray);
+}
+main {
+  width: 1000px;
+  margin: auto;
+}
+
+
+header {
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  padding: 15px 15px 10px 15px;
+  display: flex;
+  gap: 15px;
+  align-items: top;
+}
+header a {
+  font-size: 2rem;
+}
+mark.blue {
+  color: var(--blue);
+}
+mark.bold {
+  font-weight: 400;
+}
+.calendar svg {
+  height: 50px;
 }
 
 .App-logo {
