@@ -19,7 +19,7 @@ export const dateToString = (stamp) => {
   ];
 };
 
-export const msToString = (ms) => {
+export const msToWords = (ms) => {
     if(ms < 1000)
         return "0 секунд";
     var ss = Math.round(Math.abs(ms/1000));
@@ -31,6 +31,14 @@ export const msToString = (ms) => {
     return `${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
 ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
 ${sec > 0 ? sec + " " + (CountForm(sec)) : ''}`;
+  };
+export const msToNumbers = (ms) => {
+    var ss = Math.round(Math.max(0, ms/1000));
+    const hours = Math.floor(ss / 3600);
+    ss %= 3600;
+    const mins = Math.floor(ss / 60);
+    const sec = ss % 60;
+    return `${hours.toWidth(2)}:${mins.toWidth(2)}:${sec.toWidth(2)}`;
   };
   
 export const CountForm = (number, titles = ["секунду", "секунды", "секунд"]) => {

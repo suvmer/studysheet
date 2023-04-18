@@ -1,10 +1,11 @@
 const defaultState = {
   tables: [
     {
-      start: Date.now() + 10*60*1000,
-      duration: 60,
+      start: Date.now() + 20*60*1000 + 10000,
+      duration: 35,
       name: "Пара математического анализа",
       cabinet: "405",
+      teacher: "Ухалов Алексей Юрьевич",
       place: "2 корпус(ул. Кирова, 8/10)",
     },
   ],
