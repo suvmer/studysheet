@@ -3,6 +3,9 @@ import "./App.css";
 import { Clock as Calendar } from "./resources/Calendars";
 import { dateToString, getTitle, msToNumbers, msToWords } from "./utils/utils";
 import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { setTime } from "./store/uiReducer";
+import { Outlet } from "react-router-dom";
 
 
 /* near TODO:
@@ -17,15 +20,16 @@ useMemo(оптимизация)
 
 function App() {
   const table = useSelector((state) => state.table.tables[0]);
+  const curdate = useSelector(state => state.ui.time);  
+  const dispatch = useDispatch();
 
   var date = new Date();
-  useMemo(() => setInterval(() => setDate(Date.now()), 1000), []);
+  useMemo(() => setInterval(() => dispatch(setTime(Date.now())), 1000), []);
 
-  const [curdate, setDate] = useState(Date.now());
 
   const SideBar = () => {
     return <aside>
-      <a href="#">Главная</a>
+      <a className="active" href="#">Главная</a>
       <a href="#">Моё расписание</a>
       <a href="#">Аккаунт</a>
     </aside>;
@@ -40,44 +44,12 @@ function App() {
     </header>;
   }
 
-  const InfoBlock = ({text, children}) => {
-    return <p>
-      {text} <mark className="big">{children}</mark>
-    </p>;
-  }
-
-  const Event = () => {
-    return <div className={`event `+((curdate - table.start > 0) ? 'active' : '')}>
-    <div className="nextEvent">
-      <span>{getTitle(table.start - curdate)}</span>
-      <span className="time">
-        {dateToString(table.start)[1]} - {dateToString(table.start + table.duration * 60 * 1000)[1]}
-      </span>
-    </div>
-    <hr />
-    <div className="eventBody">{table.name}</div>
-    <div className="eventTitle">Начнётся через {msToWords(table.start - curdate)}</div>
-    <br/>
-    
-    <InfoBlock text="Кабинет:">{table.cabinet}</InfoBlock>
-    <InfoBlock text="До начала:">{msToNumbers(table.start - curdate)}</InfoBlock>
-    <br/>
-    <p className="left">{table.teacher}</p>
-    <p className="left">{table.place}</p>
-  </div>;
-  }
-
   return (
     <>
       <Header/>
       <main>
         <SideBar/>
-        <div className="wall">
-          <span className="event" style={{ marginRight: "auto" }}>
-            <mark className="big">{dateToString(curdate)[0]}</mark>
-          </span>
-          <Event/>
-        </div>
+        <Outlet/>
       </main>
     </>
   );
