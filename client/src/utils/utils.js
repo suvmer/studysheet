@@ -49,3 +49,11 @@ export const CountForm = (number, titles = ["секунду", "секунды", 
     }
     return titles[1];
   }
+
+export const getTitle = (ms) => {
+  if(ms > 60*60*1000)
+    return "Следующее событие";
+  if(ms > 20*60*1000)
+    return "Скоро будет";
+  return "Почти началось";
+}
