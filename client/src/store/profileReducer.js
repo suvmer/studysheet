@@ -1,9 +1,11 @@
+/* near TODO:
+1) Получать данные с сервака сначала про ид таблиц, которыми владеет пользователь
+2) Затем получать с сервака инфу о нужном расписании
+
+*/
 const defaultState = {
-  skipStart: false, //for skip start info modal
-  score: 0,
-  money: 0,
-  games: [], //history
-  isLoaded: false, //for waitng server responce(or offile mode(check v3.0 desc in info.txt))
+  currentTable: 0,
+  ownTables: [0]
 };
 
 export const profileReducer = (state = defaultState, action) => {

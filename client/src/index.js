@@ -10,6 +10,8 @@ import {
 } from "react-router-dom";
 import ErrorPage from "./pages/ErrorPage";
 import { MainPage } from "./pages/MainPage";
+import { MyPage } from "./pages/MyPage";
+import { AccountPage } from "./pages/AccountPage";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +21,16 @@ const router = createBrowserRouter([
     children: [ {
       path: "/",
       element: <MainPage/>
-    }]
+    },
+    {
+      path: "/my",
+      element: <MyPage/>
+    },
+    {
+      path: "/account",
+      element: <AccountPage/>
+    }
+  ]
   },
 ]);
 

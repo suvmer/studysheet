@@ -21,6 +21,11 @@ a {
   --darkgray: rgb(141, 141, 141);
   --blue: rgb(83, 92, 215);
   --green: rgb(237, 189, 81);
+
+  --large: 2rem;
+  --big: 1.75rem;
+  --mid: 1.5rem;
+  --small: 1rem;
 }
 
 body {
@@ -33,19 +38,19 @@ body {
 
 header {
   background-color: var(--white);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
   padding: 15px 15px 10px 15px;
   display: flex;
   gap: 15px;
   align-items: top;
-  border-radius: 0 0 20px 20px;
+  border-radius: 0 0 10px 10px;
 }
 header a {
-  font-size: 2rem;
+  font-size: var(--large);
 }
 header p {
   margin-left: auto;
-  font-size: 1.5em;
+  font-size: var(--mid);
   align-self: center;
 }
 
@@ -61,18 +66,18 @@ aside {
   min-width: 280px;
   width: 280px;
   background-color: var(--white);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
   height: auto;
   padding: 10px;
   gap: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 aside a {
-  font-size: 1.5rem;
-  padding: 1rem;
+  font-size: var(--mid);
+  padding: 16px;
   text-align: center;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 aside a:hover {
   background-color: var(--prewhite);
@@ -89,10 +94,16 @@ aside a:focus, aside a.active {
 }
 
 .event {
-  border-radius: 20px;
+  border-radius: 10px;
   background-color: var(--white);
   padding: 25px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+}
+.midbox {
+  border-radius: 10px;
+  /*background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;*/
+  padding: 5px 15px 0 15px;
 }
 .nextEvent {
   display: flex;
@@ -103,14 +114,14 @@ aside a:focus, aside a.active {
 }
 .eventBody {
   margin-top: 15px;
-  font-size: 2em;
+  font-size: var(--big);
   text-align: center;
 }
 .event span:first-child {
   font-size: 2em;
 }
 .event p {
-  font-size: 1.5em;
+  font-size: var(--mid);
   text-align: center;
 }
 .event.active {
@@ -137,7 +148,10 @@ mark.bold {
   font-weight: 500;
 }
 mark.big {
-  font-size: 1.5em;
+  font-size: var(--big);
+}
+mark.mid {
+  font-size: var(--mid);
 }
 .calendar svg {
   height: 50px;
