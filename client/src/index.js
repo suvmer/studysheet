@@ -4,11 +4,29 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "./store/index";
 import { Provider } from "react-redux";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+import ErrorPage from "./pages/ErrorPage";
+import { MainPage } from "./pages/MainPage";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <ErrorPage/>,
+    children: [ {
+      path: "/",
+      element: <MainPage/>
+    }]
+  },
+]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
-    <App />
+    <RouterProvider router={router} />
   </Provider>
 );
 

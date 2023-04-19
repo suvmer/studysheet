@@ -14,6 +14,8 @@ a {
 
 :root {
   --white: rgb(251, 251, 251);
+  --prewhite: rgb(240, 240, 240);
+  --darkwhite: rgb(220, 220, 220);
   --yellow: rgb(251, 255, 129);
   --gray: rgb(240, 242, 244);
   --darkgray: rgb(141, 141, 141);
@@ -58,16 +60,25 @@ aside {
   flex-direction: column;
   min-width: 280px;
   width: 280px;
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  height: auto;
+  padding: 10px;
   gap: 10px;
+  border-radius: 5px;
 }
 
 aside a {
   font-size: 1.5rem;
   padding: 1rem;
   text-align: center;
-  background-color: var(--white);
-  border-radius: 20px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 20px;
+  border-radius: 5px;
+}
+aside a:hover {
+  background-color: var(--prewhite);
+}
+aside a:focus, aside a.active {
+  background-color: var(--darkwhite);
 }
 
 .wall {
