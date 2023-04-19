@@ -150,6 +150,9 @@ mark.bold {
 mark.big {
   font-size: var(--big);
 }
+.center {
+  text-align: center!important;
+}
 mark.mid {
   font-size: var(--mid);
 }
