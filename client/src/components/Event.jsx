@@ -16,6 +16,7 @@ export const Event = () => {
     <hr />
     <div className="eventBody">{table.name}</div>
     <div className="eventTitle">Начнётся через {msToWords(table.start - curdate)}</div>
+    <hr />
     <br/>
     
     <InfoBlock text="Кабинет:">{table.cabinet}</InfoBlock>

@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { MainPage } from "./pages/MainPage";
 import { MyPage } from "./pages/MyPage";
 import { AccountPage } from "./pages/AccountPage";
+import { CreateTable } from "./components/CreateTable";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
     },
     {
       path: "/my",
-      element: <MyPage/>
+      element: <MyPage/>,
+      children: [{
+        path: "/my/add",
+        element: <CreateTable/>
+      }]
     },
     {
       path: "/account",
