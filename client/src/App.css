@@ -110,12 +110,31 @@ aside a:focus, aside a.active {
   padding: 5px 15px 0 15px;
   display: flex;
   justify-content: space-between;
+  gap: 10px
+}
+.midbox input {
+  width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
 .event.create {
   display: flex;
   flex-direction: column;
 }
-.event.create input {
+.event label:not(:first-child) {
+  margin-top: 20px;
+}
+
+.subject {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--white);
+}
+.subject input {
+  background-color: var(--gray);
+}
+
+input {
   outline: none;
   padding: 10px;
   margin-top: 5px;
@@ -174,19 +193,22 @@ aside a:focus, aside a.active {
   text-align: left !important;
 }
 
-mark.blue {
+.blue {
   color: var(--blue);
 }
-mark.bold {
+.bold {
   font-weight: 500;
 }
-mark.big {
+.big {
   font-size: var(--big);
 }
 .center {
   text-align: center!important;
 }
-mark.mid {
+.mup {
+  margin-top: 20px;
+}
+.mid {
   font-size: var(--mid);
 }
 .calendar svg {
