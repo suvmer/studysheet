@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import classes from "../styles/UI/CreateTable.module.css";
 import { InfoBlock } from "./InfoBlock";
+//import {TimePicker} from 'react-ios-time-picker';
+//import {TimePicker} from 'react-time-picker';
+import { TimePicker } from 'antd';
+import * as dayjs from 'dayjs'
+import { useSelector } from "react-redux";
 
 export const CreateTable = () => {
   
@@ -29,19 +34,34 @@ export const CreateTable = () => {
   ]);
 
   const addSubj = (index) => {
-    setTable({...table, index: [...table[index], getField()]});
+    setTable(table.map((elem, ind) => index == ind ? [...table[index], getField()] : elem));
   };
   console.log(table)
+  const selectTime = time => {
+    console.log(time);
+  }
+  const handleChange = event => {
+    console.log(event.target.name, event.target.value);
+  }
+
+  const defs = useSelector(state => state.table.schedules[0]);
+
+  const getDefaultSchedule = (ind) => {
+    return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
+  }
   return (<>
         {table.map((elem, index) => {
           return (
             <div key={index} className="mup">
               <mark className="big center">{days[index]}</mark>
               {elem.map((subj, ind) => (<div className="subject"><div className="mid">#{ind+1}.</div>
-                <input placeholder="Название" defaultValue={subj.name}/>
-                <input placeholder="Кабинет" defaultValue={subj.cabinet}/>
-                <input placeholder="Время начала" defaultValue={subj.start}/>
-                <input placeholder="Место" defaultValue={subj.place}/>
+                <input onChange={handleChange} name="name" placeholder="Название" defaultValue={subj.name}/>
+                <input onChange={handleChange} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
+                <input onChange={handleChange} name="start" placeholder="Время начала" defaultValue={subj.start}/>
+                <input onChange={handleChange} name="place" placeholder="Место" defaultValue={subj.place}/>
+                {/*<TimePicker name="time" onChange={handleChange} value={'10:00'} />*/}
+                {/*<TimePicker name="time" onChange={selectTime} value={'10:00'} />*/}
+                <TimePicker.RangePicker defaultValue={getDefaultSchedule(ind)} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
               </div>)
               )}
               <div onClick={() => addSubj(index)} className="btn mup">Добавить предмет</div>
