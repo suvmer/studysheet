@@ -44,6 +44,7 @@ export const CreateTable = () => {
   const getDefaultSchedule = (ind) => {
     return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
   }
+  
   console.log("Updated");
   return (<>
         {tabler.map((elem, index) => {
@@ -55,6 +56,9 @@ export const CreateTable = () => {
                 <input onChange={handleChange} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
                 <input onChange={handleChange} name="place" placeholder="Место" defaultValue={subj.place}/>
                 <TimePicker.RangePicker defaultValue={getDefaultSchedule(ind)} onChange={selectTime} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
+                {/*
+                TODO: save time without clicking OK button
+                <input type="text" className="form-control js-time-picker" value="02:56"></input>*/}
               </div>)
               )}
               <div onClick={() => addSubj(index)} className="btn mup">Добавить предмет</div>
