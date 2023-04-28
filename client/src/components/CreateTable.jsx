@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useReducer, useState } from "react";
 import classes from "../styles/UI/CreateTable.module.css";
 import { InfoBlock } from "./InfoBlock";
 //import {TimePicker} from 'react-ios-time-picker';
@@ -30,14 +30,19 @@ export const CreateTable = () => {
     teacher: "",
     place: "7 корпус(Союзная 144)" });
 
-  const [table, setTable] = useState([
+  const [tabler, setTable] = useState([
     ...Array(7).fill([getField()])
   ]);
+  const table = tabler;
 
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
-    setTable(table.map((elem, ind) => index == ind ? [...table[index], getField()] : elem));
+    table[index] = [...table[index], getField()];
+    //table = table.map((elem, ind) => index == ind ? [...table[index], getField()] : elem);
+    setTable(table);
+    forceUpdate();
+    console.log(tabler)
   };
-  console.log(table)
   const selectTime = time => {
     console.log(time);
   }
@@ -45,7 +50,9 @@ export const CreateTable = () => {
     console.log(event.target.parentNode.getAttribute('indx'), event.target.name, event.target.value);
     var idChange = event.target.parentNode.getAttribute('indx');
     var idFor = event.target.parentNode.getAttribute('indxer');
-    setTable(
+
+    table[idChange][idFor] = Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == event.target.name ? ({[k]: event.target.value}) : ({[k]: table[idChange][idFor][k]})));
+    /*setTable(
       table.map(
         (elem, ind) => ind == idChange ?
           table[idChange].map((el, key) => key == idFor ?
@@ -54,7 +61,7 @@ export const CreateTable = () => {
             //{...table[idChange][idFor], `${event.target.name}`: event.target.value}
           : el)
         : elem
-    ));
+    ));*/
     console.log(table);
   }
 
@@ -64,8 +71,9 @@ export const CreateTable = () => {
   const getDefaultSchedule = (ind) => {
     return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
   }
+  console.log("Updated");
   return (<>
-        {table.map((elem, index) => {
+        {tabler.map((elem, index) => {
           return (
             <div key={`mup${index}`} className="mup">
               <mark className="big center">{days[index]}</mark>
