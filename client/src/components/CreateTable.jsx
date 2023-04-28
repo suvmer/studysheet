@@ -1,25 +1,11 @@
 import React, { useReducer, useState } from "react";
 import classes from "../styles/UI/CreateTable.module.css";
 import { InfoBlock } from "./InfoBlock";
-//import {TimePicker} from 'react-ios-time-picker';
-//import {TimePicker} from 'react-time-picker';
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useSelector } from "react-redux";
-import { generateKey } from "../utils/utils";
 
 export const CreateTable = () => {
-  
-  /*
-  const table = [[{
-    start: Date.now() + 20*60*1000 + 10000,
-    duration: 35,
-    name: "Пара математического анализа",
-    cabinet: "405",
-    teacher: "Ухалов Алексей Юрьевич",
-    place: "2 корпус(ул. Кирова, 8/10)"
-  }], [], [], [], [], [], []];*/
-  //const table = [[], [], [], [], [], [], []];
   const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 
   const getField = () => ({
@@ -38,7 +24,6 @@ export const CreateTable = () => {
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
     table[index] = [...table[index], getField()];
-    //table = table.map((elem, ind) => index == ind ? [...table[index], getField()] : elem);
     setTable(table);
     forceUpdate();
     console.log(tabler)
@@ -50,19 +35,7 @@ export const CreateTable = () => {
     console.log(event.target.parentNode.getAttribute('indx'), event.target.name, event.target.value);
     var idChange = event.target.parentNode.getAttribute('indx');
     var idFor = event.target.parentNode.getAttribute('indxer');
-
     table[idChange][idFor] = Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == event.target.name ? ({[k]: event.target.value}) : ({[k]: table[idChange][idFor][k]})));
-    /*setTable(
-      table.map(
-        (elem, ind) => ind == idChange ?
-          table[idChange].map((el, key) => key == idFor ?
-            Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == event.target.name ? ({[k]: event.target.value}) : ({[k]: table[idChange][idFor][k]})))
-            //table[idChange][idFor].entries(obj).reduce((p, [k, v]) => ({ ...p, [k]: v * v }), {});
-            //{...table[idChange][idFor], `${event.target.name}`: event.target.value}
-          : el)
-        : elem
-    ));*/
-    console.log(table);
   }
 
 
@@ -80,11 +53,8 @@ export const CreateTable = () => {
               {elem.map((subj, ind) => (<div indx={index} indxer={ind} key={`mupin${index}${ind}`} value={index} className="subject"><div className="mid">#{ind+1}.</div>
                 <input onChange={handleChange} name="name" placeholder="Название" defaultValue={subj.name}/>
                 <input onChange={handleChange} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
-                <input onChange={handleChange} name="start" placeholder="Время начала" defaultValue={subj.start}/>
                 <input onChange={handleChange} name="place" placeholder="Место" defaultValue={subj.place}/>
-                {/*<TimePicker name="time" onChange={handleChange} value={'10:00'} />*/}
-                {/*<TimePicker name="time" onChange={selectTime} value={'10:00'} />*/}
-                <TimePicker.RangePicker defaultValue={getDefaultSchedule(ind)} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
+                <TimePicker.RangePicker defaultValue={getDefaultSchedule(ind)} onChange={selectTime} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
               </div>)
               )}
               <div onClick={() => addSubj(index)} className="btn mup">Добавить предмет</div>
@@ -92,39 +62,4 @@ export const CreateTable = () => {
           )
         })}
         </>);
-
-  const toPaste = [];
-  days.forEach((elem) => {
-    
-    toPaste.push(
-      <div className="mup">
-        <mark className="big center">{elem}</mark>
-        <div className="btn">Добавить предмет</div>
-      </div>
-    );
-  });
-
-  
-  return <>
-<div className="midbox">
-  <div className="big">Добавить расписание</div>
-</div>
-<div className="midbox">
-  <input className="full" id="idTable" placeholder="ID расписания"/><div className="btn">Добавить</div>
-</div>
-<hr className="mup"/>
-<mark className="big center">Или</mark>
-<hr/>
-<mark className="big center">Создать новое</mark>
-  
-<div className="event create">
-  <label htmlFor="name">Как назвать расписание?</label>
-  <input id="name" placeholder="Название"/>
-  <label htmlFor="hours">Сколько часов?</label>
-  <input id="hours" placeholder="Часы"/>
-  {toPaste}
-</div>
-  <div className="btn" to="/my/add">Создать</div>
-
-</>;
 };
