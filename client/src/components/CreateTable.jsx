@@ -6,6 +6,7 @@ import { InfoBlock } from "./InfoBlock";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useSelector } from "react-redux";
+import { generateKey } from "../utils/utils";
 
 export const CreateTable = () => {
   
@@ -41,8 +42,22 @@ export const CreateTable = () => {
     console.log(time);
   }
   const handleChange = event => {
-    console.log(event.target.name, event.target.value);
+    console.log(event.target.parentNode.getAttribute('indx'), event.target.name, event.target.value);
+    var idChange = event.target.parentNode.getAttribute('indx');
+    var idFor = event.target.parentNode.getAttribute('indxer');
+    setTable(
+      table.map(
+        (elem, ind) => ind == idChange ?
+          table[idChange].map((el, key) => key == idFor ?
+            Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == event.target.name ? ({[k]: event.target.value}) : ({[k]: table[idChange][idFor][k]})))
+            //table[idChange][idFor].entries(obj).reduce((p, [k, v]) => ({ ...p, [k]: v * v }), {});
+            //{...table[idChange][idFor], `${event.target.name}`: event.target.value}
+          : el)
+        : elem
+    ));
+    console.log(table);
   }
+
 
   const defs = useSelector(state => state.table.schedules[0]);
 
@@ -52,9 +67,9 @@ export const CreateTable = () => {
   return (<>
         {table.map((elem, index) => {
           return (
-            <div key={index} className="mup">
+            <div key={`mup${index}`} className="mup">
               <mark className="big center">{days[index]}</mark>
-              {elem.map((subj, ind) => (<div className="subject"><div className="mid">#{ind+1}.</div>
+              {elem.map((subj, ind) => (<div indx={index} indxer={ind} key={`mupin${index}${ind}`} value={index} className="subject"><div className="mid">#{ind+1}.</div>
                 <input onChange={handleChange} name="name" placeholder="Название" defaultValue={subj.name}/>
                 <input onChange={handleChange} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
                 <input onChange={handleChange} name="start" placeholder="Время начала" defaultValue={subj.start}/>

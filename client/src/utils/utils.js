@@ -57,3 +57,7 @@ export const getTitle = (ms) => {
     return "Скоро будет";
   return "Почти началось";
 }
+
+export const generateKey = (pre) => {
+  return `${ pre }_${ new Date().getTime() }`;
+}
