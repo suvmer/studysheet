@@ -6,9 +6,7 @@ import { InfoBlock } from '../components/InfoBlock';
 import { NavLink, useOutlet } from 'react-router-dom';
 
 export const MyPage = () => {
-    const curdate = useSelector(state => state.ui.time);
     const outlet = useOutlet();
-
     const ownTables = <><div className="midbox">
     <mark className="big">Ваши расписания</mark>
     <NavLink className="btn" to="/my/add">Добавить</NavLink>

@@ -2,9 +2,8 @@ import { dateToString, getTitle, msToNumbers, msToWords } from '../utils/utils';
 import { useSelector } from 'react-redux';
 import { InfoBlock } from './InfoBlock';
 
-export const Event = () => {
+export const Event = ({table}) => {
     const curdate = useSelector(state => state.ui.time);  
-    const table = useSelector(state => state.table.tables[0]);  
 
     return <div className={`event `+((curdate - table.start > 0) ? 'active' : '')}>
     <div className="nextEvent">

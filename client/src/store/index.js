@@ -1,7 +1,8 @@
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { tableReducer } from "./tableReducer";
 import { profileReducer } from "./profileReducer";
 import { uiReducer } from "./uiReducer";
+import thunk from "redux-thunk"
 
 const rootReducer = combineReducers({
   table: tableReducer,
@@ -9,4 +10,4 @@ const rootReducer = combineReducers({
   ui: uiReducer
 });
 
-export const store = createStore(rootReducer);
+export const store = createStore(rootReducer, applyMiddleware(thunk));
