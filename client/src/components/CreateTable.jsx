@@ -8,13 +8,21 @@ import { useSelector } from "react-redux";
 export const CreateTable = () => {
   const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 
-  const getField = () => ({
-    start: Date.now(),
+  const defs = useSelector(state => state.table.defs[0]);
+  const getDefaultSchedule = (ind) => {
+    return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
+  }
+  const getField = (i = 0) => ({
+    start: getDefaultSchedule(i)[0].valueOf(),
+    end: getDefaultSchedule(i)[1].valueOf(),
     duration: 95,
     name: "",
     cabinet: "",
     teacher: "",
     place: "7 корпус(Союзная 144)" });
+
+
+  
 
   const [tabler, setTable] = useState([
     ...Array(7).fill([getField()])
@@ -23,27 +31,22 @@ export const CreateTable = () => {
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
-    table[index] = [...table[index], getField()];
+    table[index] = [...table[index], getField(table[index].length)];
     setTable(table);
     forceUpdate();
     console.log(tabler)
   };
-  const selectTime = time => {
-    console.log(time);
+  const changeEv = event => {
+    handleChange(event.target.parentNode.getAttribute('indx'), event.target.parentNode.getAttribute('indxer'), event.target.name, event.target.value);
   }
-  const handleChange = event => {
-    console.log(event.target.parentNode.getAttribute('indx'), event.target.name, event.target.value);
-    var idChange = event.target.parentNode.getAttribute('indx');
-    var idFor = event.target.parentNode.getAttribute('indxer');
-    table[idChange][idFor] = Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == event.target.name ? ({[k]: event.target.value}) : ({[k]: table[idChange][idFor][k]})));
+
+  const handleChange = (idChange, idFor, namer, value) => {
+    console.log(`${idChange} ${idFor} ${namer}: ${value}`);
+    table[idChange][idFor] = Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == namer ? ({[k]: value}) : ({[k]: table[idChange][idFor][k]})));
   }
 
 
-  const defs = useSelector(state => state.table.schedules[0]);
-
-  const getDefaultSchedule = (ind) => {
-    return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
-  }
+  
   
   console.log("Updated");
   return (<>
@@ -52,10 +55,11 @@ export const CreateTable = () => {
             <div key={`mup${index}`} className="mup">
               <mark className="big center">{days[index]}</mark>
               {elem.map((subj, ind) => (<div indx={index} indxer={ind} key={`mupin${index}${ind}`} value={index} className="subject"><div className="mid">#{ind+1}.</div>
-                <input onChange={handleChange} name="name" placeholder="Название" defaultValue={subj.name}/>
-                <input onChange={handleChange} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
-                <input onChange={handleChange} name="place" placeholder="Место" defaultValue={subj.place}/>
-                <TimePicker.RangePicker defaultValue={getDefaultSchedule(ind)} onChange={selectTime} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
+                <input onChange={changeEv} name="name" placeholder="Название" defaultValue={subj.name}/>
+                <input onChange={changeEv} name="cabinet" placeholder="Кабинет" defaultValue={subj.cabinet}/>
+                <input onChange={changeEv} name="place" placeholder="Место" defaultValue={subj.place}/>
+                <input onChange={changeEv} name="teacher" placeholder="Преподаватель" defaultValue={subj.teacher}/>
+                <TimePicker.RangePicker defaultValue={[dayjs(subj.start), dayjs(subj.end)]} onChange={(a, b) => { handleChange(index, ind, 'start', a[0].valueOf()); handleChange(index, ind, 'end', a[1].valueOf()) }} format={"HH:mm"} minuteStep={5} placeholder={["Начало", "Конец"]} />
                 {/*
                 TODO: save time without clicking OK button
                 <input type="text" className="form-control js-time-picker" value="02:56"></input>*/}
