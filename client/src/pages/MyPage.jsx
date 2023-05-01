@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { dateToString } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../components/Event';
@@ -30,34 +30,15 @@ export const MyPage = () => {
     const users = useSelector(state => state.profile.users);
     const current = useSelector(state => state.profile.currentTable);
     const schedules = useSelector(state => state.table.schedules);
-    useMemo(() => {
-        (async () => {
-            for(var i = 0; i < tables.length; i++) {
-                const jj = await getTable(tables[i]);
-                dispatch(jj)
-            }
-        })();
+    useEffect(() => {
+        tables.forEach(id => dispatch(getTable(id)));
     }, []);
-    /*useEffect(() => {
-        
-            console.log("schedules ", schedules);
-            schedules.forEach(table => {
-                dispatch(getUser(table.creator))
-                console.log("asking ", table.creator);
-            }); //TODO: load table then user
-
-    }, []);*/
-
 
     const outlet = useOutlet();
-    //const creator = users.find(el => el.id == table.creator);
     
     const bars = tables.map(id => {
         const table = schedules.find(el => el.id == id);
         const creator = users.find(user => user.id == table.creator);
-        //if(table && !creator)
-        //    dispatch(getUser(table.creator)); //SETSTATE ON RUN!
-        console.log(creator)
         return <TableBar key={`mtb${id}`} creator={creator} table={table} selected={current}
     />});
     

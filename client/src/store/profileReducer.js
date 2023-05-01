@@ -19,7 +19,6 @@ const defaultState = {
 export const profileReducer = (state = defaultState, action) => {
   switch (action.type) {
     case GET_USER:
-        console.log("user info: ", state, action.payload);
         if(action.payload == undefined)
           return state;
         let fndd = state.users.findIndex(el => el.id == action.payload.id);

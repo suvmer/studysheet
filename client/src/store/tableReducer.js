@@ -26,13 +26,11 @@ export const tableReducer = (state = defaultState, action) => {
     case "INITIALIZE":
       return action.payload;
     case GET_TABLES:
-      console.log(state, action.payload);
       return {
         ...state,
         tables: action.payload
       };
     case GET_TABLE:
-      console.log("info: ", state, action.payload);
       if(action.payload == undefined)
         return state;
       let fnd = state.schedules.findIndex(el => el.id == action.payload.id);
