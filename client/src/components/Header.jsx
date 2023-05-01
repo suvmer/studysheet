@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Clock as Calendar } from "../resources/Calendars";
 import { dateToString } from "../utils/utils";
 import { useEffect } from "react";
@@ -17,9 +17,9 @@ export const Header = () => {
     
   return <header>
     <Calendar />
-    <NavLink to="/">
+    <Link to="/">
       Study<mark className="blue bold">SHEET</mark>
-    </NavLink>
+    </Link>
     <p>{dateToString(curdate)[1]}</p>
   </header>;
 }
