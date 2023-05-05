@@ -4,9 +4,9 @@ import { InfoBlock } from "./InfoBlock";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useSelector } from "react-redux";
+import { days } from "../utils/utils";
 
 export const CreateTable = () => {
-  const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 
   const defs = useSelector(state => state.table.defs[0]);
   const getDefaultSchedule = (ind) => {

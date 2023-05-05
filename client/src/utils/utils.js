@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 Number.prototype.width = function () {
   return this.toString().length;
 };
@@ -61,3 +63,17 @@ export const getTitle = (ms) => {
 export const generateKey = (pre) => {
   return `${ pre }_${ new Date().getTime() }`;
 }
+//todo: fix closest event search
+export const getDif = (ts1, ts2) => {
+  const d1 = dayjs(ts1);
+  const d2 = dayjs(ts2);
+  return Math.abs((dayjs().hour(d1.hour()).minute(d1.minute()).second(d1.second())).valueOf() - (dayjs().hour(d2.hour()).minute(d2.minute()).second(d2.second())).valueOf());
+}
+export const getDifSign = (ts1, ts2) => {
+  const d1 = dayjs(ts1);
+  const d2 = dayjs(ts2);
+  return ((dayjs().hour(d1.hour()).minute(d1.minute()).second(d1.second())).valueOf() - (dayjs().hour(d2.hour()).minute(d2.minute()).second(d2.second())).valueOf());
+}
+
+export const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
+export const shortDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
