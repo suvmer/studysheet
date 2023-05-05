@@ -21,9 +21,6 @@ export const CreateTable = () => {
     teacher: "",
     place: "7 корпус(Союзная 144)" });
 
-
-  
-
   const [tabler, setTable] = useState([
     ...Array(7).fill([getField()])
   ]);

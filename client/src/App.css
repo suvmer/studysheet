@@ -35,6 +35,15 @@ body {
   width: 1000px;
   margin: auto;
 }
+@media (max-width: 800px) {
+  #root {
+    width: 600px;
+  }
+  aside {
+    display: none!important;
+  }
+}
+
 header * {
   user-select: none;
 }
