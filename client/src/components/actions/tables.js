@@ -9,6 +9,7 @@ const schedules =
       id: 1,
       name: "КБ21СО",
       creator: 1,
+      info: {},
       tables:
       [
         [

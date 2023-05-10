@@ -1,7 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const mysql = require('mysql2');
 const router = require('./router/index.js');
 const connection = require('./queries.js');
 const utils = require('./utils.js');
@@ -20,66 +19,10 @@ app.use(cors({
 }));
 
 
-connection.query('SELECT * FROM posts', function(err, rows, fields) {
+connection.query('SELECT * FROM sheets', function(err, rows, fields) {
   if (err) throw err;
-  console.log("started");
-  //console.log('The count of posts rows is: ', rows);
+  console.log('The count of sheets rows is: ', rows.rowCount);
 });
-  
-const pl = [
-    {
-        title: "Амогус стал грогусом",
-        desc:
-`Интересная вещь, что грогус неожиданно стал амогусом. Кстати, именно из-за этого он решил взять
-И просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-Его голос словно пропал. Ожидаемо, что грогус не стал терпеть амогуса-двойника. Съев его, он был доволен. И
-просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-
-
-Его голос словно пропал. Интересная вещь, что грогус неожиданно стал амогусом. Кстати, именно из-за этого он решил взять
-И просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-Его голос словно пропал. Ожидаемо, что грогус не стал терпеть амогуса-двойника. Съев его, он был доволен. И
-просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-
-
-Его голос словно пропал. Интересная вещь, что грогус неожиданно стал амогусом. Кстати, именно из-за этого он решил взять
-И просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-Его голос словно пропал. Ожидаемо, что грогус не стал терпеть амогуса-двойника. Съев его, он был доволен. И
-просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-
-
-Его голос словно пропал. Интересная вещь, что грогус неожиданно стал амогусом. Кстати, именно из-за этого он решил взять
-И просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-Его голос словно пропал. Ожидаемо, что грогус не стал терпеть амогуса-двойника. Съев его, он был доволен. И
-просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-
-
-Его голос словно пропал.`,
-        img: "meme2.jpg",
-        likes: 50,
-        date: utils.prepareSqlDate(1675682553)
-    },
-    {
-      title: "А грогус съел амогуса",
-      desc:
-  `Ожидаемо, что грогус не стал терпеть амогуса-двойника. Съев его, он был доволен. И
-   просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-  Его голос словно пропал.`,
-      img: "meme1.png",
-      likes: 15,
-      date: utils.prepareSqlDate(Date.now())
-    },
-    {
-        title: "Амогус стал грогусом",
-        desc:
-  `Интересная вещь, что грогус неожиданно стал амогусом. Кстати, именно из-за этого он решил взять
-  И просто кекнуться. Учёные впервые наблюдали такую ситуацию. Джон Эйнштейн не смог дать внятных комментариев,
-  Его голос словно пропал.`,
-        img: "meme2.jpg",
-        likes: 50,
-        date: utils.prepareSqlDate(1675682553)
-    }
-    ];
   
     /*console.log("plmap:", pl.map(elem => Object.values(elem)).flat(1));
     console.log("preparevalues :", utils.prepareSqlKeys(pl, 5));
@@ -99,5 +42,24 @@ const start = () => {
     }
 }
 
+router.get('/get/:id', async (req, res) => {
+    const { id } = req.params
+    const { rows } = await connection.query('SELECT * FROM sheets WHERE id = $1', [id])
+    res.send(rows[0])
+  })
+router.get('/getall', async (req, res) => {
+    const { rows } = await connection.query('SELECT * FROM sheets')
+    res.send(rows)
+})
+router.get('/add/:name/:creator/:info', async (req, res) => {
+    const { name, creator, info } = req.params
+    const { rows } = await connection.query('INSERT INTO sheets (name, creator, info) VALUES ($1, $2, $3)', [name, creator, info])
+    res.send(rows)
+})
+router.get('/delete/:id', async (req, res) => {
+    const { id } = req.params
+    const { rows } = await connection.query('DELETE FROM sheets WHERE id = $1', [id])
+    res.send(rows[0])
+})
 
 start();
