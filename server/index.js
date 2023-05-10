@@ -1,9 +1,11 @@
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const router = require('./router/index.js');
 const connection = require('./queries.js');
 const utils = require('./utils.js');
+const { registration } = require('./service/user-service.js');
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -61,5 +63,9 @@ router.get('/delete/:id', async (req, res) => {
     const { rows } = await connection.query('DELETE FROM sheets WHERE id = $1', [id])
     res.send(rows[0])
 })
+router.get('/users/add/:name/:email/:password/:info/', async (req, res) => {
+    //const { name, email, password, info } = req.params
+    res.send(await registration(...Object.values(req.params)))
+  })
 
 start();
