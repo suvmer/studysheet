@@ -7,26 +7,7 @@ import { NavLink, useOutlet } from 'react-router-dom';
 import { getTable } from '../components/actions/tables';
 import { getUser } from '../components/actions/users';
 
-
-const TableBar = ({table, creator, current}) => {
-    if(table == undefined)
-        return <div>Загрузка...</div>;
-    console.log(table);
-    return 
-    <NavLink className="btn" to={`/info/{table.id}`}><div className="event">
-            <InfoBlock text="">{table.name}</InfoBlock>
-
-            <div className="eventTitle">Автор: {creator == undefined ? "Загрузка..." : creator.name}</div>
-
-            <br/>
-
-            <InfoBlock text="Событий в неделю:">{table.tables.length}</InfoBlock>
-            <InfoBlock text="Ближайшее событие:">00:45:00</InfoBlock>
-        </div></NavLink>
-    ;
-}
-
-export const MyPage = () => {
+export const InfoPage = () => {
     const dispatch = useDispatch();
     const tables = useSelector(state => state.profile.user.ownTables);
     const users = useSelector(state => state.profile.users);
@@ -37,12 +18,6 @@ export const MyPage = () => {
     }, []);
 
     const outlet = useOutlet();
-    
-    const bars = tables.map(id => {
-        const table = schedules.find(el => el.id == id);
-        const creator = users.find(user => user.id == table.creator);
-        return <TableBar key={`mtb${id}`} creator={creator} table={table} selected={current}
-    />});
     
     const ownTables =
     tables.length > 0 ? 
