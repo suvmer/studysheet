@@ -1,4 +1,9 @@
 class utils {
+    HttpCodes = {
+        success : 200,
+        badRequest: 400,
+        notFound : 404
+     }
     prepareSqlKeys(values) { //doing $1 $2 ... for values (for encapsulating)
         let res = []
         let sep = Object.values(values[0]).length;
@@ -22,7 +27,7 @@ class utils {
     }
 
     error(msg) {
-        return {status: 'error', message: msg};
+        return {status: this.HttpCodes.badRequest, message: msg};
     }
 }
 

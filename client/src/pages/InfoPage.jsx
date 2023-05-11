@@ -13,7 +13,7 @@ export const InfoPage = () => {
     const users = useSelector(state => state.profile.users);
     const current = useSelector(state => state.profile.currentTable);
     const schedules = useSelector(state => state.table.schedules);
-    useEffect(() => {
+    useEffect(() => { //TODO: REPLACE useEffect() WITH useLoaderData from react router
         tables.forEach(id => dispatch(getTable(id)));
     }, []);
 
@@ -26,7 +26,7 @@ export const InfoPage = () => {
         <mark className="big">Ваши расписания</mark>
         <NavLink className="btn" to="/my/add">Добавить</NavLink>
     </div>
-    {bars} </> :
+     </> :
     <>
         <div className="midbox">
             <mark className="big">Расписаний нет</mark>

@@ -12,8 +12,7 @@ const TableBar = ({table, creator, current}) => {
     if(table == undefined)
         return <div>Загрузка...</div>;
     console.log(table);
-    return 
-    <NavLink className="btn" to={`/info/{table.id}`}><div className="event">
+    return <NavLink className="event" to={`/info/${table.id}`}>
             <InfoBlock text="">{table.name}</InfoBlock>
 
             <div className="eventTitle">Автор: {creator == undefined ? "Загрузка..." : creator.name}</div>
@@ -22,7 +21,7 @@ const TableBar = ({table, creator, current}) => {
 
             <InfoBlock text="Событий в неделю:">{table.tables.length}</InfoBlock>
             <InfoBlock text="Ближайшее событие:">00:45:00</InfoBlock>
-        </div></NavLink>
+        </NavLink>
     ;
 }
 

@@ -12,6 +12,7 @@ import ErrorPage from "./pages/ErrorPage";
 import { MainPage } from "./pages/MainPage";
 import { MyPage } from "./pages/MyPage";
 import { AccountPage } from "./pages/AccountPage";
+import { InfoPage } from "./pages/InfoPage";
 import { CreateTable } from "./components/CreateTable";
 
 const router = createBrowserRouter([
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
     {
       path: "/account",
       element: <AccountPage/>
+    },
+    {
+      path: "/info/:id",
+      element: <InfoPage/>
     }
   ]
   },
