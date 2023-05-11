@@ -1,5 +1,5 @@
 const connection = require('../queries');
-const utils = require('../utils.js');
+const {checkName, checkEmail, error} = require('../utils.js');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -14,11 +14,13 @@ class UserService {
         const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
         if(res.rowCount > 0) {
             console.log(`Email ${email} is already exists `);
-            throw new Error(`User with email ${email} is already exists!`);
+            return error(`User with email ${email} is already exists!`);
         }
         
-        if(!utils.checkEmail(email))
-            throw new Error('Incorrect email');
+        if(!checkName(name))
+            return error('Incorrect name');
+        if(!checkEmail(email))
+            return error('Incorrect email');
 
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4(); //v34fa-asfasf-142saf-sa-asf
@@ -26,7 +28,7 @@ class UserService {
         const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1])
         
         if(query.rowCount == 0)
-            return 'Failed to create user';
+            return error('Failed to create user');
         
         const user = await connection.query('SELECT (name, email, id, "isActivated") from users WHERE id=$1', [query.rows[0].id])
         //mailService.sendActivationMail(email, activationLink);
@@ -34,7 +36,7 @@ class UserService {
         const userDto = user.rows[0];
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, user: userDto};
+        return {...tokens, status: "success", user: userDto};
     
     }
 }

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const connection = require('../queries');
 
 class TokenService {
     generateTokens(payload) { 

@@ -7,11 +7,14 @@ class UserController {
       try {
         const {name, email, password, info} = req.body;
         const userData = await userService.registration(name, email, password, info);
+        if(userData.type == 'error')
+          return res.json(userData);
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true});
         //httpOnly + flag 'secure' in httpS case
         return res.json(userData);
       } catch(e) {
           console.log(e);
+          return res.json("Boba");
       }
   }
   async login(req, res) {

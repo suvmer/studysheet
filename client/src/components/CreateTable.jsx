@@ -41,9 +41,6 @@ export const CreateTable = () => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
     table[idChange][idFor] = Object.assign({}, ...Object.keys(table[idChange][idFor]).map(k => [k] == namer ? ({[k]: value}) : ({[k]: table[idChange][idFor][k]})));
   }
-
-
-  
   
   console.log("Updated");
   return (<>

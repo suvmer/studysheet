@@ -11,8 +11,18 @@ class utils {
         return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
     }
     
+    checkName(name) {
+        if(!name) return false;
+        return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_-]{2,20} [a-zA-Zа-яА-Я_-]{2,20}$/.test(name)));
+    }
+    
     checkEmail(email) {
-        return (email.length >= 5 && email.length <= 30);
+        if(!email) return false;
+        return  (email.length <= 50 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)));
+    }
+
+    error(msg) {
+        return {status: 'error', message: msg};
     }
 }
 
