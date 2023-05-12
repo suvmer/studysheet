@@ -112,6 +112,25 @@ aside a:focus, aside a.active {
   padding: 25px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.infoTitle {
+  text-align: center;
+  padding: 15px;
+  background-color: var(--white);
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 5px;
+}
+.subjectBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: var(--white);
+  font-size: var(--mid);
+}
 .midbox {
   border-radius: 10px;
   /*background-color: var(--white);

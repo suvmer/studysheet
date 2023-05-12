@@ -9,15 +9,15 @@ Number.prototype.toWidth = function (width) {
     : new String("0", width - this.width()) + this;
 };
 
-export const dateToString = (stamp) => {
+export const dateToString = (stamp, nosecs = false) => {
   var a = new Date(stamp);
   return [
     `${a.getDate().toWidth(2)}.${(a.getMonth() + 1).toWidth(2)}.${a
       .getFullYear()
       .toWidth(2)}`,
-    `${a.getHours().toWidth(2)}:${a.getMinutes().toWidth(2)}:${a
+    `${a.getHours().toWidth(2)}:${a.getMinutes().toWidth(2)}${nosecs ? `` : `:${a
       .getSeconds()
-      .toWidth(2)}`,
+      .toWidth(2)}`}`,
   ];
 };
 

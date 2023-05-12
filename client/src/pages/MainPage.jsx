@@ -28,6 +28,7 @@ const MainTitle = () => {
 }
 
 export const MainPage = () => {
+  document.title = "StudySHEET - расписание под рукой!";
   const dispatch = useDispatch();
   const user = useSelector(state => state.profile.user);
   const isLogged = useSelector(state => state.profile.isLogged);

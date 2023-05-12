@@ -1,35 +1,70 @@
 import React, { useEffect } from 'react'
-import { dateToString } from '../utils/utils';
+import { dateToString, days } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../components/Event';
 import { InfoBlock } from '../components/InfoBlock';
-import { NavLink, useOutlet } from 'react-router-dom';
+import { NavLink, useOutlet, useParams } from 'react-router-dom';
 import { getTable } from '../components/actions/tables';
 import { getUser } from '../components/actions/users';
 
+export const SubjectBar = (props) => {
+    return <div className='subjectBar'><p>{props.num}. {props.name}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
+}
+
+
+
+/*
+TODO: кликом на предмет модальное окно с редактированием предмета(кабинет, время, ...)
+
+
+*/
+
+
+
+
+
+
+
+
+
 export const InfoPage = () => {
+    document.title = "Просмотр расписания";
     const dispatch = useDispatch();
-    const tables = useSelector(state => state.profile.user.ownTables);
     const users = useSelector(state => state.profile.users);
     const current = useSelector(state => state.profile.currentTable);
     const schedules = useSelector(state => state.table.schedules);
+    let { id } = useParams();
+
     useEffect(() => { //TODO: REPLACE useEffect() WITH useLoaderData from react router
-        tables.forEach(id => dispatch(getTable(id)));
+        dispatch(getTable(id));
     }, []);
 
+
     const outlet = useOutlet();
-    
+    const table = schedules.find(el => el.id == id);
+    const creator = users.find(user => user.id == table.creator);
+    console.log(table);
     const ownTables =
-    tables.length > 0 ? 
+    table ? 
     <>
-    <div className="midbox">
-        <mark className="big">Ваши расписания</mark>
-        <NavLink className="btn" to="/my/add">Добавить</NavLink>
+    <div className='infoTitle'>
+        <InfoBlock text="">{table.name}</InfoBlock>
+        <div className="eventTitle">Автор: {creator == undefined ? "Загрузка..." : creator.name}</div>
+    </div>
+    <div className="info">
+        
+
+        {table.tables.map((element, day) => {
+            return <div key={`sbjlist${day}`}>
+                <mark className="big">{days[day]}</mark>
+                {element.map((el, num) => <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>)}
+                </div>
+        })}
     </div>
      </> :
     <>
         <div className="midbox">
-            <mark className="big">Расписаний нет</mark>
+            <mark className="big">Расписание не найдено</mark>
             <NavLink className="btn" to="/my/add">Добавить</NavLink>
         </div>
     </>;
