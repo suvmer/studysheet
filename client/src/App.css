@@ -112,6 +112,19 @@ aside a:focus, aside a.active {
   padding: 25px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
+.login {
+  padding: 20px;
+  background-color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+}
+.login input {
+  padding: 7px 10px;
+  font-size: var(--mid);
+}
 .info {
   display: flex;
   flex-direction: column;

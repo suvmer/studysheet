@@ -6,6 +6,7 @@ import { InfoBlock } from '../components/InfoBlock';
 import { NavLink, useOutlet } from 'react-router-dom';
 import { getTable } from '../components/actions/tables';
 import { getUser } from '../components/actions/users';
+import { Login } from '../components/Login';
 
 
 const TableBar = ({table, creator, current}) => {
@@ -50,6 +51,8 @@ export const MyPage = () => {
         <mark className="big">Ваши расписания</mark>
         <NavLink className="btn" to="/my/add">Добавить</NavLink>
     </div>
+    <Login/>
+
     {bars} </> :
     <>
         <div className="midbox">
