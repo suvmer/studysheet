@@ -14,6 +14,7 @@ a {
 
 :root {
   --white: rgb(251, 251, 251);
+  /*--white: rgb(0, 216, 255);*/
   --prewhite: rgb(240, 240, 240);
   --darkwhite: rgb(220, 220, 220);
   --yellow: rgb(251, 255, 129);
@@ -26,6 +27,7 @@ a {
   --big: 1.75rem;
   --mid: 1.5rem;
   --small: 1rem;
+  
 }
 
 body {
