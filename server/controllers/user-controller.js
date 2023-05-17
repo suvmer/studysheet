@@ -33,9 +33,10 @@ class UserController {
   }
   async activate(req, res) {
       try {
-
+        return res.json(await userService.activate(req.params.link));
       } catch(e) {
-          
+        console.log(e);
+        return res.json("Boba");
       }
   }
   async refresh(req, res) {
