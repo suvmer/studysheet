@@ -15,7 +15,7 @@ class TokenService {
         if(query.rowCount != 0)
             return await connection.query('UPDATE tokens SET "refreshToken"=$1 WHERE userid = $2', [refreshToken, userId])
 
-        return await connection.query('INSERT INTO tokens (userid, "refreshToken") VALUES ($1, $2)', [name, creator, info])
+        return await connection.query('INSERT INTO tokens (userid, "refreshToken") VALUES ($1, $2)', [userId, refreshToken])
     }
     async removeToken(refreshToken) {
         return (await connection.query('DELETE from tokens WHERE "refreshToken" = $1', [refreshToken])).rowCount;
