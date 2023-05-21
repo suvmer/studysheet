@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
 const tokenService = require('./token-service');
+const ApiError = require('../exceptions/api-error');
 
 class UserService {
     async registration(name, email, password, info) {
@@ -12,9 +13,9 @@ class UserService {
         //if found throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
         
         if(!utils.checkName(name))
-            return utils.error('Incorrect name');
+            throw ApiError.BadRequest("Некорректное имя");
         if(!utils.checkEmail(email))
-            return utils.error('Incorrect email');
+            throw ApiError.BadRequest("Некорректная почта");
 
         /*const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
         if(res.rowCount > 0) {
@@ -28,7 +29,7 @@ class UserService {
         const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1])
         
         if(query.rowCount == 0)
-            return utils.error('Failed to create user');
+            throw ApiError.BadRequest('Неудачная регистрация');
         
         //const user = await connection.query('SELECT row_to_json(row(name, email, id, "isActivated")) from users WHERE id=$1', [query.rows[0].id])
         const user = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [query.rows[0].id])
@@ -42,11 +43,11 @@ class UserService {
     async activate(activationLink) {
         const users = await connection.query(`SELECT * FROM users WHERE "activationLink" = $1`, [activationLink]);
         if(users.rowCount == 0)
-            return utils.error("Некорректная ссылка");
+            throw ApiError.BadRequest("Некорректная ссылка");
 
         const user = users.rows[0];
         if(user.isActivated)
-            return utils.error("Этот пользователь уже активирован!");
+            throw ApiError.BadRequest("Этот пользователь уже активирован!");
         
         //const update = await connection.query(`UPDATE users SET ("isActivated") = (ROW(TRUE)) WHERE id = $1`, [user.id]);
         const update = await connection.query(`UPDATE users SET "isActivated" = TRUE WHERE id = $1`, [user.id]);
@@ -54,18 +55,18 @@ class UserService {
     }
     async login(email, password) {
         if(!utils.checkEmail(email))
-            return utils.error('Incorrect email');
+            throw ApiError.BadRequest('Некорректная почта');
         const fetchUsers = await connection.query('SELECT password, id from users WHERE email=$1', [email]);
 
         if(fetchUsers.rowCount == 0)
-            return utils.error("Некорректный email или пароль");
+            throw ApiError.BadRequest("Некорректный email или пароль");
         const user = fetchUsers.rows[0];
         const isPassEquals = await bcrypt.compare(password, user.password);
         if(!isPassEquals)
-            return utils.error("Некорректный email или пароль");
+            throw ApiError.BadRequest("Некорректный email или пароль");
         
         const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
-        const userDto = JSON.stringify(fetchInfo.rows[0]);
+        const userDto = fetchInfo.rows[0];
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
@@ -78,12 +79,12 @@ class UserService {
     }
     async refresh(refreshToken) {
         if(!refreshToken) {
-            return utils.error("Не авторизованы");
+            throw ApiError.UnauthorizedError();
         }
         const userDate = tokenService.validateRefreshToken(refreshToken);
         const tokenFromDb = await tokenService.findToken(refreshToken);
         if(!userDate || !tokenFromDb) {
-            return utils.error("Не авторизованы");
+            throw ApiError.UnauthorizedError();
         }
 
         const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
