@@ -52,6 +52,52 @@ class UserService {
         const update = await connection.query(`UPDATE users SET "isActivated" = TRUE WHERE id = $1`, [user.id]);
         return {status: utils.HttpCodes.success, message: "Почта успешно подтверждена"};
     }
+    async login(email, password) {
+        if(!utils.checkEmail(email))
+            return utils.error('Incorrect email');
+        const fetchUsers = await connection.query('SELECT password, id from users WHERE email=$1', [email]);
+
+        if(fetchUsers.rowCount == 0)
+            return utils.error("Некорректный email или пароль");
+        const user = fetchUsers.rows[0];
+        const isPassEquals = await bcrypt.compare(password, user.password);
+        if(!isPassEquals)
+            return utils.error("Некорректный email или пароль");
+        
+        const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
+        const userDto = JSON.stringify(fetchInfo.rows[0]);
+        const tokens = tokenService.generateTokens({...userDto});
+
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
+        return {...tokens, status: utils.HttpCodes.success, user: userDto};
+    }
+    async logout(refreshToken) {
+        const token = await tokenService.removeToken(refreshToken);
+        console.log(token);
+        return token;
+    }
+    async refresh(refreshToken) {
+        if(!refreshToken) {
+            return utils.error("Не авторизованы");
+        }
+        const userDate = tokenService.validateRefreshToken(refreshToken);
+        const tokenFromDb = await tokenService.findToken(refreshToken);
+        if(!userDate || !tokenFromDb) {
+            return utils.error("Не авторизованы");
+        }
+
+        const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
+        const userDto = JSON.stringify(fetchInfo.rows[0]);
+        const tokens = tokenService.generateTokens({...userDto});
+
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
+        return {...tokens, status: utils.HttpCodes.success, user: userDto};
+    }
+    async getAllUsers() {
+        const users = await connection.query(`SELECT * FROM users`);
+        return users.rows.map(el => ({...el}));
+    }
+    
 }
 
 module.exports = new UserService();
