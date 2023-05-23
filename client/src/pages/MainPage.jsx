@@ -22,8 +22,9 @@ const AddSomeSchedule = () =>
 
 const MainTitle = () => {
   const curdate = useSelector(state => state.ui.time);
-  return <span className="midbox" style={{ marginRight: "auto" }}>
-           <mark className="mid">{days[(new Date()).getDay()]}, {dateToString(curdate).join(' ')}</mark>
+  return <span className="box_nobg box_nobg_header" style={{ marginRight: "auto" }}>
+           <p>{days[(new Date()).getDay()]}, {dateToString(curdate)[0]}</p>
+           <p>{dateToString(curdate)[1]}</p>
          </span>
 }
 

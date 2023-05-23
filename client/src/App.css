@@ -23,6 +23,9 @@ a {
   --blue: rgb(83, 92, 215);
   --green: rgb(237, 189, 81);
 
+  --dark: rgb(37, 37, 37);
+  --predark: rgb(49, 49, 49);
+
   --large: 2rem;
   --big: 1.75rem;
   --mid: 1.5rem;
@@ -46,27 +49,80 @@ body {
   }
 }
 
-header * {
-  user-select: none;
+
+
+/* On wall elements */
+
+.box_nobg {
+  border-radius: 10px;
+  padding: 5px 15px 0 15px;
+  width: 100%;
+  font-size: var(--mid);
+}
+.box_nobg_header {
+  display: flex;
+  justify-content: space-between;
+}
+.box_nobg_big {
+  font-size: var(--big);
 }
 
-header {
+
+/* UI elements */
+
+.btn {
+  font-size: var(--mid);
+  padding: 10px 30px;
+  border-radius: 10px;
   background-color: var(--white);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
-  padding: 15px 15px 10px 15px;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: var(--prewhite);
+}
+.btn:active {
+  background-color: var(--darkwhite);
+}
+
+.btn_yellow {
+  background-color: var(--yellow);
+}
+.btn_dark {
+  background-color: var(--dark);
+  color: var(--white);
+}
+.btn_dark:hover {
+  background-color: var(--predark);
+}
+
+
+
+
+
+.header {
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+  padding: 15px 20px 15px 20px;
   display: flex;
-  gap: 15px;
-  align-items: start;
+  justify-content: space-between;
+  align-items: center;
   border-radius: 0 0 10px 10px;
 }
-header a {
+.header_icon {
+  width: 50px;
+  height: 50px;
+}
+.header_title {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.header a {
   font-size: var(--large);
 }
-header p {
-  margin-left: auto;
-  margin-bottom: 5px;
-  font-size: var(--mid);
-  align-self: center;
+.header * {
+  user-select: none;
 }
 
 main {
@@ -188,20 +244,6 @@ input {
   border: solid 1px black;
   border-radius: 10px;
   cursor: text!important;
-}
-.btn {
-  font-size: var(--mid);
-  padding: 10px 30px;
-  border-radius: 10px;
-  background-color: var(--white);
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: var(--prewhite);
-}
-.btn:active {
-  background-color: var(--darkwhite);
 }
 .nextEvent {
   display: flex;

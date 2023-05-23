@@ -4,6 +4,10 @@ import { Clock as Calendar } from "../resources/Calendars";
 import { dateToString } from "../utils/utils";
 import { useEffect } from "react";
 import { setTime } from "../store/uiReducer";
+import {GiExitDoor} from 'react-icons/gi'
+import {BiUserCircle} from 'react-icons/bi'
+import {BiUserCircle} from 'react-icons/bi'
+
 
 export const Header = () => {
   const dispatch = useDispatch();
@@ -15,11 +19,12 @@ export const Header = () => {
   
   const curdate = useSelector(state => state.ui.time); 
     
-  return <header>
-    <Calendar />
-    <Link to="/">
-      Study<mark className="blue bold">SHEET</mark>
-    </Link>
-    <p>{dateToString(curdate)[1]}</p>
+  return <header className="header">
+    <div className="header_title">
+      <Calendar />
+    </div>
+    <Link to="/">Study<mark className="blue bold">SHEET</mark></Link>
+    {0 ? <GiExitDoor className="header_icon" onClick={() => {}}/> :
+    <BiUserCircle className="header_icon" onClick={() => {}}/>}
   </header>;
 }

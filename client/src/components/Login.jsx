@@ -1,4 +1,5 @@
 import React, { useReducer, useState } from "react";
+import { DarkButton } from "./UI/Buttons";
 
 export const Login = () => {
 
@@ -14,6 +15,6 @@ export const Login = () => {
   return (<div className="login">
         <input onChange={changeEv} name="name" type="email" placeholder="Почта"/>
         <input onChange={changeEv} name="name" type="password" placeholder="Пароль"/>
-        <div className="btn">Войти</div>
+        <DarkButton>Войти</DarkButton>
         </div>);
 };

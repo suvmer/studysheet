@@ -7,6 +7,7 @@ import { NavLink, useOutlet } from 'react-router-dom';
 import { getTable } from '../components/actions/tables';
 import { getUser } from '../components/actions/users';
 import { Login } from '../components/Login';
+import {DarkButton} from '../components/UI/Buttons';
 
 
 const TableBar = ({table, creator, current}) => {
@@ -47,9 +48,10 @@ export const MyPage = () => {
     const ownTables =
     tables.length > 0 ? 
     <>
-    <div className="midbox">
-        <mark className="big">Ваши расписания</mark>
-        <NavLink className="btn" to="/my/add">Добавить</NavLink>
+    <div className="box_nobg box_nobg_header box_nobg_big">
+        <p>Ваши расписания</p>
+        <NavLink to="/my/add"><DarkButton onClick={() => {}}>Добавить</DarkButton></NavLink>
+        {/*<NavLink className="btn" to="/my/add">Добавить</NavLink>*/}
     </div>
     <Login/>
 
@@ -57,7 +59,7 @@ export const MyPage = () => {
     <>
         <div className="midbox">
             <mark className="big">Расписаний нет</mark>
-            <NavLink className="btn" to="/my/add">Добавить</NavLink>
+            <NavLink to="/my/add"><DarkButton onClick={() => {}}>Добавить</DarkButton></NavLink>
         </div>
     </>;
     return <div className="wall">
