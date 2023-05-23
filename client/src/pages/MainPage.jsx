@@ -33,7 +33,6 @@ export const MainPage = () => {
   const user = useSelector(state => state.profile.user);
   const isLogged = useSelector(state => state.profile.isLogged);
   useEffect(() => {
-    document.title = "StudySHEET - расписание под рукой!";
     if(isLogged)
       user.ownTables.forEach(id => dispatch(getTable(id)));
   }, []);
