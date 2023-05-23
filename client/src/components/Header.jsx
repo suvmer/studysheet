@@ -3,10 +3,9 @@ import { Link } from "react-router-dom";
 import { Clock as Calendar } from "../resources/Calendars";
 import { dateToString } from "../utils/utils";
 import { useEffect } from "react";
-import { setTime } from "../store/uiReducer";
-import {GiExitDoor} from 'react-icons/gi'
-import {BiUserCircle} from 'react-icons/bi'
-import {BiUserCircle} from 'react-icons/bi'
+import { setLogin, setTime } from "../store/uiReducer";
+import {AiOutlineUser} from 'react-icons/ai'
+import {BiLogIn} from 'react-icons/bi'
 
 
 export const Header = () => {
@@ -17,14 +16,13 @@ export const Header = () => {
   }, []);
   
   
-  const curdate = useSelector(state => state.ui.time); 
+  //const curdate = useSelector(state => state.ui.time); 
     
   return <header className="header">
     <div className="header_title">
-      <Calendar />
+      <Link to="/">Study<mark className="blue bold">SHEET</mark></Link>
     </div>
-    <Link to="/">Study<mark className="blue bold">SHEET</mark></Link>
-    {0 ? <GiExitDoor className="header_icon" onClick={() => {}}/> :
-    <BiUserCircle className="header_icon" onClick={() => {}}/>}
+    {1 ? <BiLogIn className="header_icon" onClick={() => dispatch(setLogin(true))} /> :
+    <AiOutlineUser className="header_icon" onClick={() => {}} />}
   </header>;
 }

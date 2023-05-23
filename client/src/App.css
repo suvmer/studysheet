@@ -49,9 +49,20 @@ body {
   }
 }
 
+/* global elements */
+#portal:not(:empty) {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 20vh;
+}
 
-
-/* On wall elements */
+/* Widgets */
 
 .box_nobg {
   border-radius: 10px;
@@ -65,6 +76,24 @@ body {
 }
 .box_nobg_big {
   font-size: var(--big);
+}
+
+.login {
+  padding: 20px;
+  background-color: var(--white);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+}
+.login_regbtn {
+  display: inline;
+  margin: auto;
+}
+.login input {
+  padding: 7px 10px;
+  font-size: var(--mid);
 }
 
 
@@ -95,7 +124,13 @@ body {
 .btn_dark:hover {
   background-color: var(--predark);
 }
-
+.btn_small {
+  font-size: var(--small);
+}
+.btn_transparent {
+  background-color: transparent;
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px;
+}
 
 
 
@@ -105,18 +140,20 @@ body {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
   padding: 15px 20px 15px 20px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   border-radius: 0 0 10px 10px;
 }
 .header_icon {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
 }
 .header_title {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 13px;
+  flex: 100% 0 0;
 }
 .header a {
   font-size: var(--large);
@@ -170,19 +207,7 @@ aside a:focus, aside a.active {
   padding: 25px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
-.login {
-  padding: 20px;
-  background-color: var(--white);
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
-}
-.login input {
-  padding: 7px 10px;
-  font-size: var(--mid);
-}
+
 .info {
   display: flex;
   flex-direction: column;
