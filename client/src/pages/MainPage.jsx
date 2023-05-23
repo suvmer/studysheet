@@ -23,16 +23,16 @@ const AddSomeSchedule = () =>
 const MainTitle = () => {
   const curdate = useSelector(state => state.ui.time);
   return <span className="midbox" style={{ marginRight: "auto" }}>
-           <mark className="mid">{days[(new Date()).getDay()]}, {dateToString(curdate)[0]}</mark>
+           <mark className="mid">{days[(new Date()).getDay()]}, {dateToString(curdate).join(' ')}</mark>
          </span>
 }
 
 export const MainPage = () => {
-  document.title = "StudySHEET - расписание под рукой!";
   const dispatch = useDispatch();
   const user = useSelector(state => state.profile.user);
   const isLogged = useSelector(state => state.profile.isLogged);
   useEffect(() => {
+    document.title = "StudySHEET - расписание под рукой!";
     if(isLogged)
       user.ownTables.forEach(id => dispatch(getTable(id)));
   }, []);
