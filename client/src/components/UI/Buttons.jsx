@@ -4,6 +4,9 @@ export const LightButton = ({onClick, children}) => {
 export const DarkButton = ({onClick, children}) => {
     return <div onClick={onClick} className="btn btn_dark">{children}</div>
 }
+export const DarkButtonMid = ({onClick, children}) => {
+    return <div onClick={onClick} className="btn btn_dark btn_mid">{children}</div>
+}
 export const DarkSmallButton = ({onClick, children}) => {
     return <div onClick={onClick} className="btn btn_dark btn_small">{children}</div>
 }

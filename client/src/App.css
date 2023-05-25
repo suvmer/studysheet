@@ -133,6 +133,9 @@ body {
 .btn_small {
   font-size: var(--small);
 }
+.btn_mid {
+  text-align: center;
+}
 .btn_transparent {
   background-color: transparent;
   box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 8px;
