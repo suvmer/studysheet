@@ -8,17 +8,23 @@
     helvetica neue, Arial, noto sans, sans-serif, apple color emoji,
     segoe ui emoji, segoe ui symbol, noto color emoji;
 }
-a {
-  color: black;
+
+a, p {
+  color: var(--text-primary);
 }
 
 :root {
+  --bg-default: rgba(251, 251, 251, 1);
+  --bg-secondary: rgba(240, 242, 244, 1);
+  --bg-default-inverse: rgba(37, 36, 39, 1);
+  --text-primary: rgba(0, 32, 51, 1);
+  --text-primary-inverse: rgba(251, 251, 251, 1);
+  --link-hover: rgba(240, 240, 240, 1);
+  --link-active: rgba(220, 220, 220, 1);
+
   --white: rgb(251, 251, 251);
   /*--white: rgb(0, 216, 255);*/
-  --prewhite: rgb(240, 240, 240);
-  --darkwhite: rgb(220, 220, 220);
   --yellow: rgb(251, 255, 129);
-  --gray: rgb(240, 242, 244);
   --darkgray: rgb(141, 141, 141);
   --blue: rgb(83, 92, 215);
   --green: rgb(237, 189, 81);
@@ -34,7 +40,7 @@ a {
 }
 
 body {
-  background-color: var(--gray);
+  background-color: var(--bg-secondary);
 }
 #root {
   width: 1000px;
@@ -80,7 +86,7 @@ body {
 
 .login {
   padding: 20px;
-  background-color: var(--white);
+  background-color: var(--bg-default);
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -103,15 +109,15 @@ body {
   font-size: var(--mid);
   padding: 10px 30px;
   border-radius: 10px;
-  background-color: var(--white);
+  background-color: var(--bg-default);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
   cursor: pointer;
 }
 .btn:hover {
-  background-color: var(--prewhite);
+  background-color: var(--link-hover);
 }
 .btn:active {
-  background-color: var(--darkwhite);
+  background-color: var(--link-active);
 }
 
 .btn_yellow {
@@ -188,10 +194,10 @@ aside a {
   border-radius: 10px;
 }
 aside a:hover {
-  background-color: var(--prewhite);
+  background-color: var(--link-hover);
 }
 aside a:focus, aside a.active {
-  background-color: var(--darkwhite);
+  background-color: var(--link-active);
 }
 
 .wall {
@@ -255,7 +261,7 @@ aside a:focus, aside a.active {
   background-color: var(--white);
 }
 .subject input {
-  background-color: var(--gray);
+  background-color: var(--bg-secondary);
   margin-top: 5px;
 }
 .ant-picker-input>input {

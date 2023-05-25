@@ -6,7 +6,7 @@ import { InfoBlock } from '../components/InfoBlock';
 import { NavLink, useOutlet } from 'react-router-dom';
 import { getTable } from '../components/actions/tables';
 import { getUser } from '../components/actions/users';
-import { Login } from '../components/Login';
+import { LoginForm } from '../components/LoginForm';
 import {LightButton} from '../components/UI/Buttons';
 
 

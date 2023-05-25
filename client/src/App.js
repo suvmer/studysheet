@@ -4,7 +4,7 @@ import { Outlet } from "react-router-dom";
 import { SideBar } from "./components/SideBar";
 import { Header } from "./components/Header";
 import { useSelector } from "react-redux";
-import { Login } from "./components/Login";
+import { LoginForm } from "./components/LoginForm";
 
 
 /* near TODO:
@@ -22,7 +22,7 @@ function App() {
   return (
     <>
       <Header/>
-      {loginOpen ? <Login/> : <></>}
+      {loginOpen ? <LoginForm/> : <></>}
       <main>
         <SideBar/>
         <Outlet/>
