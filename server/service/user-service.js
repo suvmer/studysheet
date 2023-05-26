@@ -7,6 +7,13 @@ const tokenService = require('./token-service');
 const ApiError = require('../exceptions/api-error');
 
 class UserService {
+    async getUserDto(id) {
+        const user = await connection.query('SELECT name, email, id, "isActivated", "currentTable", "ownTables" from users WHERE id=$1', [id])
+        if(!user.rowCount)
+            return null;
+        const userDto = user.rows[0];
+        return userDto;
+    }
     async registration(name, email, password, info) {
         //console.log(name, email, password, info)
         //find user with email
@@ -32,10 +39,9 @@ class UserService {
             throw ApiError.BadRequest('Неудачная регистрация');
         
         //const user = await connection.query('SELECT row_to_json(row(name, email, id, "isActivated")) from users WHERE id=$1', [query.rows[0].id])
-        const user = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [query.rows[0].id])
         await mailService.sendActivationMail(email, process.env.API_URL + "/api/activate/" + activationLink, `${name}, спасибо, что выбрали сервис StudySheet!`);
         
-        const userDto = JSON.stringify(user.rows[0]);
+        const userDto = await this.getUserDto(user.rows[0]);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
         return utils.success({...tokens, user: userDto});
@@ -65,8 +71,7 @@ class UserService {
         if(!isPassEquals)
             throw ApiError.BadRequest("Некорректный email или пароль");
         
-        const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
-        const userDto = fetchInfo.rows[0];
+        const userDto = await this.getUserDto(user.id);
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
@@ -88,8 +93,7 @@ class UserService {
         if(!userDate || !tokenFromDb)
             throw ApiError.UnauthorizedError();
         
-        const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
-        const userDto = JSON.stringify(fetchInfo.rows[0]);
+        const userDto = await this.getUserDto(user.id);
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)

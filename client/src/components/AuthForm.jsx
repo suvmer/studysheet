@@ -4,16 +4,25 @@ import { DarkButton, DarkButtonMid, DarkSmallButton, SmallButton } from "./UI/Bu
 import { useDispatch } from "react-redux";
 import { setLogin } from "../store/uiReducer";
 import { useOnClickOutside } from "../utils/ownHooks";
+import { login } from "../store/profileReducer";
+import { sendLogin } from "./actions/users";
 
 export const AuthForm = () => {
-  const [isSignIn, setSignIn] = useState(false);
+  var formData = {"info": []};
+
+  const [isSignIn, setSign] = useState(false);
+  const setSignIn = (value) => {
+    formData = {"info": []}
+    setSign(value);
+  }
+
   const changeEv = event =>
-    handleChange(event.target.name, event.target.value, event.target.parentNode.getAttribute('forer'));
+    handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
   
-  const formData = {"info": []};
-  const handleChange = (name, value, forer) =>
-    forer ? formData[name] = value : formData["info"][name] = value;
-  
+  const handleChange = (name, value, forer) => {
+    forer ? formData["info"][name] = value : formData[name] = value;
+    console.log(forer, formData);
+  }
 
 
   const mount = document.getElementById("portal");
@@ -24,6 +33,11 @@ export const AuthForm = () => {
     return () => mount.removeChild(el);
   }, [el, mount]);
 
+  const dispatch = useDispatch();
+
+  const sendSignIn = () => {
+    dispatch(sendLogin(formData.email, formData.password));
+  }
 
 
   
@@ -36,7 +50,7 @@ export const AuthForm = () => {
       <p>Авторизируйтесь</p>
       <input autoFocus onChange={changeEv} name="email" type="email" placeholder="Почта"/>
       <input onChange={changeEv} name="password" type="password" placeholder="Пароль"/>
-      <DarkButton>Войти</DarkButton>
+      <DarkButton onClick={() => sendSignIn()}>Войти</DarkButton>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>

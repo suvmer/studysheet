@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { fetchUser } from '../../store/profileReducer';
+import { fetchUser, login } from '../../store/profileReducer';
+import AuthService from '../../services/AuthService';
 
 const users =
 [
@@ -19,3 +20,18 @@ export const getUser = (id) => {
       dispatch(fetchUser(response));
   }
 }
+
+
+export const sendLogin = (email, password) => {
+    return async (dispatch, getState) => {
+      if(getState().profile.isLogged)
+        return;
+      const response = await AuthService.login(email, password);
+      console.log(response);
+      localStorage.setItem('token', response.data.accessToken);
+      dispatch(login(response));
+    }
+  }
+  
+  
+  
