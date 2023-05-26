@@ -38,7 +38,7 @@ class UserService {
         const userDto = JSON.stringify(user.rows[0]);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, status: utils.HttpCodes.success, user: userDto};
+        return utils.success({...tokens, user: userDto});
     }
     async activate(activationLink) {
         const users = await connection.query(`SELECT * FROM users WHERE "activationLink" = $1`, [activationLink]);
@@ -51,7 +51,7 @@ class UserService {
         
         //const update = await connection.query(`UPDATE users SET ("isActivated") = (ROW(TRUE)) WHERE id = $1`, [user.id]);
         const update = await connection.query(`UPDATE users SET "isActivated" = TRUE WHERE id = $1`, [user.id]);
-        return {status: utils.HttpCodes.success, message: "Почта успешно подтверждена"};
+        return utils.success({message: "Почта успешно подтверждена"});
     }
     async login(email, password) {
         if(!utils.checkEmail(email))
@@ -70,33 +70,34 @@ class UserService {
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, status: utils.HttpCodes.success, user: userDto};
+        return utils.success({...tokens, user: userDto});
     }
     async logout(refreshToken) {
         const token = await tokenService.removeToken(refreshToken);
         console.log(token);
-        return token;
+        if(!token)
+            throw ApiError.UnauthorizedError();
+        return utils.success({message: "Произошёл выход из аккаунта"});
     }
     async refresh(refreshToken) {
-        if(!refreshToken) {
+        if(!refreshToken)
             throw ApiError.UnauthorizedError();
-        }
+        
         const userDate = tokenService.validateRefreshToken(refreshToken);
         const tokenFromDb = await tokenService.findToken(refreshToken);
-        if(!userDate || !tokenFromDb) {
+        if(!userDate || !tokenFromDb)
             throw ApiError.UnauthorizedError();
-        }
-
+        
         const fetchInfo = await connection.query('SELECT name, email, id, "isActivated" from users WHERE id=$1', [user.id]);
         const userDto = JSON.stringify(fetchInfo.rows[0]);
         const tokens = tokenService.generateTokens({...userDto});
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
-        return {...tokens, status: utils.HttpCodes.success, user: userDto};
+        return utils.success({...tokens, user: userDto});
     }
     async getAllUsers() {
         const users = await connection.query(`SELECT * FROM users`);
-        return users.rows.map(el => ({...el}));
+        return utils.success({users: users.rows.map(el => ({...el}))});
     }
     
 }

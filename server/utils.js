@@ -29,6 +29,9 @@ class utils {
     error(msg) {
         return {status: this.HttpCodes.badRequest, message: msg};
     }
+    success(props) {
+        return {status: this.HttpCodes.success, ...props};
+    }
 }
 
 module.exports = new utils();
