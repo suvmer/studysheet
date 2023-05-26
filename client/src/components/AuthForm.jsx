@@ -8,11 +8,11 @@ import { useOnClickOutside } from "../utils/ownHooks";
 export const AuthForm = () => {
   const [isSignIn, setSignIn] = useState(false);
   const changeEv = event =>
-    handleChange(event.target.name, event.target.value, event.target.parentNode.getAttribute('for'));
+    handleChange(event.target.name, event.target.value, event.target.parentNode.getAttribute('forer'));
   
-  const formData = [];
+  const formData = {"info": []};
   const handleChange = (name, value, forer) =>
-    formData[name] = value;
+    forer ? formData[name] = value : formData["info"][name] = value;
   
 
 
@@ -34,17 +34,17 @@ export const AuthForm = () => {
   return createPortal(<div ref={ref} className="login">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
-      <input onChange={changeEv} name="email" type="email" placeholder="Почта"/>
+      <input autoFocus onChange={changeEv} name="email" type="email" placeholder="Почта"/>
       <input onChange={changeEv} name="password" type="password" placeholder="Пароль"/>
       <DarkButton>Войти</DarkButton>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>
-      <input onChange={changeEv} name="name" type="text" pattern="^[a-zA-Zа-яА-Я_-]{2,20}$" placeholder="Имя"/>
+      <input autoFocus onChange={changeEv} name="name" type="text" pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$" placeholder="Имя"/>
       <input onChange={changeEv} name="email" type="email" placeholder="Почта"/>
       <input onChange={changeEv} name="password" type="password" placeholder="Пароль"/>
-      <input onChange={changeEv} for="info" name="unversity" type="text" placeholder="Вуз(школа)" pattern="^[a-zA-Zа-яА-Я_-]{2,20}$"/>
-      <input onChange={changeEv} for="info" name="city" type="text" placeholder="Город" pattern="^[a-zA-Zа-яА-Я_-]{2,20}$"/>
+      <input onChange={changeEv} forer="info" name="unversity" type="text" placeholder="Вуз(школа)" pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$"/>
+      <input onChange={changeEv} forer="info" name="city" type="text" placeholder="Город" pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$"/>
       <DarkButtonMid>Зарегистрироваться</DarkButtonMid>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(true)}>Авторизация</SmallButton></div>
     </>}

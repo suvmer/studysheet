@@ -7,7 +7,6 @@ export const SETTIME = "SETTIME";
 export const SETLOGIN = "SETLOGIN";
   
 export const uiReducer = (state = defaultState, action) => {
-    console.log(state)
     switch (action.type) {
         case SETTIME:
             return {...state, time: action.payload};
