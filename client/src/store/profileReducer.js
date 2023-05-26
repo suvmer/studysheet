@@ -37,9 +37,9 @@ export const profileReducer = (state = defaultState, action) => {
     case LOGIN:
       if(state.isLogged || !action.payload)
         return state;
-      const response = AuthService.login(action.payload.email, action.payload.password);
-      console.log(response);
-      localStorage.setItem('token', response.data.accessToken);
+      //const response = AuthService.login(action.payload.email, action.payload.password);
+      //console.log(response);
+      //localStorage.setItem('token', response.data.accessToken);
       return state;
     default:
       return state;
