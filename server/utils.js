@@ -25,6 +25,15 @@ class utils {
         if(!email) return false;
         return  (email.length <= 50 && (/^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/.test(email)));
     }
+    checkUniversity(university) {
+        if(!university) return false;
+        return  (/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(university));
+    }
+    checkCity(city) {
+        if(!city) return false;
+        return  (/^[a-zA-Zа-яА-Я _-]{2,20}$/.test(city));
+    }
+
     checkIp(ip) {
         if(!ip) return false;
         return  ((/^([0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)));

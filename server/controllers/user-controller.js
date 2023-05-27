@@ -8,6 +8,11 @@ class UserController {
   async registration(req, res, next) {
     try{
       const {name, email, password, info} = req.body;
+      console.log(req.body)
+      console.log(name)
+      console.log(email)
+      console.log(password)
+      console.log(info)
       const userData = await userService.registration(name, email, password, info);
       if(userData.type == 'error')
         return res.json(userData);

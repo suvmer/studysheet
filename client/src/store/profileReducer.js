@@ -6,15 +6,11 @@ import AuthService from "../services/AuthService";
 */
 const GET_USER = "GET_USER";
 const LOGIN = "LOGIN";
+const LOGOUT = "LOGOUT";
 
 const defaultState = {
   isLogged: false,
-  user: {
-    id: 1,
-    name: "Сергей",
-    currentTable: 1,
-    ownTables: [1]
-  },
+  user: {},
   users: []
 };
 
@@ -40,6 +36,11 @@ export const profileReducer = (state = defaultState, action) => {
       console.log(action.payload)
       localStorage.setItem('token', action.payload.accessToken);
       return {...state, isLogged: true, user: {...action.payload.user, ownTables: action.payload.user.ownTables ?? []}};
+    case LOGOUT:
+      if(state.isLogged)
+        return state;
+      localStorage.removeItem('token');
+      return {...state, isLogged: false, user: {}};
     default:
       return state;
   }
@@ -47,3 +48,4 @@ export const profileReducer = (state = defaultState, action) => {
 
 export const fetchUser = (user) => ({type: GET_USER, payload: user})
 export const login = (user, refreshToken, accessToken) => ({type: LOGIN, payload: {user: user, refreshToken: refreshToken, accessToken: accessToken}})
+export const logout = () => ({type: LOGOUT})

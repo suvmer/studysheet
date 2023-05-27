@@ -15,14 +15,16 @@ export const Header = () => {
     setInterval(() => dispatch(setTime(Date.now())), 1000);
   }, []);
   
+  const isLogged = useSelector(state => state.profile.isLogged);
   
   //const curdate = useSelector(state => state.ui.time); 
-    
   return <header className="header">
     <div className="header_title">
       <Link to="/">Study<mark className="blue bold">SHEET</mark></Link>
     </div>
-    {1 ? <BiLogIn className="header_icon" onClick={() => dispatch(setLogin(true))} /> :
-    <AiOutlineUser className="header_icon" onClick={() => {}} />}
+    {isLogged ?
+      <AiOutlineUser className="header_icon" onClick={() => {}} /> :
+      <BiLogIn className="header_icon" onClick={() => dispatch(setLogin(true))} />
+    }
   </header>;
 }

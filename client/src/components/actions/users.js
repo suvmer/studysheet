@@ -25,13 +25,13 @@ export const getUser = (id) => {
 
 export const sendLogin = (email, password) => {
     return async (dispatch, getState) => {
-        console.log(email, password, getState().profile.isLogged)
-      if(getState().profile.isLogged)
-        return;
-      const response = await AuthService.login(email, password);
-      if(!response.data.user)
-        return;
-      dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
+        //console.log(email, password, getState().profile.isLogged)
+        if(getState().profile.isLogged)
+            return;
+        const response = await AuthService.login(email, password);
+        if(!response.data.user)
+            return;
+        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
   }
 export const sendReg = (name, email, password, info) => {
@@ -39,12 +39,21 @@ export const sendReg = (name, email, password, info) => {
         if(getState().profile.isLogged)
             return;
         console.log(name, email, password, info);
-        /*    const response = await AuthService.login(email, password);
+        const response = await AuthService.register(name, email, password, info);
         if(!response.data.user)
-        return;
-        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));*/
+            return;
+        alert(`На вашу почту ${email} отправлено письмо для подтверждения аккаунта`)
+        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
 }
+export const logout = () => {
+    return async (dispatch, getState) => {
+        if(!getState().profile.isLogged)
+            return;
+        await AuthService.logout();
+        dispatch(logout());
+    }
+  }
   
   
   export const getCity = () => {

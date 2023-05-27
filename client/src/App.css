@@ -19,6 +19,7 @@ a, p {
   --bg-default-inverse: rgba(37, 36, 39, 1);
   --text-primary: rgba(0, 32, 51, 1);
   --text-primary-inverse: rgba(251, 251, 251, 1);
+  --text-error: rgba(255, 0, 0, 1);
   --link-hover: rgba(240, 240, 240, 1);
   --link-active: rgba(220, 220, 220, 1);
 
@@ -93,6 +94,9 @@ body {
   flex-direction: column;
   gap: 15px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+}
+.login_error {
+  color: var(--text-error);
 }
 .login_regbtn {
   display: inline;

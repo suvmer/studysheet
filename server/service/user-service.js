@@ -8,22 +8,34 @@ const ApiError = require('../exceptions/api-error');
 
 class UserService {
     async getUserDto(id) {
-        const user = await connection.query('SELECT name, email, id, "isActivated", "currentTable", "ownTables" from users WHERE id=$1', [id])
+        const user = await connection.query('SELECT name, email, id, "isActivated", "currentTable", "ownTables", regtime, info from users WHERE id=$1', [id])
         if(!user.rowCount)
             return null;
         const userDto = user.rows[0];
         return userDto;
     }
+/**
+ * @param {String} name
+ */
     async registration(name, email, password, info) {
-        //console.log(name, email, password, info)
         //find user with email
         //if found throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
         
+        if(!info || !info.university || !info.city)
+            throw ApiError.BadRequest("Неполные данные");
         if(!utils.checkName(name))
             throw ApiError.BadRequest("Некорректное имя");
         if(!utils.checkEmail(email))
             throw ApiError.BadRequest("Некорректная почта");
-
+        if(!utils.checkUniversity(info.university))
+            throw ApiError.BadRequest("Некорректный вуз");
+        if(!utils.checkCity(info.city))
+            throw ApiError.BadRequest("Некорректный город");
+        
+        name = name.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
+        info.university = info.university.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
+        info.city = info.city.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
+        console.log(name, email, info.university, info.city)
         /*const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
         if(res.rowCount > 0) {
             console.log(`Email ${email} is already exists `);
@@ -41,7 +53,7 @@ class UserService {
         //const user = await connection.query('SELECT row_to_json(row(name, email, id, "isActivated")) from users WHERE id=$1', [query.rows[0].id])
         await mailService.sendActivationMail(email, process.env.API_URL + "/api/activate/" + activationLink, `${name}, спасибо, что выбрали сервис StudySheet!`);
         
-        const userDto = await this.getUserDto(user.rows[0]);
+        const userDto = await this.getUserDto(query.rows[0].id);
         const tokens = tokenService.generateTokens({...userDto});
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
         return utils.success({...tokens, user: userDto});

@@ -33,21 +33,25 @@ export const dateToString = (stamp, nosecs = false) => {
 */
 export const checkName = (name) => {
   if(!name) return false;
-  return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_\-]{2,20}( [a-zA-Zа-яА-Я_\-]{2,20})?$/.test(name)));
+  return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_-]{2,20}( [a-zA-Zа-яА-Я_-]{2,20})?$/.test(name)));
 }
 export const checkEmail = (email) => {
   if(!email) return false;
-  return  (email.length <= 50 && (/^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/.test(email)));
+  return  (email.length <= 50 && (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)));
 }
 export const checkUniversity = (university) => {
   if(!university) return false;
   return  (/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(university));
 }
+export const checkCity = (city) => {
+  if(!city) return false;
+  return  (/^[a-zA-Zа-яА-Я _-]{2,20}$/.test(city));
+}
 
 export const validateLoginData = (formData) => {
   if(!formData || !formData.email || !formData.password)
     return false;
-  if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)))
+  if(!(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)))
     return false;
   return true;
 }
@@ -60,7 +64,7 @@ export const validateRegData = (formData) => {
     return false;
   if(!checkUniversity(formData.info.university))
     return false;
-  if(!(/^[a-zA-Zа-яА-Я _\-]{2,20}$/.test(formData.info.city)))
+  if(!checkCity(formData.info.city))
     return false;
   return true;
 }
