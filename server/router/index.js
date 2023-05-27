@@ -10,6 +10,7 @@ router.get('/activate/:link', UserController.activate);
 router.post('/refresh', UserController.refresh);
 router.get('/users', authMiddleWare, UserController.getUsers);
 router.post('/getcity', UserController.getCity);
+router.get('/getcity', UserController.getCity);
 
 
 module.exports = router;

@@ -37,5 +37,11 @@ export const sendLogin = (email, password) => {
   
   
   export const getCity = () => {
-    return async (dispatch) => await UtilsService.getCity();
+    try {
+        return async (dispatch) => await UtilsService.getCity();
+    } catch(e) {
+        alert(e);
+        //const newch = Object.assign(document.createElement("div"), {innerHTML: `${e}`});
+        //document.getElementById("ddd").appendChild(newch);
+    }
   }

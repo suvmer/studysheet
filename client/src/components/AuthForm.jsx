@@ -39,7 +39,7 @@ export const AuthForm = () => {
     dispatch(sendLogin(formData.email, formData.password));
   }
 
-  dispatch(getCity());
+  console.log(dispatch(getCity()));
 
   
 
