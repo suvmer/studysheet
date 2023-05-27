@@ -25,6 +25,7 @@ export const getUser = (id) => {
 
 export const sendLogin = (email, password) => {
     return async (dispatch, getState) => {
+        console.log(email, password, getState().profile.isLogged)
       if(getState().profile.isLogged)
         return;
       const response = await AuthService.login(email, password);
@@ -33,14 +34,15 @@ export const sendLogin = (email, password) => {
       dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
   }
-export const sendReg = (email, password, info) => {
+export const sendReg = (name, email, password, info) => {
     return async (dispatch, getState) => {
         if(getState().profile.isLogged)
             return;
-        const response = await AuthService.login(email, password);
+        console.log(name, email, password, info);
+        /*    const response = await AuthService.login(email, password);
         if(!response.data.user)
         return;
-        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
+        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));*/
     }
 }
   

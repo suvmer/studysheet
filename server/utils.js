@@ -18,12 +18,12 @@ class utils {
     
     checkName(name) {
         if(!name) return false;
-        return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_-]{2,20} [a-zA-Zа-яА-Я_-]{2,20}$/.test(name)));
+        return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_\-]{2,20}( [a-zA-Zа-яА-Я_\-]{2,20})?$/.test(name)));
     }
     
     checkEmail(email) {
         if(!email) return false;
-        return  (email.length <= 50 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)));
+        return  (email.length <= 50 && (/^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/.test(email)));
     }
     checkIp(ip) {
         if(!ip) return false;

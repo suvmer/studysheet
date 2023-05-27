@@ -6,22 +6,22 @@ import { InfoBlock } from '../components/InfoBlock';
 import { AuthForm } from '../components/AuthForm';
 
 export const AccountPage = () => {
-    const curdate = useSelector(state => state.ui.time);
     const isLogged = useSelector(state => state.profile.isLogged);
+    const user = useSelector(state => state.profile.user);
     
     return <div className="wall">
             <div className="midbox">
                 <mark className="big">Ваш аккаунт</mark>
             </div>
-            {!isLogged ? <AuthForm/> : <div>Не авторизованы</div>}
-            <div className="event">
-                 <InfoBlock text="">Мугомус</InfoBlock>
+            {!isLogged ? <AuthForm/> : <div className="event">
+                 <InfoBlock text="">{user.name}</InfoBlock>
 
-                <div className="eventTitle">Дата регистрации: 20.04.2023 00:23</div>
+                <div className="eventTitle">Дата регистрации: {dateToString(user.regtime).join(" ")}</div>
                 <br/>
                 
-                <InfoBlock text="Расписаний:">5</InfoBlock>
+                <InfoBlock text="Расписаний:">{user.ownTables.Length}</InfoBlock>
                 <InfoBlock text="Ближайшее событие:">00:05:00</InfoBlock>
-            </div>
+            </div>}
+            
         </div>;
 }
