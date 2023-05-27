@@ -6,13 +6,14 @@ import { setLogin } from "../store/uiReducer";
 import { useOnClickOutside } from "../utils/ownHooks";
 import { login } from "../store/profileReducer";
 import { getCity, sendLogin } from "./actions/users";
+import { validateLoginData } from "../utils/utils";
 
 export const AuthForm = () => {
-  var formData = {"info": []};
+  var formData = {"info": {}};
 
   const [isSignIn, setSign] = useState(false);
   const setSignIn = (value) => {
-    formData = {"info": []}
+    formData = {"info": {}}
     setSign(value);
   }
 
@@ -36,30 +37,83 @@ export const AuthForm = () => {
   const dispatch = useDispatch();
 
   const sendSignIn = () => {
-    dispatch(sendLogin(formData.email, formData.password));
+    if(validateLoginData(formData))
+      dispatch(sendLogin(formData.email, formData.password));
   }
 
-  console.log(dispatch(getCity()));
-
-  
 
   const ref = useRef(null);
   useOnClickOutside(ref, setLogin, ["ui", "loginOpen"]);
 
-  return createPortal(<form ref={ref} className="login">
+  return createPortal(<form onSubmit={(e) => e.preventDefault()} ref={ref} className="login">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
-      <input required autoFocus onChange={changeEv} name="email" type="email" title="Пример: amogus@mail.ru" placeholder="Почта"/>
-      <input required onChange={changeEv} name="password" type="password" placeholder="Пароль"/>
+      <input
+        placeholder="Почта"
+        autoFocus
+        onChange={changeEv} 
+        name="email" 
+        type="email" 
+        title="Пример: amogus@mail.ru" 
+        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+        required />
+      <input 
+        placeholder="Пароль"
+        onChange={changeEv}
+        name="password"
+        type="password"
+        required/>
       <DarkButton type="submit" onClick={() => sendSignIn()}>Войти</DarkButton>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>
-      <input required autoFocus onChange={changeEv} name="name" type="text" title="Имя одним словом от 2 до 20 символов" pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$" placeholder="Имя"/>
-      <input required onChange={changeEv} name="email" type="email" title="Пример: amogus@mail.ru" placeholder="Почта"/>
-      <input required onChange={changeEv} name="password" type="password" placeholder="Пароль"/>
-      <input required onChange={changeEv} forer="info" name="unversity" type="text" title="Название вуза от 2 до 20 символов" placeholder="Вуз(школа)" pattern="^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$"/>
-      <input required onChange={changeEv} forer="info" name="city" type="text" title="Название города от 2 до 20 символов" placeholder="Город" pattern="^[a-zA-Zа-яА-Я _\-]{2,20}$"/>
+      <input
+        placeholder="Имя"
+        autoFocus
+        onChange={changeEv}
+        name="name"
+        type="text"
+        minLength={2}
+        maxLength={20}
+        title="Имя одним словом от 2 до 20 символов"
+        pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$"
+        required/>
+      <input
+        placeholder="Почта"
+        onChange={changeEv} 
+        name="email" 
+        type="email" 
+        title="Пример: amogus@mail.ru" 
+        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+        required/>
+      <input  
+        placeholder="Пароль"
+        onChange={changeEv} 
+        name="password" 
+        type="password" 
+        required/>
+      <input 
+        placeholder="Вуз(школа)" 
+        onChange={changeEv} 
+        forer="info" 
+        name="unversity" 
+        type="text" 
+        minLength={2}
+        maxLength={20}
+        title="Название вуза от 2 до 20 символов" 
+        pattern="^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$"
+        required/>
+      <input 
+        placeholder="Город" 
+        title="Название города от 2 до 20 символов" 
+        onChange={changeEv} 
+        forer="info" 
+        name="city" 
+        type="text" 
+        minLength={2}
+        maxLength={20}
+        pattern="^[a-zA-Zа-яА-Я _\-]{2,20}$"
+        required/>
       <DarkButton type="submit">Зарегистрироваться</DarkButton>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(true)}>Авторизация</SmallButton></div>
     </>}

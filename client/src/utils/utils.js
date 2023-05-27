@@ -20,6 +20,35 @@ export const dateToString = (stamp, nosecs = false) => {
       .toWidth(2)}`}`,
   ];
 };
+/*
+{
+    "info": {
+        "unversity": "Вуз",  ^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$
+        "city": ""  ^[a-zA-Zа-яА-Я _\-]{2,20}$
+    },
+    "name": "fa",  ^[a-zA-Zа-яА-Я_\-]{2,20}$
+    "email": "fda", ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
+    "password": "fda"
+}
+*/
+export const validateLoginData = (formData) => {
+  if(!formData || !formData.email || !formData.password)
+    return false;
+  if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)))
+    return false;
+  return true;
+}
+export const validateRegData = (formData) => {
+  if(!formData || !formData.email || !formData.password || !formData.info || !formData.info.university || !formData.info.city)
+    return false;
+  if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)))
+    return false;
+  if(!(/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(formData.info.university)))
+    return false;
+  if(!(/^[a-zA-Zа-яА-Я _\-]{2,20}$/.test(formData.info.city)))
+    return false;
+  return true;
+}
 
 export const msToWords = (ms) => {
     if(ms < 1000)
