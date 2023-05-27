@@ -28,12 +28,21 @@ export const sendLogin = (email, password) => {
       if(getState().profile.isLogged)
         return;
       const response = await AuthService.login(email, password);
-      console.log(response);
       if(!response.data.user)
         return;
-      dispatch(login(response.data.user, response.refreshToken, response.accessToken));
+      dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
   }
+export const sendReg = (email, password, info) => {
+    return async (dispatch, getState) => {
+        if(getState().profile.isLogged)
+            return;
+        const response = await AuthService.login(email, password);
+        if(!response.data.user)
+        return;
+        dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
+    }
+}
   
   
   export const getCity = () => {

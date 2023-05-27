@@ -33,7 +33,7 @@ class UserService {
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4(); //v34fa-asfasf-142saf-sa-asf
         
-        const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1])
+        const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable", regtime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1, Date.now()])
         
         if(query.rowCount == 0)
             throw ApiError.BadRequest('Неудачная регистрация');

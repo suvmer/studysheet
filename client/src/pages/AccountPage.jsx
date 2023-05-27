@@ -3,13 +3,17 @@ import { dateToString } from '../utils/utils';
 import { useSelector } from 'react-redux';
 import { Event } from '../components/Event';
 import { InfoBlock } from '../components/InfoBlock';
+import { AuthForm } from '../components/AuthForm';
 
 export const AccountPage = () => {
     const curdate = useSelector(state => state.ui.time);
+    const isLogged = useSelector(state => state.profile.isLogged);
+    
     return <div className="wall">
             <div className="midbox">
                 <mark className="big">Ваш аккаунт</mark>
             </div>
+            {!isLogged ? <AuthForm/> : <div>Не авторизованы</div>}
             <div className="event">
                  <InfoBlock text="">Мугомус</InfoBlock>
 

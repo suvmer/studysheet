@@ -5,6 +5,7 @@ import { SideBar } from "./components/SideBar";
 import { Header } from "./components/Header";
 import { useSelector } from "react-redux";
 import { AuthForm } from "./components/AuthForm";
+import { Portal } from "./components/Portal";
 
 
 /* near TODO:
@@ -22,7 +23,7 @@ function App() {
   return (
     <>
       <Header/>
-      {loginOpen ? <AuthForm/> : <></>}
+      {loginOpen ? <Portal><AuthForm/></Portal> : <></>}
       <main>
         <SideBar/>
         <Outlet/>

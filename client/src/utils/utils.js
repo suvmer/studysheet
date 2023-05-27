@@ -31,6 +31,15 @@ export const dateToString = (stamp, nosecs = false) => {
     "password": "fda"
 }
 */
+export const checkEmail = (email) => {
+  if(!email) return false;
+  return  (email.length <= 50 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)));
+}
+export const checkUniversity = (university) => {
+  if(!university) return false;
+  return  (/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(university));
+}
+
 export const validateLoginData = (formData) => {
   if(!formData || !formData.email || !formData.password)
     return false;
@@ -41,9 +50,9 @@ export const validateLoginData = (formData) => {
 export const validateRegData = (formData) => {
   if(!formData || !formData.email || !formData.password || !formData.info || !formData.info.university || !formData.info.city)
     return false;
-  if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email)))
+  if(!checkEmail(formData.email))
     return false;
-  if(!(/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(formData.info.university)))
+  if(!checkUniversity(formData.info.university))
     return false;
   if(!(/^[a-zA-Zа-яА-Я _\-]{2,20}$/.test(formData.info.city)))
     return false;

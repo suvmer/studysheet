@@ -26,26 +26,12 @@ export const AuthForm = () => {
   }
 
 
-  const mount = document.getElementById("portal");
-  const el = document.createElement("div");
-
-  useEffect(() => {
-    mount.appendChild(el);
-    return () => mount.removeChild(el);
-  }, [el, mount]);
-
   const dispatch = useDispatch();
-
   const sendSignIn = () => {
     if(validateLoginData(formData))
       dispatch(sendLogin(formData.email, formData.password));
   }
-
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, setLogin, ["ui", "loginOpen"]);
-
-  return createPortal(<form onSubmit={(e) => e.preventDefault()} ref={ref} className="login">
+  return <form onSubmit={(e) => e.preventDefault()} className="login">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
       <input
@@ -117,5 +103,5 @@ export const AuthForm = () => {
       <DarkButton type="submit">Зарегистрироваться</DarkButton>
       <div className="login_regbtn"><SmallButton onClick={() => setSignIn(true)}>Авторизация</SmallButton></div>
     </>}
-  </form>, el);
+  </form>;
 };
