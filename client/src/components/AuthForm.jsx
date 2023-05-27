@@ -1,21 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import React, { useState } from "react";
 import { DarkButton, DarkButtonMid, DarkSmallButton, SmallButton } from "./UI/Buttons";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../store/uiReducer";
-import { useOnClickOutside } from "../utils/ownHooks";
-import { login } from "../store/profileReducer";
-import { getCity, sendLogin } from "./actions/users";
-import { validateLoginData } from "../utils/utils";
+import { getCity, sendLogin, sendReg } from "./actions/users";
+import { validateLoginData, validateRegData } from "../utils/utils";
 
 export const AuthForm = () => {
   var formData = {"info": {}};
 
   const [isSignIn, setSign] = useState(false);
-  const setSignIn = (value) => {
-    formData = {"info": {}}
-    setSign(value);
-  }
 
   const changeEv = event =>
     handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
@@ -31,6 +23,11 @@ export const AuthForm = () => {
     if(validateLoginData(formData))
       dispatch(sendLogin(formData.email, formData.password));
   }
+  const sendSignUp = () => {
+    if(validateRegData(formData))
+      dispatch(sendReg(...Object.values(formData)));
+  }
+
   return <form onSubmit={(e) => e.preventDefault()} className="login">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
@@ -41,7 +38,7 @@ export const AuthForm = () => {
         name="email" 
         type="email" 
         title="Пример: amogus@mail.ru" 
-        pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+        pattern="^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$"
         required />
       <input 
         placeholder="Пароль"
@@ -50,18 +47,18 @@ export const AuthForm = () => {
         type="password"
         required/>
       <DarkButton type="submit" onClick={() => sendSignIn()}>Войти</DarkButton>
-      <div className="login_regbtn"><SmallButton onClick={() => setSignIn(false)}>Регистрация</SmallButton></div>
+      <div className="login_regbtn"><SmallButton onClick={() => setSign(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>
       <input
-        placeholder="Имя"
+        placeholder="Имя(Фамилия)"
         autoFocus
         onChange={changeEv}
         name="name"
         type="text"
         minLength={2}
         maxLength={20}
-        title="Имя одним словом от 2 до 20 символов"
+        title="Иван или Иван Попов"
         pattern="^[a-zA-Zа-яА-Я_\-]{2,20}$"
         required/>
       <input
@@ -101,7 +98,7 @@ export const AuthForm = () => {
         pattern="^[a-zA-Zа-яА-Я _\-]{2,20}$"
         required/>
       <DarkButton type="submit">Зарегистрироваться</DarkButton>
-      <div className="login_regbtn"><SmallButton onClick={() => setSignIn(true)}>Авторизация</SmallButton></div>
+      <div className="login_regbtn"><SmallButton onClick={() => setSign(true)}>Авторизация</SmallButton></div>
     </>}
   </form>;
 };
