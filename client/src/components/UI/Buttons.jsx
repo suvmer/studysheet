@@ -1,15 +1,12 @@
-export const LightButton = ({onClick, children}) => {
-    return <div onClick={onClick} className="btn">{children}</div>
+export const LightButton = ({type, onClick, children}) => {
+    return <button type={type} onClick={onClick} className="btn">{children}</button>
 }
-export const DarkButton = ({onClick, children}) => {
-    return <div onClick={onClick} className="btn btn_dark">{children}</div>
+export const DarkButton = ({type, onClick, children}) => {
+    return <button type={type} onClick={onClick} className="btn btn_dark">{children}</button>
 }
-export const DarkButtonMid = ({onClick, children}) => {
-    return <div onClick={onClick} className="btn btn_dark btn_mid">{children}</div>
+export const DarkSmallButton = ({type, onClick, children}) => {
+    return <button type={type} onClick={onClick} className="btn btn_dark btn_small">{children}</button>
 }
-export const DarkSmallButton = ({onClick, children}) => {
-    return <div onClick={onClick} className="btn btn_dark btn_small">{children}</div>
-}
-export const SmallButton = ({onClick, children}) => {
-    return <div onClick={onClick} className="btn btn_small btn_transparent">{children}</div>
+export const SmallButton = ({type, onClick, children}) => {
+    return <button type={type} onClick={onClick} className="btn btn_small btn_transparent">{children}</button>
 }

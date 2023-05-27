@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { fetchUser, login } from '../../store/profileReducer';
 import AuthService from '../../services/AuthService';
+import UtilsService from '../../services/UtilsService';
 
 const users =
 [
@@ -36,5 +37,5 @@ export const sendLogin = (email, password) => {
   
   
   export const getCity = () => {
-    //https://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU
+    return async (dispatch) => await UtilsService.getCity();
   }

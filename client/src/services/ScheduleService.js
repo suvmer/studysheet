@@ -5,4 +5,3 @@ export default class ScheduleService {
         return api.get('/users');
     }
 }
-response.data

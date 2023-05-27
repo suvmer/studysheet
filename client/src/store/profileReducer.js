@@ -37,9 +37,7 @@ export const profileReducer = (state = defaultState, action) => {
     case LOGIN:
       if(state.isLogged || !action.payload)
         return state;
-      //const response = AuthService.login(action.payload.email, action.payload.password);
-      //console.log(response);
-      //localStorage.setItem('token', response.data.accessToken);
+      localStorage.setItem('token', action.payload.accessToken);
       return state;
     default:
       return state;
@@ -47,4 +45,4 @@ export const profileReducer = (state = defaultState, action) => {
 };
 
 export const fetchUser = (user) => ({type: GET_USER, payload: user})
-export const login = (email, password) => ({type: LOGIN, payload: {email: email, password: password}})
+export const login = (user, refreshToken, accessToken) => ({type: LOGIN, payload: {user: user, refreshToken: refreshToken, accessToken: accessToken}})

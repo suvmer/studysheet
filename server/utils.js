@@ -25,6 +25,10 @@ class utils {
         if(!email) return false;
         return  (email.length <= 50 && (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)));
     }
+    checkIp(ip) {
+        if(!ip) return false;
+        return  ((/^([0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)));
+    }
 
     error(msg) {
         return {status: this.HttpCodes.badRequest, message: msg};

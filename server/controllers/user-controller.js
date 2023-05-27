@@ -1,4 +1,7 @@
+const fetch = require('node-fetch');
 const userService = require('../service/user-service');
+const utils = require('../utils');
+const ApiError = require('../exceptions/api-error');
 
 
 class UserController {
@@ -58,6 +61,21 @@ class UserController {
       next(e);
     }
 
+  }
+  async getCity(req, res, next) {
+    try {
+      const ip = req.body.ip;
+      if(!utils.checkIp(ip))
+        throw ApiError.BadRequest("Некорректный ip");
+
+      let response = await fetch(`https://2domains.ru/api/web-tools/geoip?ip=${ip}`);
+      let forcity = await response.json();
+      if(!forcity || !forcity['city'])
+        throw Error("Невозможно определить город");
+      return res.status(200).json({status: utils.HttpCodes.success, city: forcity['city']});
+    } catch(e) {
+      next(e);
+    }
   }
   /*async getUsers(req, res) {
       try {

@@ -3,7 +3,7 @@ import axios from "axios";
 export const API_URL = 'http://localhost:5000/api';
 
 const api = axios.create({
-    withCredentials: true, //auto cookie attachment
+    withCredentials: false, //auto cookie attachment
     baseURL: API_URL
 });
 

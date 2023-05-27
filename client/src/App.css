@@ -112,6 +112,8 @@ body {
   background-color: var(--bg-default);
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
   cursor: pointer;
+  color: var(--text-primary);
+  border: none;
 }
 .btn:hover {
   background-color: var(--link-hover);
