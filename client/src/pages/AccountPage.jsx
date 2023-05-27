@@ -1,19 +1,20 @@
 import React from 'react'
 import { dateToString } from '../utils/utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../components/Event';
 import { InfoBlock } from '../components/InfoBlock';
 import { AuthForm } from '../components/AuthForm';
 import { LightButton } from '../components/UI/Buttons';
+import { logout } from '../components/actions/users';
 
 export const AccountPage = () => {
     const isLogged = useSelector(state => state.profile.isLogged);
     const user = useSelector(state => state.profile.user);
-    
+    const dispatch = useDispatch();
     return <div className="wall">
         <div className="box_nobg box_nobg_header box_nobg_big">
             <p>Ваш аккаунт</p>
-            <LightButton onClick={() => {}}>Выйти</LightButton>
+            {isLogged ? <LightButton onClick={() => dispatch(logout())}>Выйти</LightButton> : ""}
         </div>
         {!isLogged ? <AuthForm/> : <div className="event">
                 <InfoBlock text="">{user.name}</InfoBlock>

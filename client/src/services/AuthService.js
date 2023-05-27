@@ -1,4 +1,7 @@
+import axios from "axios";
 import api from "../http";
+
+axios.defaults.withCredentials = true;
 
 export default class AuthService {
     static async login(email, password) {

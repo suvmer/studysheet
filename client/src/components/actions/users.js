@@ -1,7 +1,8 @@
-import axios from 'axios';
-import { fetchUser, login } from '../../store/profileReducer';
+import { fetchUser, login, logoutAct } from '../../store/profileReducer';
 import AuthService from '../../services/AuthService';
 import UtilsService from '../../services/UtilsService';
+import axios from 'axios';
+import { API_URL } from '../../http';
 
 const users =
 [
@@ -29,6 +30,7 @@ export const sendLogin = (email, password) => {
         if(getState().profile.isLogged)
             return;
         const response = await AuthService.login(email, password);
+        
         if(!response.data.user)
             return;
         dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
@@ -48,10 +50,31 @@ export const sendReg = (name, email, password, info) => {
 }
 export const logout = () => {
     return async (dispatch, getState) => {
-        if(!getState().profile.isLogged)
-            return;
-        await AuthService.logout();
-        dispatch(logout());
+        try {
+            if(!getState().profile.isLogged)
+                return;
+            await AuthService.logout();
+            dispatch(logoutAct());
+        } catch(e) {
+            alert(e.response?.data?.message)
+        }
+    }
+  }
+
+  export const checkAuth = () => {
+    return async (dispatch, getState) => {
+        try {
+            console.log(document.cookie);
+            const response = await axios.get(`${API_URL}/refresh`, {withCredentials: true})
+            //const response = await axios({withCredentials: true}).get(`${API_URL}/refresh`)
+            console.log("refresh: ", response)
+
+            if(!response.data.user)
+                return;
+            dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
+        } catch(e) {
+            alert(e.response?.data?.message)
+        }
     }
   }
   

@@ -8,11 +8,6 @@ class UserController {
   async registration(req, res, next) {
     try{
       const {name, email, password, info} = req.body;
-      console.log(req.body)
-      console.log(name)
-      console.log(email)
-      console.log(password)
-      console.log(info)
       const userData = await userService.registration(name, email, password, info);
       if(userData.type == 'error')
         return res.json(userData);
@@ -29,7 +24,7 @@ class UserController {
       console.log("||", email, password, "||");
 
       const userData = await userService.login(email, password);
-      //console.log(userData);
+      console.log("adding to cookie ", userData.refreshToken);
       res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true});
       return res.json(userData);
     } catch(e) {
@@ -39,6 +34,7 @@ class UserController {
   async logout(req, res, next) {
     try{
       const {refreshToken} = req.cookies;
+      console.log("AAAAAAAA")
       const token = await userService.logout(refreshToken);
       res.clearCookie('refreshToken');
       return res.status(token.status).json(token);
@@ -59,6 +55,12 @@ class UserController {
   async refresh(req, res, next) {
     try{
       const {refreshToken} = req.cookies;
+      console.log(req.cookies)
+      if(!refreshToken) {
+        console.log("returning nope")
+        return res.status(500).json({message: "nope"});
+      }
+      //  throw ApiError.UnauthorizedError();
       const userData = await userService.refresh(refreshToken);
       res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true});
       return res.status(userData.status).json(userData);

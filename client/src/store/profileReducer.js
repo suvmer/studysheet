@@ -37,7 +37,7 @@ export const profileReducer = (state = defaultState, action) => {
       localStorage.setItem('token', action.payload.accessToken);
       return {...state, isLogged: true, user: {...action.payload.user, ownTables: action.payload.user.ownTables ?? []}};
     case LOGOUT:
-      if(state.isLogged)
+      if(!state.isLogged)
         return state;
       localStorage.removeItem('token');
       return {...state, isLogged: false, user: {}};
@@ -48,4 +48,4 @@ export const profileReducer = (state = defaultState, action) => {
 
 export const fetchUser = (user) => ({type: GET_USER, payload: user})
 export const login = (user, refreshToken, accessToken) => ({type: LOGIN, payload: {user: user, refreshToken: refreshToken, accessToken: accessToken}})
-export const logout = () => ({type: LOGOUT})
+export const logoutAct = () => ({type: LOGOUT})

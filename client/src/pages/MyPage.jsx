@@ -28,7 +28,7 @@ const TableBar = ({table, creator, current}) => {
 
 export const MyPage = () => {
     const dispatch = useDispatch();
-    const tables = useSelector(state => state.profile.user.ownTables);
+    const tables = useSelector(state => state.profile.user.ownTables) ?? [];
     const users = useSelector(state => state.profile.users);
     const current = useSelector(state => state.profile.currentTable);
     const schedules = useSelector(state => state.table.schedules);
