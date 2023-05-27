@@ -64,10 +64,7 @@ class UserController {
   }
   async getCity(req, res, next) {
     try {
-      const ip = req.body.ip;
-      if(!utils.checkIp(ip))
-        throw ApiError.BadRequest("Некорректный ip");
-
+      const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
       let response = await fetch(`https://2domains.ru/api/web-tools/geoip?ip=${ip}`);
       let forcity = await response.json();
       if(!forcity || !forcity['city'])
