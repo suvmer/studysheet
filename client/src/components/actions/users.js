@@ -28,10 +28,13 @@ export const sendLogin = (email, password) => {
         return;
       const response = await AuthService.login(email, password);
       console.log(response);
-      localStorage.setItem('token', response.data.accessToken);
-      dispatch(login(response));
+      if(!response.data.user)
+        return;
+      dispatch(login(response.data.user, response.refreshToken, response.accessToken));
     }
   }
   
   
-  
+  export const getCity = () => {
+    //https://api-maps.yandex.ru/2.0-stable/?load=package.standard&lang=ru-RU
+  }
