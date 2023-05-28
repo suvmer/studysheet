@@ -66,10 +66,10 @@ export const CreateTable = () => {
       return;
     if(!up && idFor == table[idChange].length-1)
       return;
-    if(up)
-      [table[idChange][idFor], table[idChange][idFor-1]] = [table[idChange][idFor-1], table[idChange][idFor]];
-    else
-      [table[idChange][idFor], table[idChange][idFor+1]] = [table[idChange][idFor+1], table[idChange][idFor]];
+    var newid = up ? (idFor - 1) : (idFor + 1);
+    [table[idChange][idFor], table[idChange][newid]] = [table[idChange][newid], table[idChange][idFor]];
+    [table[idChange][idFor].start, table[idChange][newid].start] = [table[idChange][newid].start, table[idChange][idFor].start];
+    [table[idChange][idFor].end, table[idChange][newid].end] = [table[idChange][newid].end, table[idChange][idFor].end];
     setTable(table);
     forceUpdate();
   }
