@@ -34,7 +34,7 @@ export const MainPage = () => {
   const isLogged = useSelector(state => state.profile.isLogged);
   useEffect(() => {
     if(isLogged)
-      user.ownTables.forEach(id => dispatch(getTable(id)));
+      (user.ownTables??[]).forEach(id => dispatch(getTable(id)));
   }, []);
   const schedules = useSelector(state => state.table.schedules);
   if(!isLogged)
@@ -42,7 +42,7 @@ export const MainPage = () => {
 
   var table = schedules.find(el => el.id == user.currentTable);
   if(table == undefined) {
-    if(user.ownTables.length == 0)
+    if((user.ownTables??[]).length == 0)
       return <AddSomeSchedule/>
     table = user.ownTables[0];
   }
@@ -50,7 +50,7 @@ export const MainPage = () => {
   const dayWeek = 0;//(new Date()).getDay();
   console.log(schedules, dayWeek);
   const today = dayjs().hour(10).minute(10);
-  const tables = schedules.filter(el => (user.ownTables.find(id => (id == el.id)) != undefined)).map(element => {
+  const tables = schedules.filter(el => ((user.ownTables??[]).find(id => (id == el.id)) != undefined)).map(element => {
     /*var closest = element.tables[dayWeek].reduce(function(prev, curr) {
       return (getDif(curr.start, today) < getDifSign(prev.start, today) ? curr : prev);
     });*/

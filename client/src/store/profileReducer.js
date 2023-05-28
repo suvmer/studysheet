@@ -35,7 +35,7 @@ export const profileReducer = (state = defaultState, action) => {
         return state;
       console.log(action.payload)
       localStorage.setItem('token', action.payload.accessToken);
-      return {...state, isLogged: true, user: {...action.payload.user, ownTables: action.payload.user.ownTables ?? []}};
+      return {...state, isLogged: true, user: {...action.payload.user, info: JSON.parse(action.payload.user.info)}};
     case LOGOUT:
       if(!state.isLogged)
         return state;
