@@ -10,9 +10,9 @@ import {FiTrash2, FiRefreshCcw} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
 
 
+var globid = 0;
 
 export const CreateTable = () => {
-
   const defs = useSelector(state => state.table.defs[0]);
   const getDefaultSchedule = (ind) => {
     return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
@@ -24,17 +24,18 @@ export const CreateTable = () => {
     name: "",
     cabinet: "",
     teacher: "",
+    id: globid++,
     place: "7 корпус(Союзная 144)" });
 
   const [tabler, setTable] = useState([
     //...Array(7).fill([getField()]) //no new instances
-    ...Array(7).fill().map((el, ind) => [{...getField(), id: ind}]) //new instances
+    ...Array(7).fill().map((el, ind) => [getField()]) //new instances
   ]);
   const table = tabler;
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
-    table[index] = [...table[index], {...getField(table[index].length), id: table[index].length}];
+    table[index] = [...table[index], getField(table[index].length)];
     setTable(table);
     forceUpdate();
     console.log(tabler)
@@ -51,6 +52,15 @@ export const CreateTable = () => {
     console.log({...table[idChange]})
     //for(var i = 0; i < table[idChange].length - 1; i++)
     //  table[idChange][i] = table[idChange][i+1];
+    table[idChange] = table[idChange].filter((e, i) => (i != idFor));
+    console.log({...table[idChange]})
+    console.log(idChange, idFor)
+    setTable(table);
+    forceUpdate();
+  }
+  const moveSubject = (idChange, idFor, up) => {
+    //if(up)
+    
     table[idChange] = table[idChange].filter((e, i) => (i != idFor));
     console.log({...table[idChange]})
     console.log(idChange, idFor)
