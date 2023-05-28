@@ -49,7 +49,7 @@ export const ShowTable = ({table}) => {
   return (<>
         {tabler.map((elem, index) => {
           return (
-            <div key={`mup${index}`} className="mup">
+            <div key={`mup${index}`} className="showsubject">
               <mark className="big center">{days[index]}</mark>
               {elem.map((subj, ind) => (<div indx={index} indxer={ind} key={`mupin${index}${ind}`} value={index} className="subject"><div className="mid">#{ind+1}.</div>
                 <input onChange={changeEv} name="name" placeholder="Название" defaultValue={subj.name}/>

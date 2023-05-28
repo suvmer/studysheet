@@ -46,21 +46,19 @@ export const MyPage = () => {
     
     const ownTables =
     tables.length > 0 ? 
-    <>
+    <div className="wall">
     <div className="box_nobg box_nobg_header box_nobg_big">
         <p>Ваши расписания</p>
         <NavLink to="/my/add"><LightButton onClick={() => {}}>Добавить</LightButton></NavLink>
         {/*<NavLink className="btn" to="/my/add">Добавить</NavLink>*/}
     </div>
 
-    {bars} </> :
-    <>
+    {bars} </div> :
+    <div className="wall">
         <div className="midbox">
             <mark className="big">Расписаний нет</mark>
             <NavLink to="/my/add"><LightButton onClick={() => {}}>Добавить</LightButton></NavLink>
         </div>
-    </>;
-    return <div className="wall">
-    {outlet || ownTables}
     </div>;
+    return (outlet || ownTables);
 }

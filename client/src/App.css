@@ -18,12 +18,14 @@ a, p {
   --bg-secondary: rgba(240, 242, 244, 1);
   --bg-default-inverse: rgba(37, 36, 39, 1);
   --text-primary: rgba(0, 32, 51, 1);
+  --text-gray: rgba(141, 141, 141, 1);
   --text-primary-inverse: rgba(251, 251, 251, 1);
   --text-error: rgba(255, 0, 0, 1);
   --link-hover: rgba(240, 240, 240, 1);
   --link-active: rgba(220, 220, 220, 1);
 
   --white: rgb(251, 251, 251);
+  --transred: rgba(255, 0, 0, 0.5);
   /*--white: rgb(0, 216, 255);*/
   --yellow: rgb(251, 255, 129);
   --darkgray: rgb(141, 141, 141);
@@ -196,6 +198,7 @@ aside {
   padding: 10px;
   gap: 10px;
   border-radius: 10px;
+  margin-bottom: auto;
 }
 
 aside a {
@@ -217,6 +220,70 @@ aside a:focus, aside a.active {
   flex-direction: column;
   gap: 10px;
 }
+.wall_subjects {
+ gap: 10px;
+}
+.wall_subjects>.newsubject:not(:nth-child(2)) {
+  margin-top: 50px;
+}
+
+.newsubject {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-radius: 10px;
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+  padding: 10px;
+}
+
+
+.showsubject {
+
+}
+
+.subject {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.subject_panel {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+.subject_panel_icons {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px;
+}
+.subject_panel_icons > svg:last-child {
+  background-color: var(--transred);
+  border-radius: 10px;
+  padding: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+.subject_panel_icons > * {
+  cursor: pointer;
+  width: 2em;
+  height: 2em;
+}
+.subject_body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: var(--white);
+}
+.subjectBar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: var(--white);
+  font-size: var(--mid);
+}
 
 .event {
   border-radius: 10px;
@@ -237,13 +304,7 @@ aside a:focus, aside a.active {
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 5px;
 }
-.subjectBar {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  background-color: var(--white);
-  font-size: var(--mid);
-}
+
 .midbox {
   border-radius: 10px;
   /*background-color: var(--white);
@@ -265,16 +326,6 @@ aside a:focus, aside a.active {
   margin-top: 20px;
 }
 
-.subject {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: var(--white);
-}
-.subject input {
-  background-color: var(--bg-secondary);
-  margin-top: 5px;
-}
 .ant-picker-input>input {
   margin: 10px!important;
 }
@@ -334,9 +385,6 @@ input {
 }
 .center {
   text-align: center!important;
-}
-.mup {
-  margin-top: 20px;
 }
 .mid {
   font-size: var(--mid);

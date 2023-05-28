@@ -32,10 +32,12 @@ export const MainPage = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.profile.user);
   const isLogged = useSelector(state => state.profile.isLogged);
-  useEffect(() => {
+
+  useEffect(() => { //load table infos
     if(isLogged)
       (user.ownTables??[]).forEach(id => dispatch(getTable(id)));
   }, []);
+
   const schedules = useSelector(state => state.table.schedules);
   if(!isLogged)
     return <Authorize/>;
