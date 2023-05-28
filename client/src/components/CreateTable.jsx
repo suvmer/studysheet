@@ -5,8 +5,8 @@ import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useSelector } from "react-redux";
 import { days } from "../utils/utils";
-import { DarkButton } from "./UI/Buttons";
-import {FiTrash2, FiRefreshCcw} from 'react-icons/fi'
+import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
+import {FiTrash2, FiRefreshCcw, FiPlus} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
 
 
@@ -27,6 +27,7 @@ export const CreateTable = () => {
     id: globid++,
     place: "7 корпус(Союзная 144)" });
 
+  const [weekPart, setWeekPart] = useState(-1);
   const [tabler, setTable] = useState([
     //...Array(7).fill([getField()]) //no new instances
     ...Array(7).fill().map((el, ind) => [getField()]) //new instances
@@ -59,11 +60,16 @@ export const CreateTable = () => {
     forceUpdate();
   }
   const moveSubject = (idChange, idFor, up) => {
-    //if(up)
-    
-    table[idChange] = table[idChange].filter((e, i) => (i != idFor));
-    console.log({...table[idChange]})
-    console.log(idChange, idFor)
+    if(table[idChange].length <= 1)
+      return;
+    if(up && idFor == 0)
+      return;
+    if(!up && idFor == table[idChange].length-1)
+      return;
+    if(up)
+      [table[idChange][idFor], table[idChange][idFor-1]] = [table[idChange][idFor-1], table[idChange][idFor]];
+    else
+      [table[idChange][idFor], table[idChange][idFor+1]] = [table[idChange][idFor+1], table[idChange][idFor]];
     setTable(table);
     forceUpdate();
   }
@@ -72,6 +78,11 @@ export const CreateTable = () => {
   return (<div className="wall wall_subjects">
         <div className="box_nobg box_nobg_header box_nobg_big">
             <p>Создание расписания</p>
+        </div>
+        <div className="box_nobg box_nobg_gap">
+            {weekPart != -1 ? <FiTrash2 className="icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
+            {weekPart == -1 ? <FiPlus className="icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
+            {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
         </div>
         {tabler.map((elem, index) => {
           return (<>
@@ -87,14 +98,14 @@ export const CreateTable = () => {
                       handleChange(index, ind, 'start', a[0].valueOf()); 
                       handleChange(index, ind, 'end', a[1].valueOf())
                     }} 
-                    format={"HH:mm"} 
+                    format={"HH:mm"}
                     minuteStep={5} 
                     placeholder={["Начало", "Конец"]} />
                     <div className="subject_panel_icons">
-                      <FiRefreshCcw/>
-                      <AiOutlineArrowUp/>
-                      <AiOutlineArrowDown/>
-                      <FiTrash2 onClick={() => deleteSubject(index, ind)}/>
+                      {weekPart != -1 ? <FiRefreshCcw/> : ""}
+                      <AiOutlineArrowUp onClick={() => moveSubject(index, ind, true)}/>
+                      <AiOutlineArrowDown onClick={() => moveSubject(index, ind, false)}/>
+                      <FiTrash2 className="subject_panel_icons_delete" onClick={() => deleteSubject(index, ind)}/>
                     </div>
                   </div>
                   <div className="subject_body">

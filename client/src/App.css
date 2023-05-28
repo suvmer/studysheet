@@ -89,6 +89,12 @@ body {
 .box_nobg_big {
   font-size: var(--big);
 }
+.box_nobg_gap {
+  display: flex;
+  padding: 5px 15px 0 0px;
+  gap: 20px;
+  align-items: center;
+}
 
 .login {
   padding: 20px;
@@ -224,7 +230,7 @@ aside a:focus, aside a.active {
 .wall_subjects {
  gap: 10px;
 }
-.wall_subjects>.newsubject:not(:nth-child(2)) {
+.wall_subjects>.newsubject:not(:nth-child(3)) {
   margin-top: 50px;
 }
 
@@ -259,12 +265,21 @@ aside a:focus, aside a.active {
   gap: 20px;
   padding: 10px 20px;
 }
-.subject_panel_icons > svg:last-child {
+.icons_delete {
   background-color: var(--transred);
   border-radius: 10px;
   padding: 5px;
-  width: 40px;
-  height: 40px;
+  width: 40px!important;
+  height: 40px!important;
+  cursor: pointer;
+}
+.icons_add {
+  background-color: var(--green);
+  border-radius: 10px;
+  padding: 5px;
+  width: 40px!important;
+  height: 40px!important;
+  cursor: pointer;
 }
 
 .subject_panel_icons > * {
