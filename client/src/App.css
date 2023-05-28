@@ -25,6 +25,7 @@ a, p {
   --link-active: rgba(220, 220, 220, 1);
 
   --white: rgb(251, 251, 251);
+  --red: rgba(255, 0, 0, 1);
   --transred: rgba(255, 0, 0, 0.5);
   /*--white: rgb(0, 216, 255);*/
   --yellow: rgb(251, 255, 129);
@@ -337,6 +338,9 @@ input {
   border: solid 1px black;
   border-radius: 10px;
   cursor: text!important;
+}
+input:invalid {
+  border: solid 1px var(--red);
 }
 .nextEvent {
   display: flex;

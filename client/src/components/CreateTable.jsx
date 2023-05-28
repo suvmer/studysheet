@@ -28,13 +28,13 @@ export const CreateTable = () => {
 
   const [tabler, setTable] = useState([
     //...Array(7).fill([getField()]) //no new instances
-    ...Array(7).fill().map(() => [getField()]) //new instances
+    ...Array(7).fill().map((el, ind) => [{...getField(), id: ind}]) //new instances
   ]);
   const table = tabler;
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
-    table[index] = [...table[index], getField(table[index].length)];
+    table[index] = [...table[index], {...getField(table[index].length), id: table[index].length}];
     setTable(table);
     forceUpdate();
     console.log(tabler)
@@ -66,54 +66,58 @@ export const CreateTable = () => {
         {tabler.map((elem, index) => {
           return (<>
             <div key={`mup${index}`} className="newsubject">
-              {/* скопировать со знаменателя, вверх, вниз, удалить */}
               <mark className="big center">{days[index]}</mark>
               {elem.map((subj, ind) => (
-                <div indx={index} indxer={ind} key={`mupin${index}${ind}`} className="subject">
-                <div className="subject_panel">
-                  <TimePicker.RangePicker 
-                    defaultValue={[dayjs(subj.start), dayjs(subj.end)]} 
-                    onChange={(a, b) => {
-                    handleChange(index, ind, 'start', a[0].valueOf()); 
-                    handleChange(index, ind, 'end', a[1].valueOf())
-                  }} 
-                  format={"HH:mm"} 
-                  minuteStep={5} 
-                  placeholder={["Начало", "Конец"]} />
-                  <div className="subject_panel_icons">
-                    <FiRefreshCcw/>
-                    <AiOutlineArrowUp/>
-                    <AiOutlineArrowDown/>
-                    <FiTrash2 onClick={() => deleteSubject(index, ind)}/>
+                <div indx={index} indxer={ind} key={`mupin${index}${ind}`} className={`subject ${subj.id}`}>
+                  <div className="subject_panel"> {/* EVERY INPUT MUST HAVE UNIQUE KEY TO BE REPLACED ON DELETE */}
+                    <TimePicker.RangePicker 
+                      key={`inp_time${index}${ind}${subj.id}`}
+                      defaultValue={[dayjs(subj.start), dayjs(subj.end)]} 
+                      onChange={(a, b) => {
+                      handleChange(index, ind, 'start', a[0].valueOf()); 
+                      handleChange(index, ind, 'end', a[1].valueOf())
+                    }} 
+                    format={"HH:mm"} 
+                    minuteStep={5} 
+                    placeholder={["Начало", "Конец"]} />
+                    <div className="subject_panel_icons">
+                      <FiRefreshCcw/>
+                      <AiOutlineArrowUp/>
+                      <AiOutlineArrowDown/>
+                      <FiTrash2 onClick={() => deleteSubject(index, ind)}/>
+                    </div>
                   </div>
-                </div>
                   <div className="subject_body">
-                  <input
-                    onChange={changeEv}
-                    name="name"
-                    placeholder="Название"
-                    defaultValue={subj.name}
-                    required/>
-                  <input
-                    onChange={changeEv}
-                    name="cabinet"
-                    placeholder="Кабинет" 
-                    defaultValue={subj.cabinet}/>
-                  <input 
-                    onChange={changeEv} 
-                    name="place" 
-                    placeholder="Место" 
-                    defaultValue={subj.place}/>
-                  <input 
-                    onChange={changeEv} 
-                    name="teacher" 
-                    placeholder="Преподаватель" 
-                    defaultValue={subj.teacher}/>
-                  {/*
-                  TODO: save time without clicking OK button
-                  <input type="text" className="form-control js-time-picker" value="02:56"></input>*/}
-                </div>
-              </div>)
+                    <input
+                      key={`inp_name${index}${ind}${subj.id}`}
+                      onChange={changeEv}
+                      name="name"
+                      placeholder="Название"
+                      defaultValue={subj.name}
+                      required/>
+                    <input
+                      key={`inp_cab${index}${ind}${subj.id}`}
+                      onChange={changeEv}
+                      name="cabinet"
+                      placeholder="Кабинет" 
+                      defaultValue={subj.cabinet}/>
+                    <input 
+                      key={`inp_place${index}${ind}${subj.id}`}
+                      onChange={changeEv} 
+                      name="place" 
+                      placeholder="Место" 
+                      defaultValue={subj.place}/>
+                    <input 
+                      key={`inp_prep${index}${ind}${subj.id}`}
+                      onChange={changeEv} 
+                      name="teacher" 
+                      placeholder="Преподаватель" 
+                      defaultValue={subj.teacher}/>
+                    {/*
+                    TODO: save time without clicking OK button
+                    <input type="text" className="form-control js-time-picker" value="02:56"></input>*/}
+                  </div>
+                </div>)
               )}
             </div>
             <DarkButton onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
