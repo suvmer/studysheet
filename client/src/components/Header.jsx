@@ -23,7 +23,7 @@ export const Header = () => {
       <Link to="/">Study<mark className="blue bold">SHEET</mark></Link>
     </div>
     {isLogged ?
-      <AiOutlineUser className="header_icon" onClick={() => {}} /> :
+      <Link to="/account"><AiOutlineUser className="header_icon" onClick={() => {}} /></Link> :
       <BiLogIn className="header_icon" onClick={() => dispatch(setLogin(true))} />
     }
   </header>;
