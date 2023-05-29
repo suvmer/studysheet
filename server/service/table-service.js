@@ -5,7 +5,7 @@ const tokenService = require('./token-service');
 const ApiError = require('../exceptions/api-error');
 
 class TableService {
-    async createSchedule(user, schedule) {
+    async addSchedule(user, schedule) {
         utils.checkSchedule(schedule);
         
         return utils.success();
