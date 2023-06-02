@@ -14,11 +14,11 @@ var sequelize = new Sequelize('api', 'mogus', 'mogus', {
 
 const Pool = require('pg').Pool
 const pool = new Pool({
-  user: 'mogus',
-  host: 'localhost',
-  database: 'api',
-  password: 'mogus',
-  port: 5432,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME
 })
 
 //const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable", regtime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1, Date.now()])
