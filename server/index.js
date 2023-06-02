@@ -35,11 +35,11 @@ app.use((err, req, res, next) => { //json bad format safety response
     next();
 });*/
 
-
+/*
 connection.query('SELECT * FROM sheets', function(err, rows, fields) {
   if (err) throw err;
   console.log('The count of sheets rows is: ', rows.rowCount);
-});
+});*/
   
     /*console.log("plmap:", pl.map(elem => Object.values(elem)).flat(1));
     console.log("preparevalues :", utils.prepareSqlKeys(pl, 5));
