@@ -1,4 +1,6 @@
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { checkAuth } from "../components/actions/users";
 
 export const API_URL = 'http://localhost:5000/api';
 
@@ -14,6 +16,13 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use((config) => {
     return config;
-}, )
+}, async (error) => {
+    const originalRequest = error.config;
+    const dispatch = useDispatch();
+    if(error.response.status == 401) {
+        dispatch(checkAuth());
+        return api.request(originalRequest);
+    }
+})
 
 export default api;
