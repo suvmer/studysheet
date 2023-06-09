@@ -12,4 +12,8 @@ api.interceptors.request.use((config) => {
     return config;
 }) //attachment of auth token for every request
 
+api.interceptors.response.use((config) => {
+    return config;
+}, )
+
 export default api;
