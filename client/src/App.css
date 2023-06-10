@@ -230,11 +230,19 @@ aside a:focus, aside a.active {
 .wall_subjects {
  gap: 10px;
 }
-.wall_subjects>.newsubject:not(:nth-child(3)) {
-  margin-top: 50px;
+.wall_subjects_list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .newsubject {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.newsubject_in {
   display: flex;
   flex-direction: column;
   gap: 10px;

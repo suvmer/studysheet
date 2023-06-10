@@ -3,11 +3,13 @@ import classes from "../styles/UI/CreateTable.module.css";
 import { InfoBlock } from "./InfoBlock";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
-import { useSelector } from "react-redux";
-import { days } from "../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { days, validateTableData } from "../utils/utils";
 import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
 import {FiTrash2, FiRefreshCcw, FiPlus} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
+import { sendTable } from "./actions/tables";
+import { useNavigate } from "react-router-dom";
 
 
 var globid = 0;
@@ -73,23 +75,34 @@ export const CreateTable = () => {
     setTable(table);
     forceUpdate();
   }
-  
+
+  const navigate = useNavigate();
+  const [errorText, setErrorText] = useState("");
+  const dispatch = useDispatch();
+  const sendSchedule = () => {
+    if(validateTableData(table))
+      dispatch(sendTable(table))
+        .then((succ) => navigate("/my"), e => setErrorText(e.response?.data?.message));
+  }
+
   console.log("Updated");
   return (<div className="wall wall_subjects">
-        <div className="box_nobg box_nobg_header box_nobg_big">
-            <p>Создание расписания</p>
-        </div>
-        <div className="box_nobg box_nobg_gap">
-            {weekPart != -1 ? <FiTrash2 className="icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
-            {weekPart == -1 ? <FiPlus className="icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
-            {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
-        </div>
+      <div className="box_nobg box_nobg_header box_nobg_big">
+          <p>Создание расписания</p>
+      </div>
+      {errorText ? <p className="login_error">{errorText}</p> : ""}
+      <div className="box_nobg box_nobg_gap">
+          {weekPart != -1 ? <FiTrash2 className="icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
+          {weekPart == -1 ? <FiPlus className="icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
+          {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
+      </div>
+      <form onSubmit={(e) => e.preventDefault()} className="wall_subjects_list">
         {tabler.map((elem, index) => {
-          return (<>
-            <div key={`mup${index}`} className="newsubject">
+          return (<div className="newsubject" key={index}>
+            <div className="newsubject_in">
               <mark className="big center">{days[index]}</mark>
               {elem.map((subj, ind) => (
-                <div indx={index} indxer={ind} key={`mupin${index}${ind}`} className={`subject ${subj.id}`}>
+                <div indx={index} indxer={ind} key={subj.id} className="subject">
                   <div className="subject_panel"> {/* EVERY INPUT MUST HAVE UNIQUE KEY TO BE REPLACED ON DELETE */}
                     <TimePicker.RangePicker 
                       key={`inp_time${index}${ind}${subj.id}`}
@@ -141,11 +154,12 @@ export const CreateTable = () => {
                 </div>)
               )}
             </div>
-            <DarkButton onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
-            </>
+            <DarkButton key={index+100000} onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
+            </div>
           )
         })}
-          <DarkButton type="submit" onClick={() => {}}>Создать</DarkButton>
-        </div>
-        );
+        <LightButton type="submit" onClick={sendSchedule}>Создать</LightButton>
+      </form>
+    </div>
+  );
 };
