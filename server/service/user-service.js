@@ -20,38 +20,27 @@ class UserService {
     async registration(name, email, password, info) {
         //find user with email
         //if found throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
-        
         if(!info || !info.university || !info.city)
             throw ApiError.BadRequest("Неполные данные");
-        if(!utils.checkName(name))
-            throw ApiError.BadRequest("Некорректное имя");
-        if(!utils.checkEmail(email))
-            throw ApiError.BadRequest("Некорректная почта");
-        if(!utils.checkUniversity(info.university))
-            throw ApiError.BadRequest("Некорректный вуз");
-        if(!utils.checkCity(info.city))
-            throw ApiError.BadRequest("Некорректный город");
+        name = utils.withACapital(utils.checkField("name", name, true));
+        email = utils.checkField("email", email, true);
+        info.university = utils.withACapital(utils.checkField("university", info.university, true));
+        info.city = utils.withACapital(utils.checkField("city", info.city, true));
         
-        name = name.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
-        info.university = info.university.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
-        info.city = info.city.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase());
         console.log(name, email, info.university, info.city)
-        /*const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
+        const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
         if(res.rowCount > 0) {
             console.log(`Email ${email} is already exists `);
-            return utils.error(`User with email ${email} is already exists!`);
-        }*/
+            throw ApiError.BadRequest("Пользователь с такой почтой уже существует!");
+        }
 
         const hashPassword = await bcrypt.hash(password, 3);
         const activationLink = uuid.v4(); //v34fa-asfasf-142saf-sa-asf
         
+        await mailService.sendActivationMail(email, process.env.API_URL + "/api/activate/" + activationLink, `${name}, спасибо, что выбрали сервис StudySheet!`);
         const query = await connection.query('INSERT INTO users (name, email, password, "isActivated", "activationLink", info, "currentTable", regtime) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', [name, email, hashPassword, false, activationLink, info, -1, Date.now()])
-        
         if(query.rowCount == 0)
             throw ApiError.BadRequest('Неудачная регистрация');
-        
-        //const user = await connection.query('SELECT row_to_json(row(name, email, id, "isActivated")) from users WHERE id=$1', [query.rows[0].id])
-        await mailService.sendActivationMail(email, process.env.API_URL + "/api/activate/" + activationLink, `${name}, спасибо, что выбрали сервис StudySheet!`);
         
         const userDto = await this.getUserDto(query.rows[0].id);
         const tokens = tokenService.generateTokens({...userDto});
@@ -72,10 +61,9 @@ class UserService {
         return utils.success({message: "Почта успешно подтверждена"});
     }
     async login(email, password) {
-        if(!utils.checkEmail(email))
-            throw ApiError.BadRequest('Некорректная почта');
-        const fetchUsers = await connection.query('SELECT password, id from users WHERE email=$1', [email]);
+        email = utils.checkField("email", email, true);
 
+        const fetchUsers = await connection.query('SELECT password, id from users WHERE email=$1', [email]);
         if(fetchUsers.rowCount == 0)
             throw ApiError.BadRequest("Некорректный email или пароль");
         const user = fetchUsers.rows[0];

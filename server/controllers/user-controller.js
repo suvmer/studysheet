@@ -21,8 +21,7 @@ class UserController {
   async login(req, res, next) {
     try{
       const {email, password} = req.body;
-      console.log(req.body);
-      console.log("||", email, password, "||");
+      //console.log("||", email, password, "||");
 
       const userData = await userService.login(email, password);
       console.log("adding to cookie ", userData.refreshToken);

@@ -1,3 +1,5 @@
+const ApiError = require("./exceptions/api-error");
+
 class utils {
     HttpCodes = {
         success : 200,
@@ -15,28 +17,54 @@ class utils {
     prepareSqlDate(date) {
         return new Date(date).toISOString().slice(0, 19).replace('T', ' ');
     }
-    
-    checkName(name) {
-        if(!name) return false;
-        return  (name.length <= 50 && (/^[a-zA-Zа-яА-Я_\-]{2,20}( [a-zA-Zа-яА-Я_\-]{2,20})?$/.test(name)));
-    }
-    
-    checkEmail(email) {
-        if(!email) return false;
-        return  (email.length <= 50 && (/^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/.test(email)));
-    }
-    checkUniversity(university) {
-        if(!university) return false;
-        return  (/^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/.test(university));
-    }
-    checkCity(city) {
-        if(!city) return false;
-        return  (/^[a-zA-Zа-яА-Я _-]{2,20}$/.test(city));
+
+    withACapital(str) {
+        return str.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase())
     }
 
-    checkIp(ip) {
-        if(!ip) return false;
-        return  ((/^([0-9]{1,3}\.){3}[0-9]{1,3}$/.test(ip)));
+    checkField(fieldName, str, tr = false) {
+        var message = "Некорректные данные";
+        var pattern = /\S*/;
+        var min = 0;
+        var max = 50;
+        switch(fieldName) {
+            case "name":
+                message = "Некорректное имя";
+                pattern = /^[a-zA-Zа-яА-Я_\-]{2,20}( [a-zA-Zа-яА-Я_\-]{2,20})?$/;
+                break;
+            case "email":
+                message = "Некорректная почта";
+                pattern = /^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/;
+                break;
+            case "university":
+                message = "Некорректное место";
+                pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
+                break;
+            case "city":
+                message = "Некорректный город";
+                pattern = /^[a-zA-Zа-яА-Я _-]{2,20}$/;
+                break;
+            case "ip":
+                message = "Некорректный ip";
+                pattern = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
+                break;
+        }
+        
+        if(typeof str != 'string') {
+            if(tr)
+                throw ApiError.BadRequest(message);
+            return false;
+        }
+        str = str.trim();
+        
+        if(!str || !(str.length >= min && str.length <= max && pattern.test(str))) {
+            if(tr)
+                throw ApiError.BadRequest(message);
+            return false;
+        }
+        if(tr)
+            return str;
+        return true;
     }
 
     error(msg) {
