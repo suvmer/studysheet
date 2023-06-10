@@ -59,7 +59,7 @@ export const checkField = (fieldName, str) => {
 };
 
 export const validateTableData = (table) => {
-
+  return true;
 };
 /*
 {

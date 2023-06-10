@@ -6,7 +6,7 @@ class TableController {
   async addTable(req, res, next) {
     try{
       const {table} = req.body;
-      
+      console.log(table);
       return res.json(table);
     } catch(e) {
       next(e);

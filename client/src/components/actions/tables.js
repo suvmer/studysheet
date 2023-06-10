@@ -1,7 +1,6 @@
-import axios from 'axios';
 import { fetchTable, fetchTables } from '../../store/tableReducer';
-import { fetchUser } from '../../store/profileReducer';
 import { getUser } from './users';
+import ScheduleService from '../../services/ScheduleService';
 
 const schedules =
 [
@@ -160,5 +159,17 @@ export const getTable = (id) => {
         console.log(`Fetching profile id ${response.creator}`);
         dispatch(getUser(response.creator));
       }
+  }
+}
+
+export const sendTable = (table) => {
+  return async (dispatch, getState) => {
+      if(!getState().profile.isLogged)
+          return;
+      const response = await ScheduleService.sendTable(table);
+      if(!response || !response.data)
+          throw Error(response?.message ?? "Ошибка");
+      return "Успешно";
+      //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
   }
 }
