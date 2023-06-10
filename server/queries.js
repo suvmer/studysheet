@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS users (
   "activationLink" TEXT,
   info TEXT,
   "currentTable" INTEGER,
-  "ownTables" TEXT,
+  "ownTables" INTEGER[],
+  groups INTEGER[],
   regtime BIGINT
 )
 `);
@@ -45,6 +46,25 @@ CREATE TABLE IF NOT EXISTS tokens (
   "activationLink" TEXT
 )
 `);
+const g = async () => {
+  await pool.query(`
+  CREATE TABLE IF NOT EXISTS sheets (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    creator INTEGER NOT NULL,
+    members INTEGER[],
+    groups INTEGER[],
+    info TEXT,
+    tables TEXT,
+    created BIGINT
+  )
+  `);
+  await pool.query(`INSERT INTO sheets(name, creator, members) VALUES($1, $2, $3)`, ["Aboba", 1, [5, 7, 6]]);
+  await pool.query(`UPDATE sheets SET members = array_append(members, $1)`, [657]);
+  const fetchTest = await pool.query('SELECT * from sheets WHERE id = 1');
+  console.log(fetchTest.rows[0].members);
+}
+g();
 
 //.then(() => pool.query(`INSERT INTO "users"(name, password, "isActivated", "activationLink", info, "currentTable", regtime) VALUES ('Мугома', 'Абоба', TRUE, 'n.ru', '{"fdfadf": "fdf"}', 0, ${Date.now()})`))
 //userid, "refreshToken"

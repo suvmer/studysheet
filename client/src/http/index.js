@@ -1,6 +1,6 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
 import { checkAuth } from "../components/actions/users";
+import { store } from "../store";
 
 export const API_URL = 'http://localhost:5000/api';
 
@@ -8,6 +8,7 @@ const api = axios.create({
     withCredentials: true, //auto cookie attachment
     baseURL: API_URL
 });
+//const {dispatch} = store;
 
 api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
@@ -18,11 +19,12 @@ api.interceptors.response.use((config) => {
     return config;
 }, async (error) => {
     const originalRequest = error.config;
-    const dispatch = useDispatch();
     if(error.response.status == 401) {
-        dispatch(checkAuth());
+        store.dispatch(checkAuth());
         return api.request(originalRequest);
     }
+    throw error;
+    //return api.request(originalRequest);
 })
 
 export default api;

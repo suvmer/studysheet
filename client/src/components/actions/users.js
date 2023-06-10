@@ -27,12 +27,14 @@ export const getUser = (id) => {
 export const sendLogin = (email, password) => {
     return async (dispatch, getState) => {
         //console.log(email, password, getState().profile.isLogged)
+        console.log("Pree");
         if(getState().profile.isLogged)
             return;
+        console.log("prePostt");
         const response = await AuthService.login(email, password);
-        
-        if(!response.data.user)
-            return;
+        console.log("Postt", response);
+        if(!response || !response.data || !response.data.user)
+            return response?.message ?? "Ошибка";
         dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
   }
@@ -70,10 +72,11 @@ export const logout = () => {
             console.log("refresh: ", response)
 
             if(!response.data.user)
-                return;
+                throw Error("Требуется авторизация");
             dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
         } catch(e) {
-            alert(e.response?.data?.message)
+            dispatch(logout());
+            //alert(e.response?.data?.message)
         }
     }
   }

@@ -9,6 +9,8 @@ export const AuthForm = () => {
   const [isSignIn, setSign] = useState(false);
   const [errorText, setErrorText] = useState("");
 
+  const dispatch = useDispatch();
+  
   const changeEv = event =>
     handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
   
@@ -17,10 +19,12 @@ export const AuthForm = () => {
   }
 
 
-  const dispatch = useDispatch();
   const sendSignIn = () => {
     if(validateLoginData(formData))
-      dispatch(sendLogin(formData.email, formData.password)).catch(e => setErrorText(e.response?.data?.message));
+      dispatch(sendLogin(formData.email, formData.password)).catch(e => {
+        console.log(e);
+        setErrorText(e.response?.data?.message);
+      });
   }
   const sendSignUp = () => {
     if(validateRegData(formData))
