@@ -56,7 +56,11 @@ export const checkField = (fieldName, str) => {
   if(!str || !(str.length >= min && str.length <= max && pattern.test(str)))
       return false;
   return true;
-}
+};
+
+export const validateTableData = (table) => {
+
+};
 /*
 {
     "info": {
