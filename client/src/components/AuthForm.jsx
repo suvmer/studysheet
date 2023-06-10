@@ -3,13 +3,14 @@ import { DarkButton, DarkButtonMid, DarkSmallButton, SmallButton } from "./UI/Bu
 import { useDispatch } from "react-redux";
 import { getCity, sendLogin, sendReg } from "./actions/users";
 import { validateLoginData, validateRegData } from "../utils/utils";
+import { useNavigate } from "react-router-dom";
 
 export const AuthForm = () => {
   const [formData, setformData] = useState({"info": {}});
   const [isSignIn, setSign] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const navigate = useNavigate();
 
-  
   const changeEv = event =>
     handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
   
@@ -20,14 +21,13 @@ export const AuthForm = () => {
   const dispatch = useDispatch();
   const sendSignIn = () => {
     if(validateLoginData(formData))
-      dispatch(sendLogin(formData.email, formData.password)).catch(e => {
-        console.log(e);
-        setErrorText(e.response?.data?.message);
-      });
+      dispatch(sendLogin(formData.email, formData.password))
+        .then((succ) => navigate("/"), e => setErrorText(e.response?.data?.message));
   }
   const sendSignUp = () => {
     if(validateRegData(formData))
-      dispatch(sendReg(formData.name, formData.email, formData.password, formData.info)).catch(e => setErrorText(e.response?.data?.message));;
+      dispatch(sendReg(formData.name, formData.email, formData.password, formData.info))
+        .then((succ) => navigate("/"), e => setErrorText(e.response?.data?.message));
   }
 
   return <form onSubmit={(e) => e.preventDefault()} className="login">
