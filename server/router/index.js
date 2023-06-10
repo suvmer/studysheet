@@ -3,6 +3,7 @@ const UserController = require('../controllers/user-controller')
 const TableController = require('../controllers/table-controller')
 const router = new Router();
 const authMiddleWare = require('../middlewares/auth-middleware');
+const trimMiddleware = require('../middlewares/trim-middleware');
 
 router.post('/registration', UserController.registration);
 router.post('/login', UserController.login);
