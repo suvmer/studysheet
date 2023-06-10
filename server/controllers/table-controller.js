@@ -1,4 +1,5 @@
-const userService = require('../service/user-service');
+const ApiError = require('../exceptions/api-error');
+const tableService = require('../service/table-service');
 
 
 class TableController {
@@ -14,9 +15,18 @@ class TableController {
   async getTable(req, res, next) {
     try{
       const tableid = req.params.tableid;
-      
-      
-      return res.json(table);
+      return res.json(await tableService.getTable(tableid));
+    } catch(e) {
+      next(e);
+    }
+  }
+  async getPublicTable(req, res, next) {
+    try{
+      const tableid = req.params.tableid;
+      const table = await tableService.getTable(tableid);
+      if(table.table?.public)
+        return res.status(table.status).json(table);
+      throw ApiError.UnauthorizedError();
     } catch(e) {
       next(e);
     }
@@ -24,7 +34,8 @@ class TableController {
   async getTables(req, res, next) {
     try{
       const userid = req.params.userid;
-
+      const tables = await tableService.getTables(userid);
+      
       return res.json(table);
     } catch(e) {
       next(e);
