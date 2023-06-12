@@ -4,7 +4,7 @@ import { InfoBlock } from "./InfoBlock";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useDispatch, useSelector } from "react-redux";
-import { days, validateTableData } from "../utils/utils";
+import { dateToString, days, validateTableData } from "../utils/utils";
 import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
 import {FiTrash2, FiRefreshCcw, FiPlus} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 var globid = 0;
 
 export const CreateTable = () => {
+  const [page, setPage] = useState(0);
   const defs = useSelector(state => state.table.defs[0]);
   const getDefaultSchedule = (ind) => {
     return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
@@ -22,7 +23,6 @@ export const CreateTable = () => {
   const getField = (i = 0) => ({
     start: getDefaultSchedule(i)[0].valueOf(),
     end: getDefaultSchedule(i)[1].valueOf(),
-    duration: 95,
     name: "",
     cabinet: "",
     teacher: "",
@@ -30,18 +30,20 @@ export const CreateTable = () => {
     place: "7 корпус(Союзная 144)" });
 
   const [weekPart, setWeekPart] = useState(-1);
-  const [tabler, setTable] = useState([
+  const [storedSheet, storeSheet] = useState({
+    name: "",
+    tables: [
     //...Array(7).fill([getField()]) //no new instances
     ...Array(7).fill().map((el, ind) => [getField()]) //new instances
-  ]);
-  const table = tabler;
+  ]});
+  const sheet = storedSheet;
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
-    table[index] = [...table[index], getField(table[index].length)];
-    setTable(table);
+    sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
+    storeSheet(sheet);
     forceUpdate();
-    console.log(tabler)
+    console.log(storedSheet)
   };
   const changeEv = event => {
     handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
@@ -49,30 +51,34 @@ export const CreateTable = () => {
 
   const handleChange = (idChange, idFor, namer, value) => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
-    table[idChange][idFor] = {...(table[idChange][idFor]), [namer]: value};
+    if(namer == "title" || namer == "pub") {
+      sheet[namer] = value;
+      return;
+    }
+    sheet.tables[idChange][idFor] = {...(sheet.tables[idChange][idFor]), [namer]: value};
   }
   const deleteSubject = (idChange, idFor) => {
-    console.log({...table[idChange]})
-    //for(var i = 0; i < table[idChange].length - 1; i++)
-    //  table[idChange][i] = table[idChange][i+1];
-    table[idChange] = table[idChange].filter((e, i) => (i != idFor));
-    console.log({...table[idChange]})
+    console.log({...sheet.tables[idChange]})
+    //for(var i = 0; i < sheet.tables[idChange].length - 1; i++)
+    //  sheet.tables[idChange][i] = sheet.tables[idChange][i+1];
+    sheet.tables[idChange] = sheet.tables[idChange].filter((e, i) => (i != idFor));
+    console.log({...sheet.tables[idChange]})
     console.log(idChange, idFor)
-    setTable(table);
+    storeSheet(sheet);
     forceUpdate();
   }
   const moveSubject = (idChange, idFor, up) => {
-    if(table[idChange].length <= 1)
+    if(sheet.tables[idChange].length <= 1)
       return;
     if(up && idFor == 0)
       return;
-    if(!up && idFor == table[idChange].length-1)
+    if(!up && idFor == sheet.tables[idChange].length-1)
       return;
     var newid = up ? (idFor - 1) : (idFor + 1);
-    [table[idChange][idFor], table[idChange][newid]] = [table[idChange][newid], table[idChange][idFor]];
-    [table[idChange][idFor].start, table[idChange][newid].start] = [table[idChange][newid].start, table[idChange][idFor].start];
-    [table[idChange][idFor].end, table[idChange][newid].end] = [table[idChange][newid].end, table[idChange][idFor].end];
-    setTable(table);
+    [sheet.tables[idChange][idFor], sheet.tables[idChange][newid]] = [sheet.tables[idChange][newid], sheet.tables[idChange][idFor]];
+    [sheet.tables[idChange][idFor].start, sheet.tables[idChange][newid].start] = [sheet.tables[idChange][newid].start, sheet.tables[idChange][idFor].start];
+    [sheet.tables[idChange][idFor].end, sheet.tables[idChange][newid].end] = [sheet.tables[idChange][newid].end, sheet.tables[idChange][idFor].end];
+    storeSheet(sheet);
     forceUpdate();
   }
 
@@ -80,8 +86,8 @@ export const CreateTable = () => {
   const [errorText, setErrorText] = useState("");
   const dispatch = useDispatch();
   const sendSchedule = () => {
-    if(validateTableData(table))
-      dispatch(sendTable(table))
+    if(validateTableData(sheet.tables))
+      dispatch(sendTable(sheet))
         .then((succ) => navigate("/my"), e => setErrorText(e.response?.data?.message));
   }
 
@@ -90,14 +96,24 @@ export const CreateTable = () => {
       <div className="box_nobg box_nobg_header box_nobg_big">
           <p>Создание расписания</p>
       </div>
-      {errorText ? <p className="login_error">{errorText}</p> : ""}
+      {errorText ? <p className="error_label">{errorText}</p> : ""}
       <div className="box_nobg box_nobg_gap">
           {weekPart != -1 ? <FiTrash2 className="icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
           {weekPart == -1 ? <FiPlus className="icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
           {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
       </div>
-      <form onSubmit={(e) => e.preventDefault()} className="wall_subjects_list">
-        {tabler.map((elem, index) => {
+      <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}}`}>
+        <label for="sheetName">Название</label>
+        <input
+          key="sheetName"
+          id="sheetName"
+          onChange={changeEv}
+          name="title"
+          placeholder="Название"
+          defaultValue={`Расписание от ${dateToString(Date.now())[0]}`}
+          required
+          autoFocus/>
+        {storedSheet.tables.map((elem, index) => {
           return (<div className="newsubject" key={index}>
             <div className="newsubject_in">
               <mark className="big center">{days[index]}</mark>

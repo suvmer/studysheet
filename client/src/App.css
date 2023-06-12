@@ -105,7 +105,7 @@ body {
   gap: 15px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
-.login_error {
+.error_label {
   color: var(--text-error);
 }
 .login_regbtn {
@@ -233,6 +233,11 @@ aside a:focus, aside a.active {
 .wall_subjects_list {
   display: flex;
   flex-direction: column;
+}
+.wall_subjects_list_first {
+  gap: 10px;
+}
+.wall_subjects_list_second {
   gap: 40px;
 }
 
