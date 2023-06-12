@@ -23,34 +23,6 @@ app.use(express.json())
 app.use("/api", router)
 app.use(errorMiddleware);
 
-/*
-app.use((err, req, res, next) => { //json bad format safety response
-    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
-        console.error(err);
-        return res.status(utils.HttpCodes.badRequest).send({
-            status: utils.HttpCodes.badRequest,
-            message: err.message 
-        }); // Bad request
-    }
-    next();
-});*/
-
-/*
-connection.query('SELECT * FROM sheets', function(err, rows, fields) {
-  if (err) throw err;
-  console.log('The count of sheets rows is: ', rows.rowCount);
-});*/
-  
-    /*console.log("plmap:", pl.map(elem => Object.values(elem)).flat(1));
-    console.log("preparevalues :", utils.prepareSqlKeys(pl, 5));
-    connection.query(`INSERT INTO posts(title, descr, img, likes, date) VALUES ${utils.prepareSqlKeys(pl, 5)}`,
-    pl.map(elem => Object.values(elem)).flat(1),
-    function(err, rows) {
-    if (err) throw err;
-    console.log('Done: ', rows);
-  })*/
-
-
 const start = () => {
     try {
         app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
@@ -58,17 +30,6 @@ const start = () => {
         console.log(e);
     }
 }
-
-const today = dayjs().day(8);
-//console.log(`На этой неделе ${utils.days[0]}:`, atCurWeek(1, today).format('DD.MM.YYYY'));
-//console.log(`Сегодня ${utils.days[(today.day()+6)%7]}`, today.format('DD.MM.YYYY'));
-for(var i = 1; i <= 7; i++) console.log(`На этой неделе ${utils.days[i-1]}:`, atCurWeek(i, today).format('DD.MM.YYYY'));
-//for(var i = 1; i <= 7; i++) console.log(`На следующей неделе ${utils.days[i-1]}:`, atNextWeek(i, today).format('DD.MM.YYYY'));
-//for(var i = 1; i <= 7; i++) console.log(`На предыдущей неделе ${utils.days[i-1]}:`, atPrevWeek(i, today).format('DD.MM.YYYY'));
-//for(var i = 1; i <= 7; i++) console.log(`Следующий ${utils.days[i-1]}:`, nextDay(i, today).format('DD.MM.YYYY'));
-//for(var i = 1; i <= 7; i++) console.log(`Ближайший ${utils.days[i-1]}:`, closestDay(i, today).format('DD.MM.YYYY'));
-
-//console.log(`На прошлой неделе ${utils.days[0]}:`, atNextWeek(-1, today).format('DD.MM.YYYY'));
 
 router.get('/get/:id', async (req, res) => {
     const { id } = req.params
