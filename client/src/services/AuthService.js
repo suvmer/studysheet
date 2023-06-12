@@ -1,5 +1,5 @@
 import axios from "axios";
-import api from "../http";
+import api, { API_URL } from "../http";
 
 axios.defaults.withCredentials = true;
 
@@ -12,6 +12,6 @@ export default class AuthService {
         return api.post('/registration', {name, email, password, info: info});
     }
     static async logout(email, password) {
-        return api.post('/logout');
+        return axios.post(`${API_URL}/logout`, {withCredentials: true});
     }
 }

@@ -79,24 +79,29 @@ class UserService {
     }
     async logout(refreshToken) {
         const token = await tokenService.removeToken(refreshToken);
-        console.log(token);
+        //console.log(token);
         if(!token)
             throw ApiError.UnauthorizedError();
         return utils.success({message: "Произошёл выход из аккаунта"});
     }
     async refresh(refreshToken) {
+        //console.log("======\n\nREFRESH: refreshToken: ", refreshToken);
         if(!refreshToken)
             throw ApiError.UnauthorizedError();
         
         const userData = tokenService.validateRefreshToken(refreshToken);
+        //console.log("REFRESH: userData: ", userData);
         const tokenFromDb = await tokenService.findToken(refreshToken);
+        //console.log("REFRESH: tokenFromDb: ", tokenFromDb);
         if(!userData || !userData.id || !tokenFromDb)
             throw ApiError.UnauthorizedError();
         
         const userDto = await this.getUserDto(userData.id);
+        //console.log("REFRESH: userDto: ", userDto);
         if(!userDto)
             throw ApiError.UnauthorizedError();
         const tokens = tokenService.generateTokens({...userDto});
+        //console.log("REFRESH: tokens: ", tokens);
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
         return utils.success({...tokens, user: userDto});

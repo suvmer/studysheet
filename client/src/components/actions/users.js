@@ -27,14 +27,12 @@ export const getUser = (id) => {
 export const sendLogin = (email, password) => {
     return async (dispatch, getState) => {
         //console.log(email, password, getState().profile.isLogged)
-        console.log("Pree");
         if(getState().profile.isLogged)
             return;
-        console.log("prePostt");
         const response = await AuthService.login(email, password);
-        console.log("Postt", response);
         if(!response || !response.data || !response.data.user)
             return response?.message ?? "Ошибка";
+        localStorage.setItem('token', response.data.accessToken);  
         dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
   }
@@ -47,6 +45,7 @@ export const sendReg = (name, email, password, info) => {
         if(!response.data.user)
             return;
         alert(`На вашу почту ${email} отправлено письмо для подтверждения аккаунта`)
+        localStorage.setItem('token', response.data.accessToken);  
         dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
     }
 }
@@ -64,17 +63,21 @@ export const logout = () => {
   export const checkAuth = () => {
     return async (dispatch, getState) => {
         try {
-            console.log(document.cookie);
+            //console.log(document.cookie);
             const response = await axios.get(`${API_URL}/refresh`, {withCredentials: true})
             //const response = await axios({withCredentials: true}).get(`${API_URL}/refresh`)
-            console.log("refresh: ", response)
-            console.log("usr: ", response.data.user)
-
             if(!response.data.user)
                 throw Error("Требуется авторизация");
-            dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
+            localStorage.setItem('token', response.data.accessToken);  
+            /*console.log("Local storage", localStorage.getItem('token'), "must be", response.data.accessToken)  
+            console.log("refresh: ", response)
+            console.log("access: ", response.data.accessToken)
+            console.log("usr: ", response.data.user)*/
+            await dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
         } catch(e) {
-            dispatch(logout());
+            alert(e.response.message)
+            console.log(e)
+            await dispatch(logout());
         }
     }
   }

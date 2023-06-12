@@ -54,7 +54,7 @@ class UserController {
   async refresh(req, res, next) {
     try{
       const {refreshToken} = req.cookies;
-      console.log(req.cookies)
+      //console.log(req.cookies)
       if(!refreshToken) {
         console.log("returning nope")
         return res.status(500).json({message: "nope"});
@@ -74,7 +74,6 @@ class UserController {
       let response = await fetch(`https://2domains.ru/api/web-tools/geoip?ip=${ip}`);
       let forcity = await response.json();
       //console.log(req.connection.remoteAddress, response)
-      console.log();
       if(!forcity || !forcity['city'])
         throw Error("Невозможно определить город");
       return res.status(200).json({status: utils.HttpCodes.success, city: forcity['city']});

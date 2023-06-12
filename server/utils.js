@@ -30,7 +30,7 @@ class utils {
         return str.toLowerCase().replace(/(^[a-zа-яё]{1})|(\s+[a-zа-яё]{1})/g, letter => letter.toUpperCase())
     }
 
-    checkField(fieldName, str, tr = false) {
+    checkField(fieldName, str, tr = false, canbeEmpty = false) {
         var message = "Некорректные данные";
         var pattern = /\S*/;
         var min = 1;
@@ -58,7 +58,7 @@ class utils {
                 break;
             case "subjectName":
                 message = "Некорректное название предмета";
-                pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,30}$/;
+                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,30}$/;
                 break;
             case "sheetName":
                 message = "Некорректное название расписания";
@@ -93,7 +93,14 @@ class utils {
             return false;
         }
         str = str.trim();
-        
+        if(str === "" && canbeEmpty) {
+            if(tr)
+                return str;
+            return true;
+        }
+        if(fieldName == "sheetName")
+            console.log("UNACCEPTABLE:", str, str.length);
+
         if(!str || !(str.length >= min && str.length <= max && pattern.test(str))) {
             if(tr)
                 throw ApiError.BadRequest(message);
@@ -102,6 +109,65 @@ class utils {
         if(tr)
             return str;
         return true;
+    }
+
+    checkSchedule(table) {
+        const toStore = {
+            name: '',
+            creator: -1,
+            members: [],
+            groups: [],
+            info: [],
+            created: Date.now(),
+            tables: []
+          };
+          toStore.name = this.checkField("sheetName", table.name, true);
+          if(!table.tables)
+            throw ApiError.BadRequest("Некорректный запрос");
+          [...Array(7)].forEach((e, ind) => {
+            if(table.tables[ind] == undefined || !Array.isArray(table.tables[ind]))
+                throw ApiError.BadRequest("Недостаточно дней в расписании");
+            table.tables[ind].forEach(el => {
+                if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
+                  throw ApiError.BadRequest(`Неполные данные`);
+                const tab = {
+                  "start": el.start,
+                  "end": el.end,
+                  "name": "",
+                  "cabinet": "",
+                  "teacher": "",
+                  "place": ""
+                };
+                if(isNaN(tab.start) || isNaN(tab.end) || dayjs(tab.start) >= dayjs(tab.end))
+                  throw ApiError.BadRequest("Некорректное время начала");
+                tab['name'] = this.checkField("subjectName", el.name, true);
+                tab['cabinet'] = this.checkField("sheetCabinet", el.cabinet, true, true);
+                tab['teacher'] = this.checkField("sheetTeacher", el.teacher, true, true);
+                tab['place'] = this.checkField("sheetPlace", el.place, true, true);
+                console.log("Tostrore pushing ", tab)
+                toStore.tables.push(tab);
+              })
+          });
+            /*table.tables.forEach(elem => elem.forEach(el => {
+            if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
+              throw ApiError.BadRequest(`Неполные данные`);
+            const tab = {
+              "start": el.start,
+              "end": el.end,
+              "name": "",
+              "cabinet": "",
+              "teacher": "",
+              "place": ""
+            };
+            if(isNaN(tab.start) || isNaN(tab.end) || dayjs(tab.start) >= dayjs(tab.end))
+              throw ApiError.BadRequest("Некорректное время начала");
+            tab['name'] = checkField("sheetName", el.name, true);
+            tab['cabinet'] = checkField("sheetCabinet", el.cabinet, true, true);
+            tab['teacher'] = checkField("sheetTeacher", el.teacher, true, true);
+            tab['place'] = checkField("sheetPlace", el.place, true, true);
+            toStore.tables.push(elem);
+          }));*/
+          return toStore;
     }
 
     error(msg) {

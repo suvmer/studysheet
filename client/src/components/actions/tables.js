@@ -173,3 +173,17 @@ export const sendTable = (table) => {
       //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
   }
 }
+
+export const getOwnTables = () => {
+  return async (dispatch, getState) => {
+      if(!getState().profile.isLogged)
+          return;
+      const response = await ScheduleService.getMyTables();
+      if(!response || !response.data)
+          throw Error(response?.message ?? "Ошибка");
+      return response.data;
+      //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
+  }
+}
+
+//    /schedule/getfrom

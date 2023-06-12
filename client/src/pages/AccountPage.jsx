@@ -10,7 +10,7 @@ export const AccountPage = () => {
     const isLogged = useSelector(state => state.profile.isLogged);
     const user = useSelector(state => state.profile.user);
     const dispatch = useDispatch();
-    console.log(user);
+    //console.log(user);
     return <div className="wall">
         <div className="box_nobg box_nobg_header box_nobg_big">
             <p>Ваш аккаунт</p>

@@ -18,9 +18,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use((config) => {
     return config;
 }, async (error) => {
-    if(error.response.status == 401) {
+    if(error.response.status == 401 && localStorage.getItem('token')) {
         const originalRequest = error.config;
-        store.dispatch(checkAuth());
+        console.log("relogin... token: ", localStorage.getItem("token"));
+        await store.dispatch(checkAuth());
+        //return await setTimeout(() => api.request(originalRequest), 1000);
         return api.request(originalRequest);
     }
     throw error;

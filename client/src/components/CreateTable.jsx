@@ -34,7 +34,7 @@ export const CreateTable = () => {
     name: "",
     tables: [
     //...Array(7).fill([getField()]) //no new instances
-    ...Array(7).fill().map((el, ind) => [getField()]) //new instances
+    ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //new instances
   ]});
   const sheet = storedSheet;
 
@@ -125,11 +125,13 @@ export const CreateTable = () => {
           {weekPart == -1 ? <FiPlus className="icons icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
           {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
       </div>
+      
       <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
         {storedSheet.tables.map((elem, index) => {
           return (<div className="newsubject" key={index}>
             <div className="newsubject_in">
               <mark className="big center">{days[index]}</mark>
+              {elem.length == 0 ? <><hr/><mark className="mid center">Нет занятий</mark></> : ""}
               {elem.map((subj, ind) => (
                 <div indx={index} indxer={ind} key={subj.id} className="subject">
                   <div className="subject_panel"> {/* EVERY INPUT MUST HAVE UNIQUE KEY TO BE REPLACED ON DELETE */}

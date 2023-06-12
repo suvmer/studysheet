@@ -1,6 +1,6 @@
 const ApiError = require('../exceptions/api-error');
 const tableService = require('../service/table-service');
-const {utils} = require('../utils');
+const {dayjs, utils} = require('../utils');
 
 /*
 {
@@ -17,40 +17,7 @@ class TableController {
   async addTable(req, res, next) {
     try{
       const {table} = req.body;
-      const toStore = {
-        name: '',
-        creator: req.user.id,
-        members: [],
-        groups: [],
-        info: [],
-        created: Date.now(),
-        tables: []
-      };
-      toStore.name = utils.checkField("sheetName", table.name, true);
-      if(!table.tables)
-        throw ApiError.BadRequest("Некорректный запрос");
-      table.tables.forEach(el => {
-        if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
-          throw ApiError.BadRequest("Неполные данные");
-        const tab = {
-          "start": 0,
-          "end": 0,
-          "name": "",
-          "cabinet": "",
-          "teacher": "",
-          "place": ""
-        };
-        if(dayjs().format('DD/MM/YYYY'))
-        tab['name'] = utils.checkField("sheetName", el.name, true);
-        tab['cabinet'] = utils.checkField("sheetCabinet", el.cabinet, true);
-        tab['teacher'] = utils.checkField("sheetTeacher", el.teacher, true);
-        tab['place'] = utils.checkField("sheetPlace", el.place, true);
-      });
-      toStore.tables = utils.checkField("sheetTables", table.tables, true);
-      toStore.tables = utils.checkField("sheetTables", table.tables, true);
-      toStore.tables = utils.checkField("sheetTables", table.tables, true);
-      console.log(toStore);
-
+      await tableService.addSchedule(req.user, table);
       return res.json(table);
     } catch(e) {
       next(e);
@@ -80,7 +47,15 @@ class TableController {
       const userid = req.params.userid;
       const tables = await tableService.getTables(userid);
       
-      return res.json(table);
+      return res.json(tables);
+    } catch(e) {
+      next(e);
+    }
+  }
+  async getMyTables(req, res, next) {
+    try{
+      const tables = await tableService.getTables(req.user.id);
+      return res.json(tables);
     } catch(e) {
       next(e);
     }

@@ -8,4 +8,7 @@ export default class ScheduleService {
         console.log("sended table")
         return api.post('/schedule/add', {table});
     }
+    static async getMyTables() {
+        return api.post('/schedule/my');
+    }
 }

@@ -318,6 +318,9 @@ aside a:focus, aside a.active {
   padding: 25px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
+.event_selected {
+  background-color: var(--green);
+}
 
 .info {
   display: flex;
