@@ -33,7 +33,7 @@ export const AuthForm = () => {
   return <form onSubmit={(e) => e.preventDefault()} className="login">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
-      {errorText ? <p className="login_error">{errorText}</p> : ""}
+      {errorText ? <p className="error_label">{errorText}</p> : ""}
       <input
         placeholder="Почта"
         autoFocus
@@ -57,7 +57,7 @@ export const AuthForm = () => {
       <div className="login_regbtn"><SmallButton onClick={() => setSign(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>
-      {errorText ? <p className="login_error">{errorText}</p> : ""}
+      {errorText ? <p className="error_label">{errorText}</p> : ""}
       <input
         placeholder="Имя(Фамилия)"
         autoFocus

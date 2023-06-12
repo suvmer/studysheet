@@ -95,6 +95,9 @@ body {
   gap: 20px;
   align-items: center;
 }
+.box_nobg_center {
+  justify-content: center;
+}
 
 .login {
   padding: 20px;
@@ -258,10 +261,6 @@ aside a:focus, aside a.active {
 }
 
 
-.showsubject {
-
-}
-
 .subject {
   display: flex;
   flex-direction: column;
@@ -278,21 +277,18 @@ aside a:focus, aside a.active {
   gap: 20px;
   padding: 10px 20px;
 }
-.icons_delete {
-  background-color: var(--transred);
+.icons {
   border-radius: 10px;
   padding: 5px;
   width: 40px!important;
   height: 40px!important;
   cursor: pointer;
 }
+.icons_delete {
+  background-color: var(--transred);
+}
 .icons_add {
   background-color: var(--green);
-  border-radius: 10px;
-  padding: 5px;
-  width: 40px!important;
-  height: 40px!important;
-  cursor: pointer;
 }
 
 .subject_panel_icons > * {
@@ -358,6 +354,10 @@ aside a:focus, aside a.active {
 .ant-picker-input>input {
   margin: 10px!important;
 }
+label {
+  padding-left: 1em;
+  font-size: 1.1em;
+}
 input {
   outline: none;
   padding: 10px;
@@ -415,8 +415,14 @@ input:invalid {
 .big {
   font-size: var(--big);
 }
+.gray {
+  color: var(--text-gray);
+}
 .center {
   text-align: center!important;
+}
+.right {
+  text-align: right!important;
 }
 .mid {
   font-size: var(--mid);

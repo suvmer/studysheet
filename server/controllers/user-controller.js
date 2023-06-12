@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const userService = require('../service/user-service');
-const utils = require('../utils');
+const {utils} = require('../utils');
 const ApiError = require('../exceptions/api-error');
 
 
@@ -34,9 +34,8 @@ class UserController {
   async logout(req, res, next) {
     try{
       const {refreshToken} = req.cookies;
-      console.log("AAAAAAAA")
-      const token = await userService.logout(refreshToken);
       res.clearCookie('refreshToken');
+      const token = await userService.logout(refreshToken);
       return res.status(token.status).json(token);
     } catch(e) {
       next(e);

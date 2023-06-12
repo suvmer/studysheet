@@ -59,10 +59,10 @@ const g = async () => {
     created BIGINT
   )
   `);
-  await pool.query(`INSERT INTO sheets(name, creator, members) VALUES($1, $2, $3)`, ["Aboba", 1, [5, 7, 6]]);
+  /*await pool.query(`INSERT INTO sheets(name, creator, members) VALUES($1, $2, $3)`, ["Aboba", 1, [5, 7, 6]]);
   await pool.query(`UPDATE sheets SET members = array_append(members, $1)`, [657]);
   const fetchTest = await pool.query('SELECT * from sheets WHERE id = 1');
-  console.log(fetchTest.rows[0].members);
+  console.log(fetchTest.rows[0].members);*/
 }
 g();
 

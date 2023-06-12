@@ -1,5 +1,5 @@
 const connection = require('../queries');
-const utils = require('../utils.js');
+const {utils} = require('../utils.js');
 const bcrypt = require('bcrypt');
 const tokenService = require('./token-service');
 const ApiError = require('../exceptions/api-error');

@@ -53,12 +53,10 @@ export const sendReg = (name, email, password, info) => {
 export const logout = () => {
     return async (dispatch, getState) => {
         try {
-            if(!getState().profile.isLogged)
-                return;
-            await AuthService.logout();
             dispatch(logoutAct());
+            await AuthService.logout();
         } catch(e) {
-            alert(e.response?.data?.message)
+            //alert(e.response?.data?.message)
         }
     }
   }
@@ -70,13 +68,13 @@ export const logout = () => {
             const response = await axios.get(`${API_URL}/refresh`, {withCredentials: true})
             //const response = await axios({withCredentials: true}).get(`${API_URL}/refresh`)
             console.log("refresh: ", response)
+            console.log("usr: ", response.data.user)
 
             if(!response.data.user)
                 throw Error("Требуется авторизация");
             dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
         } catch(e) {
             dispatch(logout());
-            //alert(e.response?.data?.message)
         }
     }
   }

@@ -1,5 +1,5 @@
 const connection = require('../queries');
-const utils = require('../utils.js');
+const {utils} = require('../utils.js');
 const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mailService = require('./mail-service');
@@ -23,7 +23,7 @@ class UserService {
         if(!info || !info.university || !info.city)
             throw ApiError.BadRequest("Неполные данные");
         name = utils.withACapital(utils.checkField("name", name, true));
-        email = utils.checkField("email", email, true);
+        email = utils.checkField("email", email, true).toLowerCase();
         info.university = utils.withACapital(utils.checkField("university", info.university, true));
         info.city = utils.withACapital(utils.checkField("city", info.city, true));
         
@@ -61,7 +61,7 @@ class UserService {
         return utils.success({message: "Почта успешно подтверждена"});
     }
     async login(email, password) {
-        email = utils.checkField("email", email, true);
+        email = utils.checkField("email", email, true).toLowerCase();
 
         const fetchUsers = await connection.query('SELECT password, id from users WHERE email=$1', [email]);
         if(fetchUsers.rowCount == 0)

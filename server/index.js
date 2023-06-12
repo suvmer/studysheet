@@ -4,7 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const router = require('./router/index.js');
 const connection = require('./queries.js');
-const utils = require('./utils.js');
+const {dayjs, utils} = require('./utils.js');
 const { registration } = require('./service/user-service.js');
 const errorMiddleware = require('./middlewares/error-middleware.js');
 
@@ -59,6 +59,17 @@ const start = () => {
     }
 }
 
+const today = dayjs().day(8);
+//console.log(`На этой неделе ${utils.days[0]}:`, atCurWeek(1, today).format('DD.MM.YYYY'));
+//console.log(`Сегодня ${utils.days[(today.day()+6)%7]}`, today.format('DD.MM.YYYY'));
+for(var i = 1; i <= 7; i++) console.log(`На этой неделе ${utils.days[i-1]}:`, atCurWeek(i, today).format('DD.MM.YYYY'));
+//for(var i = 1; i <= 7; i++) console.log(`На следующей неделе ${utils.days[i-1]}:`, atNextWeek(i, today).format('DD.MM.YYYY'));
+//for(var i = 1; i <= 7; i++) console.log(`На предыдущей неделе ${utils.days[i-1]}:`, atPrevWeek(i, today).format('DD.MM.YYYY'));
+//for(var i = 1; i <= 7; i++) console.log(`Следующий ${utils.days[i-1]}:`, nextDay(i, today).format('DD.MM.YYYY'));
+//for(var i = 1; i <= 7; i++) console.log(`Ближайший ${utils.days[i-1]}:`, closestDay(i, today).format('DD.MM.YYYY'));
+
+//console.log(`На прошлой неделе ${utils.days[0]}:`, atNextWeek(-1, today).format('DD.MM.YYYY'));
+
 router.get('/get/:id', async (req, res) => {
     const { id } = req.params
     const { rows } = await connection.query('SELECT * FROM sheets WHERE id = $1', [id])
@@ -84,3 +95,4 @@ router.get('/users/add/:name/:email/:password/:info/', async (req, res) => {
   })
 
 start();
+

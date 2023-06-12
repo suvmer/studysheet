@@ -6,7 +6,7 @@ import * as dayjs from 'dayjs'
 import { useDispatch, useSelector } from "react-redux";
 import { dateToString, days, validateTableData } from "../utils/utils";
 import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
-import {FiTrash2, FiRefreshCcw, FiPlus} from 'react-icons/fi'
+import {FiTrash2, FiRefreshCcw, FiPlus, FiArrowLeft} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
 import { sendTable } from "./actions/tables";
 import { useNavigate } from "react-router-dom";
@@ -51,8 +51,14 @@ export const CreateTable = () => {
 
   const handleChange = (idChange, idFor, namer, value) => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
-    if(namer == "title" || namer == "pub") {
-      sheet[namer] = value;
+    if(namer == "sheetName") {
+      sheet['name'] = value;
+      forceUpdate();
+      return;
+    }
+    if(namer == "pub") { //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
+      //TODO: если вуз - числитель и знаменатель или просто пары, название заведения (50%: УЧИТЕЛЯ И ПРЕПОДАВАТЕЛИ К РАСПИСАНИЮ)
+      sheet['isPublic'] = value;
       return;
     }
     sheet.tables[idChange][idFor] = {...(sheet.tables[idChange][idFor]), [namer]: value};
@@ -93,26 +99,32 @@ export const CreateTable = () => {
 
   console.log("Updated");
   return (<div className="wall wall_subjects">
-      <div className="box_nobg box_nobg_header box_nobg_big">
-          <p>Создание расписания</p>
+      <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
+          <p>{page == 0 ? "Создание расписания" : sheet.name}</p>
       </div>
+      {page == 1 ? <p className="center gray">Автор: Вы</p> : ""}
+      
       {errorText ? <p className="error_label">{errorText}</p> : ""}
-      <div className="box_nobg box_nobg_gap">
-          {weekPart != -1 ? <FiTrash2 className="icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
-          {weekPart == -1 ? <FiPlus className="icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
-          {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
-      </div>
-      <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}}`}>
-        <label for="sheetName">Название</label>
+      {page == 0 ? <>
+      <label for="sheetName">Название</label>
         <input
           key="sheetName"
           id="sheetName"
+          name="sheetName"
           onChange={changeEv}
-          name="title"
-          placeholder="Название"
-          defaultValue={`Расписание от ${dateToString(Date.now())[0]}`}
+          value={sheet.name}
+          placeholder={`Расписание от ${dateToString(Date.now())[0]}`}
           required
           autoFocus/>
+        <LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] == "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
+      </>: <>
+      <div className="box_nobg box_nobg_gap">
+          <FiArrowLeft className="icons" onClick={() => setPage(0)}/>
+          {weekPart != -1 ? <FiTrash2 className="icons icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
+          {weekPart == -1 ? <FiPlus className="icons icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
+          {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
+      </div>
+      <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
         {storedSheet.tables.map((elem, index) => {
           return (<div className="newsubject" key={index}>
             <div className="newsubject_in">
@@ -134,7 +146,7 @@ export const CreateTable = () => {
                       {weekPart != -1 ? <FiRefreshCcw/> : ""}
                       <AiOutlineArrowUp onClick={() => moveSubject(index, ind, true)}/>
                       <AiOutlineArrowDown onClick={() => moveSubject(index, ind, false)}/>
-                      <FiTrash2 className="subject_panel_icons_delete" onClick={() => deleteSubject(index, ind)}/>
+                      <FiTrash2 onClick={() => deleteSubject(index, ind)}/>
                     </div>
                   </div>
                   <div className="subject_body">
@@ -170,12 +182,12 @@ export const CreateTable = () => {
                 </div>)
               )}
             </div>
-            <DarkButton key={index+100000} onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
+            <DarkButton type="button" key={index+100000} onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
             </div>
           )
         })}
         <LightButton type="submit" onClick={sendSchedule}>Создать</LightButton>
-      </form>
+      </form></>}
     </div>
   );
 };
