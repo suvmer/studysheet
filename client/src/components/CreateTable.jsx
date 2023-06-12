@@ -73,6 +73,7 @@ export const CreateTable = () => {
     storeSheet(sheet);
     forceUpdate();
   }
+
   const moveSubject = (idChange, idFor, up) => {
     if(sheet.tables[idChange].length <= 1)
       return;

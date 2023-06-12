@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { getCity, sendLogin, sendReg } from "./actions/users";
 import { validateLoginData, validateRegData } from "../utils/utils";
 import { useNavigate } from "react-router-dom";
+import { setLogin } from "../store/uiReducer";
 
 export const AuthForm = () => {
   const [formData, setformData] = useState({"info": {}});
@@ -19,15 +20,19 @@ export const AuthForm = () => {
   }
 
   const dispatch = useDispatch();
+  const closeAll = (succ) => {
+    dispatch(setLogin(false))
+    navigate("/")
+  };
   const sendSignIn = () => {
     if(validateLoginData(formData))
       dispatch(sendLogin(formData.email, formData.password))
-        .then((succ) => navigate("/"), e => setErrorText(e.response?.data?.message));
+        .then(closeAll, e => setErrorText(e.response?.data?.message));
   }
   const sendSignUp = () => {
     if(validateRegData(formData))
       dispatch(sendReg(formData.name, formData.email, formData.password, formData.info))
-        .then((succ) => navigate("/"), e => setErrorText(e.response?.data?.message));
+        .then(closeAll, e => setErrorText(e.response?.data?.message));
   }
 
   return <form onSubmit={(e) => e.preventDefault()} className="login">
