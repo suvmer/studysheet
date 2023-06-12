@@ -10,7 +10,7 @@ class TableService {
 
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
         console.log("after:", toStore);
-        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, toStore.tables, Date.now()]);
+        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now()]);
         if(!addQuery.rowCount)
             throw ApiError.BadRequest("Не удалось добавить расписание");
         return utils.success({message: "Расписание успешно добавлено"});
@@ -21,7 +21,7 @@ class TableService {
         const fetchTable = await connection.query('SELECT * from sheets WHERE id=$1', [id]);
         if(!fetchTable.rowCount)
             throw ApiError.BadRequest("Unknown ID");
-        return utils.success({table: fetchTable.rows[0]});
+        return utils.success({table: {...fetchTable.rows[0], tables: JSON.parse(fetchTable.rows[0].tables)}});
     }
     async getTables(userid) {
         if(isNaN(userid))

@@ -33,12 +33,13 @@ export const MyPage = () => {
     const current = useSelector(state => state.profile.currentTable) ?? -1;
     const schedules = useSelector(state => state.table.schedules);
     const [list, setList] = useState([]);
+    const outlet = useOutlet();
+
     useEffect(() => {
         //tables.forEach(id => dispatch(getTable(id)));
         dispatch(getOwnTables()).then((res) => res && setList(res.tables), (err) => setList([]));
-    }, [useSelector(state => state.profile.isLogged)]);
+    }, [useSelector(state => state.profile.isLogged), outlet]);
 
-    const outlet = useOutlet();
     
     const bars = list.map(el => {
         return <TableBar key={el.id} table={el} creator={user} selected={el.id == current}/>

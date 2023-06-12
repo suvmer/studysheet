@@ -25,8 +25,12 @@ class TableController {
   }
   async getTable(req, res, next) {
     try{
-      const tableid = req.params.tableid;
-      return res.json(await tableService.getTable(tableid));
+      const {id} = req.body;
+      const table = await tableService.getTable(id);
+      console.log("Returning table ", table);
+      if(table.table?.public || table.table?.creator == req.user.id)
+        return res.status(table.status).json(table);
+      throw ApiError.UnauthorizedError();
     } catch(e) {
       next(e);
     }

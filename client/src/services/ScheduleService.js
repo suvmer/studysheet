@@ -11,4 +11,8 @@ export default class ScheduleService {
     static async getMyTables() {
         return api.post('/schedule/my');
     }
+    static async getTable(id) {
+        console.log("asking for table with id ", id);
+        return api.post('/schedule/get', {id});
+    }
 }

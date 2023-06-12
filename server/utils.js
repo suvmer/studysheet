@@ -127,6 +127,7 @@ class utils {
           [...Array(7)].forEach((e, ind) => {
             if(table.tables[ind] == undefined || !Array.isArray(table.tables[ind]))
                 throw ApiError.BadRequest("Недостаточно дней в расписании");
+            toStore.tables[ind] = [];
             table.tables[ind].forEach(el => {
                 if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
                   throw ApiError.BadRequest(`Неполные данные`);
@@ -144,11 +145,12 @@ class utils {
                 tab['cabinet'] = this.checkField("sheetCabinet", el.cabinet, true, true);
                 tab['teacher'] = this.checkField("sheetTeacher", el.teacher, true, true);
                 tab['place'] = this.checkField("sheetPlace", el.place, true, true);
-                console.log("Tostrore pushing ", tab)
-                toStore.tables.push(tab);
+                
+                toStore.tables[ind].push(tab);
               })
           });
-            /*table.tables.forEach(elem => elem.forEach(el => {
+          console.log("Итого ", toStore)
+              /*table.tables.forEach(elem => elem.forEach(el => {
             if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
               throw ApiError.BadRequest(`Неполные данные`);
             const tab = {

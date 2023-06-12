@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dateToString, days } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../components/Event';
@@ -30,19 +30,21 @@ TODO: кликом на предмет модальное окно с редак
 export const InfoPage = () => {
     document.title = "Просмотр расписания";
     const dispatch = useDispatch();
-    const users = useSelector(state => state.profile.users);
+    const user = useSelector(state => state.profile.user);
     const current = useSelector(state => state.profile.currentTable);
     const schedules = useSelector(state => state.table.schedules);
     let { id } = useParams();
 
+    const [table, setTable] = useState(null);
+
     useEffect(() => { //TODO: REPLACE useEffect() WITH useLoaderData from react router
-        dispatch(getTable(id));
-    }, []);
+        dispatch(getTable(id)).then((res) => res && setTable(res.table), (err) => setTable(null));
+    }, [useSelector(state => state.profile.isLogged)]);
 
 
     const outlet = useOutlet();
-    const table = schedules.find(el => el.id == id);
-    const creator = users.find(user => user.id == table.creator);
+    //const table = schedules.find(el => el.id == id);
+    const creator = user;//users.find(user => user.id == table.creator);
     console.log(table);
     const ownTables =
     table ? 
@@ -52,11 +54,10 @@ export const InfoPage = () => {
         <div className="eventTitle">Автор: {creator == undefined ? "Загрузка..." : creator.name}</div>
     </div>
     <div className="info">
-        
-
         {table.tables.map((element, day) => {
             return <div key={`sbjlist${day}`}>
                 <mark className="big">{days[day]}</mark>
+                {element.length == 0 ? <p className="mid center">Занятий нет</p> : ""}
                 {element.map((el, num) => <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>)}
                 </div>
         })}

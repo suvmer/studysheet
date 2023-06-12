@@ -139,26 +139,12 @@ export const getTables = () => {
 
 export const getTable = (id) => {
   return async (dispatch, getState) => {
-      const response = schedules.find(el => el.id==id);
-      /*const response = [
-          {
-            start: Date.now() + 20*60*1000 + 10000,
-            duration: 35,
-            name: "Пара математического анализа",
-            cabinet: "405",
-            teacher: "Ухалов Алексей Юрьевич",
-            place: "2 корпус(ул. Кирова, 8/10)"
-          }
-        ]*/
-      console.log(`getTable(${id}) dispatched`, response);
-      //const response = axios.get('https://api.github.com/users/suvmer');
-      if(!response)
-        return;
-      dispatch(fetchTable({...response, tables: response.tables.sort((e1, e2) => e1.start - e2.start)}));
-      if(!getState().profile.users.find(user => user.id == response.creator)) {
-        console.log(`Fetching profile id ${response.creator}`);
-        dispatch(getUser(response.creator));
-      }
+    if(!getState().profile.isLogged)
+      return;
+    const response = await ScheduleService.getTable(id);
+    if(!response || !response.data)
+        throw Error(response?.message ?? "Ошибка");
+    return response.data;
   }
 }
 
