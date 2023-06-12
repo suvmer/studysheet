@@ -132,6 +132,7 @@ body {
   cursor: pointer;
   color: var(--text-primary);
   border: none;
+  user-select: none;
 }
 .btn:hover {
   background-color: var(--link-hover);
@@ -216,6 +217,7 @@ aside a {
   padding: 16px;
   text-align: center;
   border-radius: 10px;
+  user-select: none;
 }
 aside a:hover {
   background-color: var(--link-hover);
