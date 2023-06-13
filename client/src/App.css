@@ -245,6 +245,18 @@ aside a:focus, aside a.active {
 .wall_subjects_list_second {
   gap: 40px;
 }
+.wall_list {
+  min-width: 0px;
+  word-wrap: break-word;
+}
+.wall_info {
+
+}
+
+.wall_info_icons {
+  display: flex;
+  justify-content: right;
+}
 
 .newsubject {
   display: flex;
@@ -328,11 +340,18 @@ aside a:focus, aside a.active {
   gap: 10px;
 }
 .infoTitle {
+  min-height: 200px;
   text-align: center;
   padding: 15px;
   background-color: var(--white);
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 5px;
+}
+.infoTitle_error {
+  display: flex;
+  flex-flow: column;
+  gap: 20px;
+  padding: 30px;
 }
 
 .midbox {

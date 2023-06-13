@@ -139,8 +139,8 @@ export const getTables = () => {
 
 export const getTable = (id) => {
   return async (dispatch, getState) => {
-    if(!getState().profile.isLogged)
-      return;
+    //if(!getState().profile.isLogged)
+    //  return;
     const response = await ScheduleService.getTable(id);
     if(!response || !response.data)
         throw Error(response?.message ?? "Ошибка");
@@ -157,6 +157,17 @@ export const sendTable = (table) => {
           throw Error(response?.message ?? "Ошибка");
       return "Успешно";
       //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
+  }
+}
+
+export const deleteTable = (id) => {
+  return async (dispatch, getState) => {
+      if(!getState().profile.isLogged)
+          return;
+      const response = await ScheduleService.deleteTable(id);
+      if(!response || !response.data)
+          throw Error(response?.message ?? "Ошибка");
+      return "Успешно";
   }
 }
 

@@ -15,6 +15,7 @@ router.post('/getcity', UserController.getCity);
 router.get('/getcity', UserController.getCity);
 router.post('/schedule/public/:tableid', TableController.getPublicTable);
 router.post('/schedule/add', authMiddleWare, TableController.addTable);
+router.post('/schedule/delete', authMiddleWare, TableController.deleteTable);
 router.post('/schedule/get', authMiddleWare, TableController.getTable);
 router.post('/schedule/getfrom', authMiddleWare, TableController.getTables);
 router.post('/schedule/my', authMiddleWare, TableController.getMyTables);

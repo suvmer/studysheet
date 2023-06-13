@@ -14,6 +14,7 @@ import { MyPage } from "./pages/MyPage";
 import { AccountPage } from "./pages/AccountPage";
 import { InfoPage } from "./pages/InfoPage";
 import { CreateTable } from "./components/CreateTable";
+import { ListTables } from "./components/ListTables";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       path: "/my",
       element: <MyPage/>,
       children: [{
+        path: "/my",
+        element: <ListTables/>
+      },
+      {
         path: "/my/add",
         element: <CreateTable/>
       }]

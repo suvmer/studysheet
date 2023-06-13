@@ -28,9 +28,9 @@ class TableController {
       const {id} = req.body;
       const table = await tableService.getTable(id);
       console.log("Returning table ", table);
-      if(table.table?.public || table.table?.creator == req.user.id)
+      if(table.table?.public || table.table?.creator.id == req.user.id)
         return res.status(table.status).json(table);
-      throw ApiError.UnauthorizedError();
+      throw ApiError.NoPermission("Нет прав на просмотр данного расписания");
     } catch(e) {
       next(e);
     }
@@ -60,6 +60,18 @@ class TableController {
     try{
       const tables = await tableService.getTables(req.user.id);
       return res.json(tables);
+    } catch(e) {
+      next(e);
+    }
+  }
+  async deleteTable(req, res, next) {
+    try{
+      const {id} = req.body;
+      const table = await tableService.getTable(id);
+      if(table.table.creator.id != req.user.id)
+        throw ApiError.NoPermission("Нет прав для удаления данного расписания");
+      const removeTable = await tableService.deleteTable(table.table.id);
+      return res.json(removeTable);
     } catch(e) {
       next(e);
     }

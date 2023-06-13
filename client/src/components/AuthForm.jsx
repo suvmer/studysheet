@@ -22,7 +22,7 @@ export const AuthForm = () => {
   const dispatch = useDispatch();
   const closeAll = (succ) => {
     dispatch(setLogin(false))
-    navigate("/")
+    //navigate("/")
   };
   const sendSignIn = () => {
     if(validateLoginData(formData))

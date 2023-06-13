@@ -15,4 +15,7 @@ export default class ScheduleService {
         console.log("asking for table with id ", id);
         return api.post('/schedule/get', {id});
     }
+    static async deleteTable(id) {
+        return api.post('/schedule/delete', {id});
+    }
 }
