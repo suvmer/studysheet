@@ -96,7 +96,7 @@ export const validateRegData = (formData) => {
   );
 }
 
-export const msToWords = (ms) => {
+export const msToWords = (ms, parentCase = false) => {
     if(ms < 1000)
         return "0 секунд";
     var ss = Math.round(Math.abs(ms/1000));
@@ -104,11 +104,14 @@ export const msToWords = (ms) => {
     ss %= 3600;
     const mins = Math.floor(ss / 60);
     const sec = ss % 60;
-
+    if(parentCase)
+      return `${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
+              ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
+              ${sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
     return `${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
-${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
-${sec > 0 ? sec + " " + (CountForm(sec)) : ''}`;
-  };
+            ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
+            ${sec > 0 ? sec + " " + (CountForm(sec)) : ''}`;
+};
 export const msToNumbers = (ms) => {
     var ss = Math.round(Math.max(0, ms/1000));
     const hours = Math.floor(ss / 3600);
@@ -132,7 +135,9 @@ export const getTitle = (ms) => {
     return "Следующее событие";
   if(ms > 20*60*1000)
     return "Скоро будет";
-  return "Почти началось";
+  if(ms > 0)
+    return "Почти началось";
+  return "Уже началось";
 }
 
 export const generateKey = (pre) => {

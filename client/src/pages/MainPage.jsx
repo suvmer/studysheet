@@ -57,7 +57,7 @@ export const MainPage = () => {
 
   if(!response[1])
       return <AddSomeSchedule/>
-  return <div className='wall'><div>{JSON.stringify(response[1])}</div><br/><OnlineTable table={response[1]}/></div>
+  return <div className='wall'>{/*<div>{JSON.stringify(response[1])}</div>*/}<OnlineTable table={response[1]}/></div>
 /*
   const dayWeek = 0;//(new Date()).getDay();
   console.log(schedules, dayWeek);

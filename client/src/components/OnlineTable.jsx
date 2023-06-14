@@ -32,7 +32,7 @@ export const OnlineTable = ({table}) => {
     const curdate = useSelector(state => state.ui.time);    
     if(cursubj == null)
         return <div>Нет занятий</div>
-    const dif = getDif(curdate, cursubj.start);
+    const dif = cursubj.start - curdate;
     return <div className={`event `+((dif == 0) ? 'active' : '')}>
         <div className="nextEvent">
         <span>{getTitle(dif)}</span>
@@ -42,14 +42,14 @@ export const OnlineTable = ({table}) => {
         </div>
         <hr />
         <div className="eventBody">{cursubj.name}</div>
-        <div className="eventTitle">Начнётся через {msToWords(dif)}</div>
+        <div className="eventTitle">{curdate < cursubj.start ? "Начнётся через" : "Идёт"}  {msToWords(Math.abs(dif))}</div>
         <hr />
         <br/>
-        
-        <InfoBlock text="Кабинет:">{cursubj.cabinet}</InfoBlock>
-        <InfoBlock text="До начала:">{msToNumbers(dif)}</InfoBlock>
+        {cursubj.cabinet ? <p className='mid'>Кабинет: {cursubj.cabinet}</p> : ""}
+        {cursubj.teacher ? <p className='mid'>Ведёт: {cursubj.teacher}</p> : ""}
+        {curdate >= cursubj.start ? <p className='mid'>До конца: {msToNumbers(cursubj.end - curdate)}</p> : ""}
+        <p className='mid'>Длительность: {msToWords(cursubj.end - cursubj.start)}</p>
         <br/>
-        <p className="left">{cursubj.teacher}</p>
         <p className="left">{cursubj.place}</p>
     </div>
 }
