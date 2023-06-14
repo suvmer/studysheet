@@ -6,16 +6,17 @@ import { getOwnTables } from '../components/actions/tables';
 import {LightButton} from '../components/UI/Buttons';
 import { AuthAsk } from './AuthAsk';
 import dayjs from 'dayjs';
+import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai';
 
 
 const TableBar = ({table, selected}) => {
     if(table == undefined)
         return <div>Загрузка...</div>;
-    console.log(table);
-    return <NavLink className="event" to={`/info/${table.id}${selected ? ` event_selected` : ``}`}>
-            <InfoBlock text="">{table.name}</InfoBlock>
+    console.log(selected)
+    return <NavLink className={`sheet${selected ? ` sheet_selected` : ``}`} to={'/info/${table.id}'}>
+            <InfoBlock text="">{table.name}{selected ? <AiFillPushpin className="icons"/> : <AiOutlinePushpin className="icons"/>}</InfoBlock>
 
-            <div className="eventTitle">Автор: {JSON.stringify(table.creator)}</div>
+            <div className="eventTitle">Автор: {table.creator.name}</div>
             <div className="eventTitle">Создано: {dayjs(+table.created).format("DD.MM.YYYY HH:mm:ss")}</div>
 
             <br/>
@@ -31,6 +32,7 @@ export const ListTables = () => {
     const user = useSelector(state => state.profile.user);
     const current = user?.currentTable ?? -1;
     const [list, setList] = useState([]);
+    console.log(current);
 
     useEffect(() => {
         dispatch(getOwnTables()).then((res) => res && setList(res.tables), (err) => setList([]));

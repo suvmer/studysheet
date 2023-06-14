@@ -24,6 +24,7 @@ a, p {
   --link-hover: rgba(240, 240, 240, 1);
   --link-active: rgba(220, 220, 220, 1);
 
+  --selected: rgb(255, 255, 0.5);
   --white: rgb(251, 251, 251);
   --red: rgba(255, 0, 0, 1);
   --transred: rgba(255, 0, 0, 0.5);
@@ -322,6 +323,17 @@ aside a:focus, aside a.active {
   padding: 15px;
   background-color: var(--white);
   font-size: var(--mid);
+}
+
+
+.sheet {
+  border-radius: 10px;
+  background-color: var(--white);
+  padding: 25px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+}
+.sheet_selected {
+  background-color: var(--selected);
 }
 
 .event {

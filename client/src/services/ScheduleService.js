@@ -5,14 +5,12 @@ export default class ScheduleService {
         return api.get('/users');
     }
     static async sendTable(table) {
-        console.log("sended table")
         return api.post('/schedule/add', {table});
     }
     static async getMyTables() {
         return api.post('/schedule/my');
     }
     static async getTable(id) {
-        console.log("asking for table with id ", id);
         return api.post('/schedule/get', {id});
     }
     static async editTable(table) {
