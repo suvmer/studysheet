@@ -17,7 +17,11 @@ export const CreateTable = (props = null) => {
   const [isEdit, setEdit] = useState(false);
   const defs = useSelector(state => state.table.defs[0]);
   const getDefaultSchedule = (ind) => {
-    return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
+    ind = Math.min(defs.length-1, ind);
+    const [starthour, startminute] = defs[ind][0].split(':').map(el => +el);
+    const [endhour, endminute] = defs[ind][1].split(':').map(el => +el);
+    return [dayjs().hour(starthour).minute(startminute), dayjs().hour(endhour).minute(endminute)];
+    //return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
   }
   const getField = (i = 0) => ({
     start: getDefaultSchedule(i)[0].valueOf(),
@@ -49,8 +53,9 @@ export const CreateTable = (props = null) => {
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
-    storeSheet(sheet);
-    forceUpdate();
+    doSort(index);
+    //storeSheet(sheet);
+    //forceUpdate();
     console.log(storedSheet)
   };
   const changeEv = event => {
