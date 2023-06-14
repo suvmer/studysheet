@@ -15,6 +15,7 @@ import { AccountPage } from "./pages/AccountPage";
 import { InfoPage } from "./pages/InfoPage";
 import { CreateTable } from "./components/CreateTable";
 import { ListTables } from "./components/ListTables";
+import { EditPage } from "./pages/EditPage";
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: "/my/add",
         element: <CreateTable/>
+      },
+      {
+        path: "/my/edit/:id",
+        element: <EditPage/>
       }]
     },
     {

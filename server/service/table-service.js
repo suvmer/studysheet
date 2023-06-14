@@ -15,6 +15,16 @@ class TableService {
             throw ApiError.BadRequest("Не удалось добавить расписание");
         return utils.success({message: "Расписание успешно добавлено"});
     }
+    async editSchedule(user, schedule) {
+        console.log("before:", schedule);
+
+        const toStore = {...utils.checkSchedule(schedule), creator: user.id};
+        console.log("after:", toStore);
+        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now()]);
+        if(!addQuery.rowCount)
+            throw ApiError.BadRequest("Не удалось добавить расписание");
+        return utils.success({message: "Расписание успешно добавлено"});
+    }
     async getTable(id) {
         if(isNaN(id))
             throw ApiError.BadRequest("ID is NaN");

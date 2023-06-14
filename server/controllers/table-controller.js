@@ -76,6 +76,15 @@ class TableController {
       next(e);
     }
   }
+  async editTable(req, res, next) {
+    try{
+      const {table} = req.body;
+      await tableService.editSchedule(req.user, table);
+      return res.json(table);
+    } catch(e) {
+      next(e);
+    }
+  }
 }
 
 module.exports = new TableController()

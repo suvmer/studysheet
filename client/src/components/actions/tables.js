@@ -159,6 +159,17 @@ export const sendTable = (table) => {
       //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
   }
 }
+export const editTable = (table) => {
+  return async (dispatch, getState) => {
+      if(!getState().profile.isLogged)
+          return;
+      const response = await ScheduleService.editTable(table);
+      if(!response || !response.data)
+          throw Error(response?.message ?? "Ошибка");
+      return "Успешно";
+      //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
+  }
+}
 
 export const deleteTable = (id) => {
   return async (dispatch, getState) => {

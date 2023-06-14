@@ -1,6 +1,4 @@
-import React, { useReducer, useState } from "react";
-import classes from "../styles/UI/CreateTable.module.css";
-import { InfoBlock } from "./InfoBlock";
+import React, { useEffect, useReducer, useState } from "react";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useDispatch, useSelector } from "react-redux";
@@ -8,14 +6,15 @@ import { dateToString, days, validateTableData } from "../utils/utils";
 import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
 import {FiTrash2, FiRefreshCcw, FiPlus, FiArrowLeft} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
-import { sendTable } from "./actions/tables";
+import { editTable, sendTable } from "./actions/tables";
 import { useNavigate } from "react-router-dom";
 
 
 var globid = 0;
 
-export const CreateTable = () => {
+export const CreateTable = (props = null) => {
   const [page, setPage] = useState(0);
+  const [isEdit, setEdit] = useState(false);
   const defs = useSelector(state => state.table.defs[0]);
   const getDefaultSchedule = (ind) => {
     return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
@@ -36,6 +35,14 @@ export const CreateTable = () => {
     //...Array(7).fill([getField()]) //no new instances
     ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //new instances
   ]});
+  useEffect(() => {
+    if(props?.toedit != null) {
+      setEdit(true);
+      storeSheet({...props.toedit, tables: props.toedit.tables.map(el => el.map(subel => ({...subel, id: globid++})))});
+    }
+  }, []);
+  
+  
   const sheet = storedSheet;
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
@@ -97,11 +104,17 @@ export const CreateTable = () => {
       dispatch(sendTable(sheet))
         .then((succ) => navigate("/my"), e => setErrorText(e.response?.data?.message));
   }
+  const editSchedule = () => {
+    if(validateTableData(sheet.tables))
+      dispatch(editTable(sheet))
+        .then((succ) => navigate(`/info/${sheet.id}`), e => setErrorText(e.response?.data?.message));
+  }
+  
 
   console.log("Updated");
   return (<div className="wall wall_subjects">
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
-          <p>{page == 0 ? "Создание расписания" : sheet.name}</p>
+          <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : sheet.name}</p>
       </div>
       {page == 1 ? <p className="center gray">Автор: Вы</p> : ""}
       
@@ -189,7 +202,8 @@ export const CreateTable = () => {
             </div>
           )
         })}
-        <LightButton type="submit" onClick={sendSchedule}>Создать</LightButton>
+        {errorText ? <p className="error_label">{errorText}</p> : ""}
+        <LightButton type="submit" onClick={isEdit ? editSchedule : sendSchedule}>{isEdit ? "Изменить" : "Создать"}</LightButton>
       </form></>}
     </div>
   );
