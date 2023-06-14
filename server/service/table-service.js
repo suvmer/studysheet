@@ -6,30 +6,30 @@ const ApiError = require('../exceptions/api-error');
 
 class TableService {
     async addSchedule(user, schedule) {
-        console.log("before:", schedule);
-
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
-        console.log("after:", toStore);
         const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now()]);
         if(!addQuery.rowCount)
             throw ApiError.BadRequest("Не удалось добавить расписание");
         return utils.success({message: "Расписание успешно добавлено"});
     }
     async editSchedule(user, schedule) {
-        console.log("before:", schedule);
-
+        if(!schedule.id)
+            throw ApiError.BadRequest("Не удалось обновить расписание");
+        const table = await this.getTable(schedule.id);
+        if(table.table.creator.id != user.id)
+            throw ApiError.NoPermission("Нет прав для редактирования данного расписания");
+        
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
-        console.log("after:", toStore);
-        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now()]);
+        const addQuery = await connection.query('UPDATE sheets SET (name, tables, info) = ($1, $2, $3) WHERE id = $4', [toStore.name, JSON.stringify(toStore.tables), JSON.stringify(toStore.info), table.table.id]);
         if(!addQuery.rowCount)
-            throw ApiError.BadRequest("Не удалось добавить расписание");
-        return utils.success({message: "Расписание успешно добавлено"});
+            throw ApiError.BadRequest("Не удалось обновить расписание");
+        return utils.success({message: "Расписание успешно обновлено"});
     }
     async getTable(id) {
         if(isNaN(id))
             throw ApiError.BadRequest("ID is NaN");
         //const fetchTable = await connection.query('SELECT * from sheets WHERE id=$1', [id]);
-        const fetchTable = await connection.query('SELECT sheets.id, sheets.name, row_to_json(users) AS creator, sheets.members, sheets.groups, sheets.info, sheets.public, sheets.tables, sheets.created from sheets JOIN users ON sheets.creator = users.id AND sheets.id = $1', [id]);
+        const fetchTable = await connection.query(`SELECT sheets.id, sheets.name, json_build_object('id', users.id, 'name', users.name, 'info', users.info) AS creator, sheets.members, sheets.groups, sheets.info, sheets.public, sheets.tables, sheets.created from sheets JOIN users ON sheets.creator = users.id AND sheets.id = $1`, [id]);
         if(!fetchTable.rowCount)
             throw ApiError.NotFound("Расписание не найдено");
         return utils.success({table: {...fetchTable.rows[0], tables: JSON.parse(fetchTable.rows[0].tables)}});

@@ -98,8 +98,6 @@ class utils {
                 return str;
             return true;
         }
-        if(fieldName == "sheetName")
-            console.log("UNACCEPTABLE:", str, str.length);
 
         if(!str || !(str.length >= min && str.length <= max && pattern.test(str))) {
             if(tr)
@@ -132,8 +130,8 @@ class utils {
                 if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
                   throw ApiError.BadRequest(`Неполные данные`);
                 const tab = {
-                  "start": el.start,
-                  "end": el.end,
+                  "start": dayjs().hour(dayjs(el.start).hour()).minute(dayjs(el.start).minute()).valueOf(),
+                  "end": dayjs().hour(dayjs(el.end).hour()).minute(dayjs(el.end).minute()).valueOf(),
                   "name": "",
                   "cabinet": "",
                   "teacher": "",
@@ -149,7 +147,6 @@ class utils {
                 toStore.tables[ind].push(tab);
               })
           });
-          console.log("Итого ", toStore)
               /*table.tables.forEach(elem => elem.forEach(el => {
             if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
               throw ApiError.BadRequest(`Неполные данные`);

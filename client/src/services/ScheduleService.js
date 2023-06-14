@@ -15,10 +15,11 @@ export default class ScheduleService {
         console.log("asking for table with id ", id);
         return api.post('/schedule/get', {id});
     }
-    static async editTable(id) {
-        return api.put('/schedule/edit', {id});
+    static async editTable(table) {
+        return api.put('/schedule/edit', {table});
     }
     static async deleteTable(id) {
-        return api.delete('/schedule/delete', {id});
+        console.log("Send to del ", id)
+        return api.delete(`/schedule/delete`, {data: {id: id}});
     }
 }

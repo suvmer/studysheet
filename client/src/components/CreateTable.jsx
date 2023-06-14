@@ -44,6 +44,7 @@ export const CreateTable = (props = null) => {
   
   
   const sheet = storedSheet;
+  console.log(sheet);
 
   const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
   const addSubj = (index) => {
@@ -56,8 +57,19 @@ export const CreateTable = (props = null) => {
     handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
   }
 
+  const doSort = (id) => {
+    //console.log()
+    sheet.tables[id].sort((e1, e2) => e1.start - e2.start);
+    console.log(sheet.tables[id])
+    storeSheet(sheet);
+    forceUpdate();
+  }
+
   const handleChange = (idChange, idFor, namer, value) => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
+    if(namer == "start" || namer == "end") {
+      console.log(namer, ":", dayjs(value).format("DD.MM.YYYY HH:mm"))
+    }
     if(namer == "sheetName") {
       sheet['name'] = value;
       forceUpdate();
@@ -69,6 +81,8 @@ export const CreateTable = (props = null) => {
       return;
     }
     sheet.tables[idChange][idFor] = {...(sheet.tables[idChange][idFor]), [namer]: value};
+    if(namer == 'start')
+      doSort(idChange);
   }
   const deleteSubject = (idChange, idFor) => {
     console.log({...sheet.tables[idChange]})
@@ -116,7 +130,7 @@ export const CreateTable = (props = null) => {
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
           <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : sheet.name}</p>
       </div>
-      {page == 1 ? <p className="center gray">Автор: Вы</p> : ""}
+      {page == 1 ? <p className="center gray">Автор: {storedSheet.creator ? storedSheet.creator.name : "Вы"}</p> : ""}
       
       {errorText ? <p className="error_label">{errorText}</p> : ""}
       {page == 0 ? <>

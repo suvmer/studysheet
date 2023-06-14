@@ -110,6 +110,13 @@ class UserService {
         const users = await connection.query(`SELECT * FROM users`);
         return utils.success({users: users.rows.map(el => ({...el}))});
     }
+
+    //will be removed soon
+    /*async appendTable(userid, tableid) {
+        const users = await connection.query(`UPDATE users SET "ownTables" = array_append("ownTables", $1) WHERE id = $2`, [tableid, userid]);
+        if(users.rowCount)
+            throw s
+    }*/
     
 }
 
