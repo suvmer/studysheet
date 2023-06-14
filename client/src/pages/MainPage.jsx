@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { dateToString, days, getDif, getDifSign, shortDays } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../components/Event';
-import { getTable, getTables } from '../components/actions/tables';
+import { getOwnTables, getTable, getTables } from '../components/actions/tables';
 import { NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
+import { OnlineTable } from '../components/OnlineTable';
 
 const Authorize = () =>
   <div className="wall">
@@ -31,31 +32,40 @@ const MainTitle = () => {
 export const MainPage = () => {
   const dispatch = useDispatch();
   const user = useSelector(state => state.profile.user);
-  const isLogged = useSelector(state => state.profile.isLogged);
+  const [response, setResponse] = useState(["Загрузка", null]);
 
-  useEffect(() => { //load table infos
-    if(isLogged)
-      (user.ownTables??[]).forEach(id => dispatch(getTable(id)));
-  }, []);
+  useEffect(() => { //TODO: REPLACE useEffect() WITH useLoaderData from react router
+    dispatch(getOwnTables()).then((res) => {
+      console.log("res: ", res);
+      if(!res)
+        return;
+      if(res.tables.length == 0)
+        return setResponse(["Нет таблиц", null, 404])
+      if(!user.currentTable || !res.tables.find(el => el.id == user.currentTable))
+        return setResponse(["", res.tables[0], 200]);
+      return setResponse(["", res.tables.find(el => el.id == user.currentTable), 200]);
+    },
+    (err) => {
+        return setResponse([err.response.data.message, null, err.response.status])
+    });
+  }, [useSelector(state => state.profile.isLogged)]);
 
-  const schedules = useSelector(state => state.table.schedules);
-  if(!isLogged)
+  console.log("rerenderrrr")
+
+  if(!user.id)
     return <Authorize/>;
 
-  var table = schedules.find(el => el.id == user.currentTable);
-  if(table == undefined) {
-    if((user.ownTables??[]).length == 0)
+  if(!response[1])
       return <AddSomeSchedule/>
-    table = user.ownTables[0];
-  }
-
+  return <div className='wall'><div>{JSON.stringify(response[1])}</div><br/><OnlineTable table={response[1]}/></div>
+/*
   const dayWeek = 0;//(new Date()).getDay();
   console.log(schedules, dayWeek);
   const today = dayjs().hour(10).minute(10);
   const tables = schedules.filter(el => ((user.ownTables??[]).find(id => (id == el.id)) != undefined)).map(element => {
     /*var closest = element.tables[dayWeek].reduce(function(prev, curr) {
       return (getDif(curr.start, today) < getDifSign(prev.start, today) ? curr : prev);
-    });*/
+    });*
     const check = 1;
     console.log(dateToString(today)[1]);
     console.log(dateToString(element.tables[dayWeek][check].start)[1]);
@@ -68,5 +78,5 @@ export const MainPage = () => {
   return <div className="wall">
             <MainTitle />
             {tables}
-         </div>;
+         </div>;*/
 }

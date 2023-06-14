@@ -138,6 +138,23 @@ export const getTables = () => {
     }
 }
 
+const standartTable = (table) => {
+  if(typeof(table.tables) == "string")
+    table.tables = JSON.parse(table.tables);
+  return ({
+      ...table,
+      tables: table.tables.map(el =>
+        el.map(subj => {
+            var start = dayjs(subj.start);
+            var end = dayjs(subj.end);
+            return ({...subj, start: dayjs().hour(start.hour()).minute(start.minute()), end: dayjs().hour(end.hour()).minute(end.minute())});
+          }
+        )
+      )
+    }
+  )
+}
+
 export const getTable = (id) => {
   return async (dispatch, getState) => {
     //if(!getState().profile.isLogged)
@@ -147,16 +164,7 @@ export const getTable = (id) => {
         throw Error(response?.message ?? "Ошибка");
     return ({
       ...response.data,
-      table: {
-        ...response.data.table,
-        tables: response.data.table.tables.map(el => 
-          el.map(subj => {
-              var start = dayjs(subj.start);
-              var end = dayjs(subj.end);
-              return ({...subj, start: dayjs().hour(start.hour()).minute(start.minute()), end: dayjs().hour(end.hour()).minute(end.minute())});
-            }
-          ))
-      }
+      table: standartTable(response.data.table)
     });
   }
 }
@@ -202,7 +210,9 @@ export const getOwnTables = () => {
       const response = await ScheduleService.getMyTables();
       if(!response || !response.data)
           throw Error(response?.message ?? "Ошибка");
-      return response.data;
+      return {...response.data,
+        tables: response.data.tables.map(el => standartTable(el))
+      };
       //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
   }
 }
