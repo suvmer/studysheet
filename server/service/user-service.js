@@ -106,6 +106,10 @@ class UserService {
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
         return utils.success({...tokens, user: userDto});
     }
+    async selectSheet(userid, id) {
+        await connection.query(`UPDATE users SET "currentTable" = $1 WHERE id = $2`, [id, userid]);
+        return utils.success({message: "Успешно"});
+    }
     async getAllUsers() {
         const users = await connection.query(`SELECT * FROM users`);
         return utils.success({users: users.rows.map(el => ({...el}))});

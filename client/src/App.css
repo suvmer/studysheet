@@ -329,11 +329,20 @@ aside a:focus, aside a.active {
 .sheet {
   border-radius: 10px;
   background-color: var(--white);
-  padding: 25px;
+  padding: 15px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
 }
 .sheet_selected {
   background-color: var(--selected);
+}
+.sheet_panel {
+  display: flex;
+  justify-content: center;
+}
+.sheet_panel_title {
+  font-size: var(--mid);
+  width: 100%;
+  text-align: center;
 }
 
 .event {

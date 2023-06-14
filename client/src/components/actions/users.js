@@ -1,8 +1,9 @@
-import { fetchUser, login, logoutAct } from '../../store/profileReducer';
+import { fetchUser, login, logoutAct, selectSheetAct } from '../../store/profileReducer';
 import AuthService from '../../services/AuthService';
 import UtilsService from '../../services/UtilsService';
 import axios from 'axios';
 import { API_URL } from '../../http';
+import UserService from '../../services/UserService';
 
 const users =
 [
@@ -78,6 +79,22 @@ export const logout = () => {
             alert(e.response.message)
             console.log(e)
             await dispatch(logout());
+        }
+    }
+  }
+
+  export const selectSheet = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            if(!getState().profile.isLogged)
+                return;
+            dispatch(selectSheetAct(id));
+            const response = await UserService.selectSheet(id);
+            if(!response || !response.data)
+                throw Error(response?.message ?? "Ошибка");
+            return "Успешно";
+        } catch(e) {
+            console.log(e)
         }
     }
   }

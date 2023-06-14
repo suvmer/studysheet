@@ -5,6 +5,7 @@
 const GET_USER = "GET_USER";
 const LOGIN = "LOGIN";
 const LOGOUT = "LOGOUT";
+const SELECTSHEET = "SELECTSHEET";
 
 const defaultState = {
   isLogged: false,
@@ -37,6 +38,10 @@ export const profileReducer = (state = defaultState, action) => {
     case LOGOUT:
       localStorage.removeItem('token');
       return {...state, isLogged: false, user: {}};
+    case SELECTSHEET:
+      if(!state.isLogged || !action.payload)
+        return state;
+      return {...state, user: {...state.user, currentTable: action.payload}};
     default:
       return state;
   }
@@ -45,3 +50,4 @@ export const profileReducer = (state = defaultState, action) => {
 export const fetchUser = (user) => ({type: GET_USER, payload: user})
 export const login = (user, refreshToken, accessToken) => ({type: LOGIN, payload: {user: user, refreshToken: refreshToken, accessToken: accessToken}})
 export const logoutAct = () => ({type: LOGOUT})
+export const selectSheetAct = (id) => ({type: SELECTSHEET, payload: id})

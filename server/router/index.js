@@ -3,7 +3,6 @@ const UserController = require('../controllers/user-controller')
 const TableController = require('../controllers/table-controller')
 const router = new Router();
 const authMiddleWare = require('../middlewares/auth-middleware');
-const trimMiddleware = require('../middlewares/trim-middleware');
 
 router.post('/registration', UserController.registration);
 router.post('/login', UserController.login);
@@ -20,6 +19,7 @@ router.put('/schedule/edit', authMiddleWare, TableController.editTable);
 router.post('/schedule/get', authMiddleWare, TableController.getTable);
 router.post('/schedule/getfrom', authMiddleWare, TableController.getTables);
 router.post('/schedule/my', authMiddleWare, TableController.getMyTables);
+router.post('/schedule/select', authMiddleWare, UserController.selectSheet);
 
 
 module.exports = router;

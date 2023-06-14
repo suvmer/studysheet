@@ -2,6 +2,7 @@ const fetch = require('node-fetch');
 const userService = require('../service/user-service');
 const {utils} = require('../utils');
 const ApiError = require('../exceptions/api-error');
+const tableService = require('../service/table-service');
 
 
 class UserController {
@@ -68,6 +69,20 @@ class UserController {
     }
 
   }
+
+  async selectSheet(req, res, next) {
+    try{
+      const {id} = req.body;
+      const table = await tableService.getTable(id);
+      if(table.table.creator.id != req.user.id)
+        throw ApiError.NoPermission("Нет прав для закрепления данного расписания");
+      const selectTable = await userService.selectSheet(req.user.id, table.table.id);
+      return res.json(selectTable);
+    } catch(e) {
+      next(e);
+    }
+  }
+
   async getCity(req, res, next) {
     try {
       const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.connection.remoteAddress).split(':')[3];
@@ -102,6 +117,7 @@ class UserController {
       next(e);
     }
   }
+  
 }
 
 module.exports = new UserController()

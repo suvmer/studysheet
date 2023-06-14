@@ -67,7 +67,6 @@ class TableController {
   async deleteTable(req, res, next) {
     try{
       const {id} = req.body;
-      console.log("deleting: ", id)
       const table = await tableService.getTable(id);
       if(table.table.creator.id != req.user.id)
         throw ApiError.NoPermission("Нет прав для удаления данного расписания");
