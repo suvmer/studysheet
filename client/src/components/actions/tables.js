@@ -1,6 +1,7 @@
 import { fetchTable, fetchTables } from '../../store/tableReducer';
 import { getUser } from './users';
 import ScheduleService from '../../services/ScheduleService';
+import dayjs from 'dayjs'
 
 const schedules =
 [
@@ -144,7 +145,19 @@ export const getTable = (id) => {
     const response = await ScheduleService.getTable(id);
     if(!response || !response.data)
         throw Error(response?.message ?? "Ошибка");
-    return response.data;
+    return ({
+      ...response.data,
+      table: {
+        ...response.data.table,
+        tables: response.data.table.tables.map(el => 
+          el.map(subj => {
+              var start = dayjs(subj.start);
+              var end = dayjs(subj.end);
+              return ({...subj, start: dayjs().hour(start.hour()).minute(start.minute()), end: dayjs().hour(end.hour()).minute(end.minute())});
+            }
+          ))
+      }
+    });
   }
 }
 
