@@ -13,7 +13,7 @@ const TableBar = ({table, selected}) => {
     if(table == undefined)
         return <div>Загрузка...</div>;
     console.log(selected)
-    return <NavLink className={`sheet${selected ? ` sheet_selected` : ``}`} to={'/info/${table.id}'}>
+    return <NavLink className={`sheet${selected ? ` sheet_selected` : ``}`} to={`/info/${table.id}`}>
             <InfoBlock text="">{table.name}{selected ? <AiFillPushpin className="icons"/> : <AiOutlinePushpin className="icons"/>}</InfoBlock>
 
             <div className="eventTitle">Автор: {table.creator.name}</div>
