@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { DarkButton, DarkButtonMid, DarkSmallButton, SmallButton } from "./UI/Buttons";
 import { useDispatch } from "react-redux";
-import { getCity, sendLogin, sendReg } from "./actions/users";
+import { sendLogin, sendReg } from "./actions/users";
 import { validateLoginData, validateRegData } from "../utils/utils";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 import { setLogin } from "../store/uiReducer";
 
 export const AuthForm = () => {
   const [formData, setformData] = useState({"info": {}});
   const [isSignIn, setSign] = useState(false);
   const [errorText, setErrorText] = useState("");
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const changeEv = event =>
     handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
@@ -35,7 +35,7 @@ export const AuthForm = () => {
         .then(closeAll, e => setErrorText(e.response?.data?.message));
   }
 
-  return <form onSubmit={(e) => e.preventDefault()} className="login">
+  return <form onSubmit={(e) => e.preventDefault()} className="portal">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
       {errorText ? <p className="error_label">{errorText}</p> : ""}
@@ -59,7 +59,7 @@ export const AuthForm = () => {
         autoComplete="on"
         required/>
       <DarkButton type="submit" onClick={() => sendSignIn()}>Войти</DarkButton>
-      <div className="login_regbtn"><SmallButton onClick={() => setSign(false)}>Регистрация</SmallButton></div>
+      <div className="portal_regbtn"><SmallButton onClick={() => setSign(false)}>Регистрация</SmallButton></div>
     </> : <>
       <p>Регистрация</p>
       {errorText ? <p className="error_label">{errorText}</p> : ""}
@@ -88,7 +88,7 @@ export const AuthForm = () => {
         required/>
       <input  
         placeholder="Пароль"
-        onChange={changeEv} 
+        onChange={changeEv}
         name="password" 
         type="password" 
         value={formData.password??""}
@@ -119,7 +119,7 @@ export const AuthForm = () => {
         autoComplete="on"
         required/>
       <DarkButton type="submit" onClick={() => sendSignUp()}>Зарегистрироваться</DarkButton>
-      <div className="login_regbtn"><SmallButton onClick={() => setSign(true)}>Авторизация</SmallButton></div>
+      <div className="portal_regbtn"><SmallButton onClick={() => setSign(true)}>Авторизация</SmallButton></div>
     </>}
   </form>;
 };

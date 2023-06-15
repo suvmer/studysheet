@@ -6,6 +6,8 @@ const authMiddleWare = require('../middlewares/auth-middleware');
 
 router.post('/registration', UserController.registration);
 router.post('/login', UserController.login);
+router.put('/changepassword', authMiddleWare, UserController.changePassword);
+router.put('/changeinfo', authMiddleWare, UserController.changeInfo);
 router.post('/logout', UserController.logout);
 router.get('/activate/:link', UserController.activate);
 router.get('/refresh', UserController.refresh);

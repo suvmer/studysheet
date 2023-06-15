@@ -3,9 +3,10 @@ import { dateToString } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { InfoBlock } from '../components/InfoBlock';
 import { AuthForm } from '../components/AuthForm';
-import { LightButton } from '../components/UI/Buttons';
+import { DarkButton, LightButton } from '../components/UI/Buttons';
 import { logout } from '../components/actions/users';
 import { getOwnTables } from '../components/actions/tables';
+import { setChpw, setInfoOpen } from '../store/uiReducer';
 
 export const AccountPage = () => {
     const dispatch = useDispatch();
@@ -32,12 +33,16 @@ export const AccountPage = () => {
                 <InfoBlock text="">{user.name}</InfoBlock>
 
             <div className="eventTitle">Дата регистрации: {dateToString(+user.regtime).join(" ")}</div>
+            <div className="eventTitle">Почта: {user.email} {user.isActivated ? <a className='good_label'>Подтверждена</a> : <a className='error_label'>Не подтверждена</a>}</div>
             <br/>
             
-            <InfoBlock text="Расписаний:">{count}</InfoBlock>
-            {user.info?.city ? <InfoBlock text="Город:">{user.info?.city}</InfoBlock> : ""}
-            {user.info?.university ? <InfoBlock text="Вуз:">{user.info?.university}</InfoBlock> : ""}
-            <InfoBlock text="Ближайшее событие:">00:05:00</InfoBlock>
+            <p className="mid">Расписаний: {count}</p>
+            {user.info?.city ? <p className="mid">Город: {user.info?.city}</p> : ""}
+            {user.info?.university ? <p className="mid">Учёба: {user.info?.university}</p> : ""}
+            <div className='event_footer'>
+                <DarkButton onClick={() => dispatch(setChpw(true))}>Изменить пароль</DarkButton>
+                <DarkButton onClick={() => dispatch(setInfoOpen(true))}>Редактировать профиль</DarkButton>
+            </div>
         </div>}
         
     </div>;

@@ -1,4 +1,4 @@
-import { fetchUser, login, logoutAct, selectSheetAct } from '../../store/profileReducer';
+import { changeInfoAct, fetchUser, login, logoutAct, selectSheetAct } from '../../store/profileReducer';
 import AuthService from '../../services/AuthService';
 import UtilsService from '../../services/UtilsService';
 import axios from 'axios';
@@ -61,6 +61,28 @@ export const logout = () => {
     }
   }
 
+  export const sendChpw = (info) => {
+    return async (dispatch, getState) => {
+        if(!getState().profile.isLogged || !info.oldpassword || !info.password)
+            return;
+        const response = await AuthService.changePassword(info.oldpassword, info.password);
+        if(!response || !response.data)
+            throw Error(response?.message ?? "Ошибка"); 
+        return "Success";
+    }
+  }
+  export const sendNewInfo = (info) => {
+    return async (dispatch, getState) => {
+        if(!getState().profile.isLogged || !info.university || !info.city)
+            return;
+        const response = await AuthService.changeInfo(info.university, info.city);
+        if(!response || !response.data?.info)
+            throw Error(response?.message ?? "Ошибка"); 
+        dispatch(changeInfoAct(response.data.info));
+        return "Success";
+    }
+  }
+
   export const checkAuth = () => {
     return async (dispatch, getState) => {
         try {
@@ -76,8 +98,8 @@ export const logout = () => {
             console.log("usr: ", response.data.user)*/
             await dispatch(login(response.data.user, response.data.refreshToken, response.data.accessToken));
         } catch(e) {
-            alert(e.response.message)
             console.log(e)
+            alert(e.response.message)
             await dispatch(logout());
         }
     }

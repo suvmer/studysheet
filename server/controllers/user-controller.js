@@ -32,6 +32,25 @@ class UserController {
       next(e);
     }
   }
+  async changePassword(req, res, next) {
+    try{
+      const {oldpassword, newpassword} = req.body;
+      const userData = await userService.changePassword(req.user.id, oldpassword, newpassword);
+      return res.json(userData);
+    } catch(e) {
+      next(e);
+    }
+  }
+  async changeInfo(req, res, next) {
+    try{
+      const {university, city} = req.body;
+      const userData = await userService.changeInfo(req.user.id, university, city);
+      return res.json(userData);
+    } catch(e) {
+      next(e);
+    }
+  }
+  
   async logout(req, res, next) {
     try{
       const {refreshToken} = req.cookies;

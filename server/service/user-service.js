@@ -17,15 +17,17 @@ class UserService {
 /**
  * @param {String} name
  */
-    async registration(name, email, password, info) {
+    async registration(name, email, password, someinfo) {
         //find user with email
         //if found throw new Error(`Пользователь с почтовым адресом ${email} уже существует`)
-        if(!info || !info.university || !info.city)
+        if(!someinfo || !someinfo.university || !someinfo.city)
             throw ApiError.BadRequest("Неполные данные");
         name = utils.withACapital(utils.checkField("name", name, true));
         email = utils.checkField("email", email, true).toLowerCase();
-        info.university = utils.withACapital(utils.checkField("university", info.university, true));
-        info.city = utils.withACapital(utils.checkField("city", info.city, true));
+        const info = {
+            university: utils.withACapital(utils.checkField("university", someinfo.university, true)),
+            city: utils.withACapital(utils.checkField("city", someinfo.city, true))
+        }
         
         console.log(name, email, info.university, info.city)
         const res = await connection.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -76,6 +78,32 @@ class UserService {
 
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
         return utils.success({...tokens, user: userDto});
+    }
+    async changePassword(id, oldpassword, newpassword) {
+        const fetchUsers = await connection.query('SELECT password, id from users WHERE id=$1', [id]);
+        if(fetchUsers.rowCount == 0)
+            throw ApiError.BadRequest("Некорректный пользователь");
+        const user = fetchUsers.rows[0];
+        const isPassEquals = await bcrypt.compare(oldpassword, user.password);
+        if(!isPassEquals)
+            throw ApiError.BadRequest("Неправильный пароль");
+        if(newpassword.length == 0)
+            throw ApiError.BadRequest("Некорректный новый пароль");
+        const hashPassword = await bcrypt.hash(newpassword, 3);
+        await connection.query(`UPDATE users SET password = $1 WHERE id = $2`, [hashPassword, id]);
+        return utils.success({message: "Пароль успешно изменён"});
+    }
+    async changeInfo(id, university, city) {
+        const fetchUsers = await connection.query('SELECT password, id from users WHERE id=$1', [id]);
+        if(fetchUsers.rowCount == 0)
+            throw ApiError.BadRequest("Некорректный пользователь");
+        const user = fetchUsers.rows[0];
+        
+        university = utils.withACapital(utils.checkField("university", university, true));
+        city = utils.withACapital(utils.checkField("city", city, true));
+        
+        await connection.query(`UPDATE users SET info = $2 WHERE id = $1`, [id, {university, city}]);
+        return utils.success({info: {city, university}, message: "Информация успешно изменена"});
     }
     async logout(refreshToken) {
         const token = await tokenService.removeToken(refreshToken);

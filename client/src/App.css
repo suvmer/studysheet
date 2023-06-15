@@ -21,6 +21,7 @@ a, p {
   --text-gray: rgba(141, 141, 141, 1);
   --text-primary-inverse: rgba(251, 251, 251, 1);
   --text-error: rgba(255, 0, 0, 1);
+  --text-good: rgba(0, 255, 0, 1);
   --link-hover: rgba(240, 240, 240, 1);
   --link-active: rgba(220, 220, 220, 1);
 
@@ -101,7 +102,7 @@ body {
   justify-content: center;
 }
 
-.login {
+.portal {
   padding: 20px;
   background-color: var(--bg-default);
   border-radius: 10px;
@@ -113,11 +114,14 @@ body {
 .error_label {
   color: var(--text-error);
 }
-.login_regbtn {
+.good_label {
+  color: var(--text-good);
+}
+.portal_regbtn {
   display: inline;
   margin: auto;
 }
-.login input {
+.portal input {
   padding: 7px 10px;
   font-size: var(--mid);
 }
@@ -354,6 +358,12 @@ aside a:focus, aside a.active {
 }
 .event_selected {
   background-color: var(--green);
+}
+.event_footer {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
 }
 
 .info {
