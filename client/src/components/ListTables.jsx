@@ -26,7 +26,7 @@ const TableBar = ({table, selected}) => {
 
                 <br/>
 
-                <InfoBlock text="Событий в неделю:">{/*table.tables.reduce((acc, cur) => acc+cur.length, 0)*/}</InfoBlock>
+                <InfoBlock text="Событий в неделю:">{table.tables.reduce((acc, cur) => acc+cur.length, 0)}</InfoBlock>
                 <InfoBlock text="Ближайшее событие:">00:45:00</InfoBlock>
             </NavLink>
         </div>
