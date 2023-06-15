@@ -8,13 +8,21 @@ import { AuthAsk } from './AuthAsk';
 import dayjs from 'dayjs';
 import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai';
 import { selectSheet } from './actions/users';
+import { getClosest, msToNumbers, msToWords } from '../utils/utils';
 
 
 const TableBar = ({table, selected}) => {
     const dispatch = useDispatch();
+    console.log("rerender")
+    const curdate = useSelector(state => state.ui.time); 
     if(table == undefined)
-        return <div>Загрузка...</div>;
-    console.log(selected)
+        return <div>Загрузка...</div>;   
+
+    const subj = getClosest(table.tables)[0];
+    var closest = "Нет расписаний";
+    if(subj != null)
+        closest = msToWords(subj.start - curdate);
+    
     return <div className={`sheet${selected ? ` sheet_selected` : ``}`}>
             <div className="sheet_panel">
                 {selected ? <AiFillPushpin className="icons"/> : <AiOutlinePushpin onClick={() => dispatch(selectSheet(table.id))} className="icons"/>}
@@ -27,7 +35,7 @@ const TableBar = ({table, selected}) => {
                 <br/>
 
                 <InfoBlock text="Событий в неделю:">{table.tables.reduce((acc, cur) => acc+cur.length, 0)}</InfoBlock>
-                <InfoBlock text="Ближайшее событие:">00:45:00</InfoBlock>
+                <InfoBlock text="До ближайшего события:">{closest}</InfoBlock>
             </NavLink>
         </div>
     ;
