@@ -96,21 +96,19 @@ export const validateRegData = (formData) => {
   );
 }
 
-export const msToWords = (ms, parentCase = false) => {
+export const msToWords = (ms) => {
     if(ms < 1000)
         return "0 секунд";
     var ss = Math.round(Math.abs(ms/1000));
-    const hours = Math.floor(ss / 3600);
+    const days = Math.floor(ss / 3600 /24);
+    const hours = Math.floor(ss / 3600)%24;
     ss %= 3600;
     const mins = Math.floor(ss / 60);
     const sec = ss % 60;
-    if(parentCase)
-      return `${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
-              ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
-              ${sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
-    return `${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
+    return `${days > 0 ? days.toString() + (CountForm(days, [" день ", " дня ", " часа "])) : ''}
+            ${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
             ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
-            ${sec > 0 ? sec + " " + (CountForm(sec)) : ''}`;
+            ${days == 0 && sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
 };
 export const msToNumbers = (ms) => {
     var ss = Math.round(Math.max(0, ms/1000));

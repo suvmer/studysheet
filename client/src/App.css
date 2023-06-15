@@ -24,7 +24,8 @@ a, p {
   --link-hover: rgba(240, 240, 240, 1);
   --link-active: rgba(220, 220, 220, 1);
 
-  --selected: rgb(255, 255, 0.5);
+  --selected: rgba(255, 255, 0, 1);
+  --soon: rgb(247, 249, 255);
   --white: rgb(251, 251, 251);
   --red: rgba(255, 0, 0, 1);
   --transred: rgba(255, 0, 0, 0.5);
@@ -436,6 +437,9 @@ input:invalid {
 }
 .event.active {
   background-color: var(--yellow);
+}
+.event.soon {
+  background-color: var(--soon);
 }
 
 .eventTitle {
