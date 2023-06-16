@@ -4,6 +4,7 @@
   box-sizing: border-box;
   text-decoration: none;
   background-color: transparent;
+  word-wrap: break-word;
   font-family: -apple-system, BlinkMacSystemFont, segoe ui, Roboto,
     helvetica neue, Arial, noto sans, sans-serif, apple color emoji,
     segoe ui emoji, segoe ui symbol, noto color emoji;
@@ -82,12 +83,14 @@ body {
 .box_nobg {
   border-radius: 10px;
   padding: 5px 15px 0 15px;
-  width: 100%;
+  width: inherit;
   font-size: var(--mid);
+  max-width: calc(100% - 30px);
 }
 .box_nobg_header {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
 }
 .box_nobg_big {
   font-size: var(--big);
@@ -342,6 +345,9 @@ aside a:focus, aside a.active {
 }
 .sheet_selected {
   background-color: var(--selected);
+}
+.sheet_disabled {
+  cursor: default;
 }
 .sheet_panel {
   display: flex;

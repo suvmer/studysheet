@@ -193,5 +193,7 @@ export const getClosest = (list) => {
   return [cursubj, mode, today];
 }
 
+export const shortTo = (str, cnt) => str.length > cnt ? str.substr(0, cnt-3) + "..." : str;
+
 export const days = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"];
 export const shortDays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];

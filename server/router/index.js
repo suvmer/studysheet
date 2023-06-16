@@ -3,6 +3,7 @@ const UserController = require('../controllers/user-controller')
 const TableController = require('../controllers/table-controller')
 const router = new Router();
 const authMiddleWare = require('../middlewares/auth-middleware');
+const optionalAuthMiddleWare = require('../middlewares/optional-auth-middleware');
 
 router.post('/registration', UserController.registration);
 router.post('/login', UserController.login);
@@ -18,7 +19,7 @@ router.post('/schedule/public/:tableid', TableController.getPublicTable);
 router.post('/schedule/add', authMiddleWare, TableController.addTable);
 router.delete('/schedule/delete', authMiddleWare, TableController.deleteTable);
 router.put('/schedule/edit', authMiddleWare, TableController.editTable);
-router.post('/schedule/get', authMiddleWare, TableController.getTable);
+router.post('/schedule/get', optionalAuthMiddleWare, TableController.getTable);
 router.post('/schedule/getfrom', authMiddleWare, TableController.getTables);
 router.post('/schedule/my', authMiddleWare, TableController.getMyTables);
 router.post('/schedule/select', authMiddleWare, UserController.selectSheet);

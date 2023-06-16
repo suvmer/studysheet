@@ -28,7 +28,7 @@ class TableController {
       const {id} = req.body;
       const table = await tableService.getTable(id);
       //console.log("Returning table ", table);
-      if(table.table?.public || table.table?.creator.id == req.user.id)
+      if(table.table?.public || table.table?.creator.id == req.user?.id)
         return res.status(table.status).json(table);
       throw ApiError.NoPermission("Нет прав на просмотр данного расписания");
     } catch(e) {

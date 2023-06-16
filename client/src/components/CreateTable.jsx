@@ -2,12 +2,13 @@ import React, { useEffect, useReducer, useState } from "react";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useDispatch, useSelector } from "react-redux";
-import { dateToString, days, validateTableData } from "../utils/utils";
+import { dateToString, days, shortTo, validateTableData } from "../utils/utils";
 import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
 import {FiTrash2, FiRefreshCcw, FiPlus, FiArrowLeft} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
 import { editTable, sendTable } from "./actions/tables";
 import { useNavigate } from "react-router-dom";
+import { AuthAsk } from "./AuthAsk";
 
 
 var globid = 0;
@@ -63,6 +64,7 @@ export const CreateTable = (props = null) => {
   const changeEv = event => {
     handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
   }
+
 
   const doSort = (id) => {
     //console.log()
@@ -134,12 +136,16 @@ export const CreateTable = (props = null) => {
       dispatch(editTable(sheet))
         .then((succ) => navigate(`/info/${sheet.id}`), e => setErrorText(e.response?.data?.message));
   }
+
   
+  const user = useSelector(state => state.profile.user);
+  if(!user?.id)
+    return <div className="wall"><p className="big">Чтобы создавать расписания, войдите:</p><AuthAsk/></div>;
 
   console.log("Updated");
   return (<div className="wall wall_subjects">
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
-          <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : sheet.name}</p>
+          <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : shortTo(sheet.name, 40)}</p>
       </div>
       {page == 1 ? <p className="center gray">Автор: {storedSheet.creator ? storedSheet.creator.name : "Вы"}</p> : ""}
       

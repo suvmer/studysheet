@@ -2,18 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { dateToString, days } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { InfoBlock } from '../components/InfoBlock';
-import { NavLink, useNavigate, useOutlet, useParams } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { deleteTable, getTable } from '../components/actions/tables';
-import dayjs from 'dayjs';
-import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowUp, AiOutlineEdit } from 'react-icons/ai';
-import { FiTrash2 } from 'react-icons/fi';
+import { AiOutlineArrowLeft } from 'react-icons/ai';
 import { DarkButton, DarkRepeatButton, LightButton } from '../components/UI/Buttons';
 import { AuthAsk } from '../components/AuthAsk';
 import { TableBar } from '../components/TableBar';
+import { InfoBar } from '../components/InfoBar';
 
-export const SubjectBar = (props) => {
-    return <div className='subjectBar'><p>{props.num}. {props.name}{props.cabinet ? ` (${props.cabinet})` : ""}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
-}
+
 
 
 
@@ -22,8 +19,6 @@ TODO: кликом на предмет модальное окно с редак
 
 
 */
-
-
 
 
 
@@ -45,6 +40,7 @@ export const InfoPage = () => {
     const user = useSelector(state => state.profile.user);
     const current = user?.currentTable ?? -1;
 
+
     const table = response[1];
     console.log(table);
 
@@ -55,6 +51,7 @@ export const InfoPage = () => {
             setErrorText(err.response.data.message)
         });
     }
+    const permission = table?.id ? (user.id == table.creator.id) : false;
 
     return <div className="wall wall_info">
     {table?.id ? 
@@ -63,31 +60,14 @@ export const InfoPage = () => {
         <div className="wall_info_icons">
             <AiOutlineArrowLeft onClick={() => navigate(-1)} className="icons"/>
             <div>
-                <DarkRepeatButton onClick={() => deleteSheet(table.id)}>Удалить</DarkRepeatButton>
+                {permission ? <DarkRepeatButton onClick={() => deleteSheet(table.id)}>Удалить</DarkRepeatButton> : ""}
             </div>
         </div>
-        <TableBar table={table} selected={table.id == current}/>
+        <TableBar table={table} selected={table.id == current} isOpen={true} permission={permission}/>
         <NavLink className="wall_info_panel" to={`/my/edit/${table.id}`}>
-            <DarkButton>Редактировать</DarkButton>
+            {permission ? <DarkButton>Редактировать</DarkButton> : ""}
         </NavLink>
-        <div className="info">
-            {table.tables.map((element, day) => {
-                return <div className='sheet' key={`sbjlist${day}`}>
-                    <p className="big center">{days[day]}</p>
-                    <br/>
-                    <hr/>
-                    {element.length == 0 ? <p className="mid center">Занятий нет</p> : ""}
-                    {element.map((el, num) => {
-                        if(num == 0)
-                            return <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>
-                        return <>
-                            <hr/>
-                            <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>
-                        </>
-                    })}
-                    </div>
-            })}
-        </div>
+        <InfoBar tables={table.tables}/>
         </> :
         <>
             <div className="infoTitle infoTitle_error">

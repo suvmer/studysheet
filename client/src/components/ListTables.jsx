@@ -28,7 +28,7 @@ export const ListTables = () => {
                     <p>Ваши расписания</p>
                     <NavLink to="/my/add/"><LightButton>Добавить</LightButton></NavLink>
                 </div>
-                {list.map(el => <TableBar key={el.id} table={el} selected={el.id == current}/>)}
+                {list.map(el => <TableBar key={el.id} table={el} selected={el.id == current} isOpen={false} permission={true}/>)}
             </>
         :
             <div className="midbox">

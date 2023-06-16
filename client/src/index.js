@@ -16,6 +16,7 @@ import { InfoPage } from "./pages/InfoPage";
 import { CreateTable } from "./components/CreateTable";
 import { ListTables } from "./components/ListTables";
 import { EditPage } from "./pages/EditPage";
+import { ViewPage } from "./pages/ViewPage";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
     {
       path: "/info/:id",
       element: <InfoPage/>
+    },
+    {
+      path: "/view/:id",
+      element: <ViewPage/>
     }
   ]
   },
