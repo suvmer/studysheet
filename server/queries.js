@@ -55,7 +55,7 @@ const g = async () => {
     members INTEGER[],
     groups INTEGER[],
     info TEXT,
-    public BOOLEAN DEFAULT FALSE,
+    public BOOLEAN DEFAULT TRUE,
     tables TEXT,
     created BIGINT
   )

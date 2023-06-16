@@ -1,45 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { InfoBlock } from '../components/InfoBlock';
 import { NavLink } from 'react-router-dom';
 import { getOwnTables } from '../components/actions/tables';
 import {LightButton} from '../components/UI/Buttons';
 import { AuthAsk } from './AuthAsk';
-import dayjs from 'dayjs';
-import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai';
-import { selectSheet } from './actions/users';
-import { getClosest, msToNumbers, msToWords } from '../utils/utils';
+import { TableBar } from './TableBar';
 
-
-const TableBar = ({table, selected}) => {
-    const dispatch = useDispatch();
-    console.log("rerender")
-    const curdate = useSelector(state => state.ui.time); 
-    if(table == undefined)
-        return <div>Загрузка...</div>;   
-
-    const subj = getClosest(table.tables)[0];
-    var closest = "Нет расписаний";
-    if(subj != null)
-        closest = msToWords(subj.start - curdate);
-    
-    return <div className={`sheet${selected ? ` sheet_selected` : ``}`}>
-            <div className="sheet_panel">
-                {selected ? <AiFillPushpin className="icons"/> : <AiOutlinePushpin onClick={() => dispatch(selectSheet(table.id))} className="icons"/>}
-                <p className="sheet_panel_title">{table.name}</p>
-            </div>
-            <NavLink to={`/info/${table.id}`}>
-                <div className="eventTitle">Автор: {table.creator.name}</div>
-                <div className="eventTitle">Создано: {dayjs(+table.created).format("DD.MM.YYYY HH:mm:ss")}</div>
-
-                <br/>
-
-                <InfoBlock text="Событий в неделю:">{table.tables.reduce((acc, cur) => acc+cur.length, 0)}</InfoBlock>
-                <InfoBlock text="До ближайшего события:">{closest}</InfoBlock>
-            </NavLink>
-        </div>
-    ;
-}
 var a = 5;
 export const ListTables = () => {
     const dispatch = useDispatch();

@@ -120,6 +120,7 @@ class utils {
             tables: []
           };
           toStore.name = this.checkField("sheetName", table.name, true);
+          toStore.public = (table.public == true);
           if(!table.tables)
             throw ApiError.BadRequest("Некорректный запрос");
           [...Array(7)].forEach((e, ind) => {

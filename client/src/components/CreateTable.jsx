@@ -23,6 +23,7 @@ export const CreateTable = (props = null) => {
     return [dayjs().hour(starthour).minute(startminute), dayjs().hour(endhour).minute(endminute)];
     //return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
   }
+  const [defPlace, setDefPlace] = useState("");
   const getField = (i = 0) => ({
     start: getDefaultSchedule(i)[0].valueOf(),
     end: getDefaultSchedule(i)[1].valueOf(),
@@ -30,11 +31,12 @@ export const CreateTable = (props = null) => {
     cabinet: "",
     teacher: "",
     id: globid++,
-    place: "7 корпус(Союзная 144)" });
+    place: defPlace });
 
   const [weekPart, setWeekPart] = useState(-1);
   const [storedSheet, storeSheet] = useState({
     name: "",
+    public: true,
     tables: [
     //...Array(7).fill([getField()]) //no new instances
     ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //new instances
@@ -72,6 +74,10 @@ export const CreateTable = (props = null) => {
 
   const handleChange = (idChange, idFor, namer, value) => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
+    if(namer == "defPlace") {
+      setDefPlace(value);
+      return;
+    }
     if(namer == "start" || namer == "end") {
       console.log(namer, ":", dayjs(value).format("DD.MM.YYYY HH:mm"))
     }
@@ -149,15 +155,22 @@ export const CreateTable = (props = null) => {
           placeholder={`Расписание от ${dateToString(Date.now())[0]}`}
           required
           autoFocus/>
-        <LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] == "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
+        <div>
+          {storedSheet.public ? <DarkButton onClick={() => storeSheet({...storedSheet, public: false}) }>Видят все</DarkButton> : <LightButton onClick={() => storeSheet({...storedSheet, public: true})}>Видят только участники</LightButton>}
+        </div>
+        <br/><LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] == "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
       </>: <>
       <div className="box_nobg box_nobg_gap">
           <FiArrowLeft className="icons" onClick={() => setPage(0)}/>
-          {weekPart != -1 ? <FiTrash2 className="icons icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
+          {/*{weekPart != -1 ? <FiTrash2 className="icons icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
           {weekPart == -1 ? <FiPlus className="icons icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
-          {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}
+      {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}*/}
       </div>
-      
+      <input 
+          onChange={changeEv} 
+          value={defPlace}
+          name="defPlace"
+          placeholder="Место(автоматически при добавлении)" />
       <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
         {storedSheet.tables.map((elem, index) => {
           return (<div className="newsubject" key={index}>

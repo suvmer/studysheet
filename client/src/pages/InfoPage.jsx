@@ -5,13 +5,14 @@ import { InfoBlock } from '../components/InfoBlock';
 import { NavLink, useNavigate, useOutlet, useParams } from 'react-router-dom';
 import { deleteTable, getTable } from '../components/actions/tables';
 import dayjs from 'dayjs';
-import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineEdit } from 'react-icons/ai';
+import { AiOutlineArrowDown, AiOutlineArrowLeft, AiOutlineArrowUp, AiOutlineEdit } from 'react-icons/ai';
 import { FiTrash2 } from 'react-icons/fi';
-import { DarkButton, LightButton } from '../components/UI/Buttons';
+import { DarkButton, DarkRepeatButton, LightButton } from '../components/UI/Buttons';
 import { AuthAsk } from '../components/AuthAsk';
+import { TableBar } from '../components/TableBar';
 
 export const SubjectBar = (props) => {
-    return <div className='subjectBar'><p>{props.num}. {props.name}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
+    return <div className='subjectBar'><p>{props.num}. {props.name}{props.cabinet ? ` (${props.cabinet})` : ""}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
 }
 
 
@@ -41,6 +42,9 @@ export const InfoPage = () => {
                 return setResponse([err.response.data.message, null, err.response.status])
             });
     }, [useSelector(state => state.profile.isLogged)]);
+    const user = useSelector(state => state.profile.user);
+    const current = user?.currentTable ?? -1;
+
     const table = response[1];
     console.log(table);
 
@@ -57,20 +61,30 @@ export const InfoPage = () => {
         <>
         {errorText ? <p className="error_label mid">{errorText}</p> : ""}
         <div className="wall_info_icons">
-            <NavLink to={`/my/edit/${table.id}`}><AiOutlineEdit className="icons"/></NavLink>
-            <FiTrash2 onClick={() => deleteSheet(table.id)} className="icons"/>
+            <AiOutlineArrowLeft onClick={() => navigate(-1)} className="icons"/>
+            <div>
+                <DarkRepeatButton onClick={() => deleteSheet(table.id)}>Удалить</DarkRepeatButton>
+            </div>
         </div>
-        <div className='infoTitle'>
-            <InfoBlock text="">{table.name}</InfoBlock>
-            <div className="eventTitle">Автор: {table.creator.name}</div>
-            <div className="eventTitle">Создано: {dayjs(+table.created).format("DD.MM.YYYY HH:mm:ss")}</div>
-        </div>
+        <TableBar table={table} selected={table.id == current}/>
+        <NavLink className="wall_info_panel" to={`/my/edit/${table.id}`}>
+            <DarkButton>Редактировать</DarkButton>
+        </NavLink>
         <div className="info">
             {table.tables.map((element, day) => {
-                return <div key={`sbjlist${day}`}>
-                    <mark className="big">{days[day]}</mark>
+                return <div className='sheet' key={`sbjlist${day}`}>
+                    <p className="big center">{days[day]}</p>
+                    <br/>
+                    <hr/>
                     {element.length == 0 ? <p className="mid center">Занятий нет</p> : ""}
-                    {element.map((el, num) => <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>)}
+                    {element.map((el, num) => {
+                        if(num == 0)
+                            return <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>
+                        return <>
+                            <hr/>
+                            <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>
+                        </>
+                    })}
                     </div>
             })}
         </div>

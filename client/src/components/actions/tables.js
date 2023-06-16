@@ -211,9 +211,8 @@ export const getOwnTables = () => {
       if(!response || !response.data)
           throw Error(response?.message ?? "Ошибка");
       return {...response.data,
-        tables: response.data.tables.map(el => standartTable(el))
+        tables: response.data.tables.map(el => standartTable(el)).sort((e1, e2) => e2.created - e1.created)
       };
-      //dispatch(table(response.data.user, response.data.refreshToken, response.data.accessToken));*/
   }
 }
 

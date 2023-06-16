@@ -7,7 +7,7 @@ const ApiError = require('../exceptions/api-error');
 class TableService {
     async addSchedule(user, schedule) {
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
-        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created) VALUES ($1, $2, $3, $4)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now()]);
+        const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created, public) VALUES ($1, $2, $3, $4, $5)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now(), toStore.public]);
         if(!addQuery.rowCount)
             throw ApiError.BadRequest("Не удалось добавить расписание");
         return utils.success({message: "Расписание успешно добавлено"});
@@ -20,7 +20,7 @@ class TableService {
             throw ApiError.NoPermission("Нет прав для редактирования данного расписания");
         
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
-        const addQuery = await connection.query('UPDATE sheets SET (name, tables, info) = ($1, $2, $3) WHERE id = $4', [toStore.name, JSON.stringify(toStore.tables), JSON.stringify(toStore.info), table.table.id]);
+        const addQuery = await connection.query('UPDATE sheets SET (name, tables, info, public) = ($1, $2, $3, $4) WHERE id = $5', [toStore.name, JSON.stringify(toStore.tables), JSON.stringify(toStore.info), toStore.public, table.table.id]);
         if(!addQuery.rowCount)
             throw ApiError.BadRequest("Не удалось обновить расписание");
         return utils.success({message: "Расписание успешно обновлено"});
