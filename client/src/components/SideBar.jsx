@@ -25,10 +25,11 @@ export const SideBar = () => {
         document.removeEventListener('click', handleClickOutside, true);
       };
     }, []);
-
+    const closeMenu = () => dispatch(setMenuOpen(false));
   return <aside ref={ref} className={isOpened ? "opened" : ""}>
-          <NavLink draggable="false" to="/" className={({isActive}) => isActive ? "active": ""}>Главная</NavLink>
-          <NavLink draggable="false" to="/my" className={({isActive}) => isActive ? "active": ""}>Моё расписание</NavLink>
-          <NavLink draggable="false" to="/account" className={({isActive}) => isActive ? "active": ""}>Аккаунт</NavLink>
+          <NavLink onClick={() => closeMenu()} draggable="false" to="/" className={({isActive}) => isActive ? "active": ""}>Главная</NavLink>
+          <NavLink onClick={() => closeMenu()} draggable="false" to="/my" className={({isActive}) => isActive ? "active": ""}>Моё расписание</NavLink>
+          <NavLink onClick={() => closeMenu()} draggable="false" to="/account" className={({isActive}) => isActive ? "active": ""}>Аккаунт</NavLink>
+          <a href="https://vk.com/suvmer" className="link small center">© vk.com/suvmer</a>
         </aside>;
   }

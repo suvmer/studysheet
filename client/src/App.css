@@ -58,6 +58,10 @@ body {
 .menuIcon {
   display: none;
 }
+.link {
+  text-decoration: none;
+  color: blue;
+}
 @media (max-width: 800px) {
   #root {
     width: 100%;
@@ -65,8 +69,8 @@ body {
   aside {
     position: absolute;
     top: 0;
-    left: -500px;
-    transition: left 200ms ease-in;
+    left: -300px;
+    transition: left 100ms ease-in;
   }
   aside.opened {
     top: 0;
@@ -74,7 +78,7 @@ body {
   }
   .menuIcon {
     display: block;
-    transition: transform 100ms ease-in;
+    transition: transform 50ms ease-in;
   }
   .menuIcon.opened {
     display: block;
