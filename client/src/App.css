@@ -55,12 +55,30 @@ body {
   margin: auto;
   margin-bottom: 50px;
 }
+.menuIcon {
+  display: none;
+}
 @media (max-width: 800px) {
   #root {
-    width: 600px;
+    width: 100%;
   }
   aside {
-    display: none!important;
+    position: absolute;
+    top: 0;
+    left: -500px;
+    transition: left 200ms ease-in;
+  }
+  aside.opened {
+    top: 0;
+    left:0;
+  }
+  .menuIcon {
+    display: block;
+    transition: transform 100ms ease-in;
+  }
+  .menuIcon.opened {
+    display: block;
+    transform: rotate(90deg);
   }
 }
 
@@ -181,6 +199,7 @@ body {
   display: flex;
   align-items: center;
   border-radius: 0 0 10px 10px;
+  position: relative;
 }
 .header_icon {
   width: 40px;
@@ -205,6 +224,7 @@ main {
   display: flex;
   margin-top: 10px;
   gap: 10px;
+  position: relative;
 }
 
 aside {

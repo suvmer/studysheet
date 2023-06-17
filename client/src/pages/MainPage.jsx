@@ -6,11 +6,14 @@ import { getOwnTables, getTable, getTables } from '../components/actions/tables'
 import { NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { OnlineTable } from '../components/OnlineTable';
+import { AuthAsk } from '../components/AuthAsk';
 
 const Authorize = () =>
   <div className="wall">
     <MainTitle />
-    <div className="midbox big">Авторизируйтесь, чтобы создавать расписания</div>
+    <hr/>
+    <div className="midbox big">Авторизируйтесь</div>
+    <AuthAsk/>
   </div>
 
 const AddSomeSchedule = () =>
@@ -24,8 +27,8 @@ const AddSomeSchedule = () =>
 const MainTitle = () => {
   const curdate = useSelector(state => state.ui.time);
   return <span className="box_nobg box_nobg_header" style={{ marginRight: "auto" }}>
-           <p>{days[(new Date()).getDay()]}, {dateToString(curdate)[0]}</p>
-           <p>{dateToString(curdate)[1]}</p>
+           <p>{dateToString(curdate)[0]}</p>
+           <p>{days[(new Date()).getDay()]}</p>
          </span>
 }
 
