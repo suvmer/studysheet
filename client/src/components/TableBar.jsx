@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai';
 import { selectSheet } from './actions/users';
-import { getClosest, msToNumbers, msToWords } from '../utils/utils';
+import { dateToString, getClosest, msToNumbers, msToWords } from '../utils/utils';
 import {BsPeople, BsPeopleFill} from 'react-icons/bs'
 import { editTable } from '../components/actions/tables';
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +43,7 @@ export const TableBar = ({table, selected, isOpen, permission}) => {
                 <br/>
 
                 <p className="mid center">Событий в неделю: {table.tables.reduce((acc, cur) => acc+cur.length, 0)}</p>
+                <p className="mid center">Общая длительность: {msToNumbers(table.tables.reduce((acc, cur) => acc+ cur.reduce((allTime, subj) => Math.abs(subj.end - subj.start), 0), 0))}</p>
                 {subj ? <p className="mid center">До ближайшего: {closest}</p> : ""}
                 <br/>
                 <div className="sheet_footer">
