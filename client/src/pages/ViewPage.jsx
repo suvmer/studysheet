@@ -13,6 +13,7 @@ import { InfoBar } from '../components/InfoBar';
 
 export const ViewPage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     let { id } = useParams();
     const [response, setResponse] = useState(["Загрузка", null]);
 
@@ -30,8 +31,9 @@ export const ViewPage = () => {
 
   return <div className="wall wall_info">
     {table?.id ? <>
-    <div className='box_nobg'>
-        <p className='big'>Мониторинг</p>
+    <div className='box_nobg box_nobg_align'>
+        <AiOutlineArrowLeft onClick={() => navigate(-1)} className="icons"/>
+        <a className='big'>Мониторинг</a>
     </div>
     <div className='wall'>
         <OnlineTable table={table}/>

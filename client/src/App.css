@@ -123,6 +123,11 @@ body {
   font-size: var(--mid);
   max-width: calc(100% - 30px);
 }
+.box_nobg_align {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .box_nobg_header {
   display: flex;
   justify-content: space-between;
@@ -269,6 +274,12 @@ aside a:focus, aside a.active {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+.wall_main_page {
+  /*gap: 10px;*/
+}
+.wall_main_page>*:nth-child(n+4):not(:last-child) {
+  margin-top: 10px;
 }
 .wall_subjects {
  gap: 10px;

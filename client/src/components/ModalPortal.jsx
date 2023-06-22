@@ -1,10 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { setInfoOpen, setModal } from "../store/uiReducer";
-import { useOnClickOutside } from "../utils/ownHooks";
+import { setModal } from "../store/uiReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { sendNewInfo } from "./actions/users";
-import { DarkButton } from "./UI/Buttons";
 
 export const ModalPortal = ({content}) => {
   const mount = document.body;

@@ -7,15 +7,46 @@ import { NavLink } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { OnlineTable } from '../components/OnlineTable';
 import { AuthAsk } from '../components/AuthAsk';
+import { InfoBar } from '../components/InfoBar';
 
-const Authorize = () =>
-  <div className="wall">
+
+const Welcome = () =>  <></>
+const testId = 4;
+const Authorize = () => {
+    const dispatch = useDispatch();
+    const [response, setResponse] = useState(["Загрузка", null]);
+    useEffect(() => { //TODO: REPLACE useEffect() WITH useLoaderData from react router
+        dispatch(getTable(testId)).then((res) => res && setResponse(["", res.table, 200]),
+            (err) => {
+                return setResponse([err.response.data.message, null, err.response.status])
+            });
+    }, []);
+    
+  const sheet = response[1];
+  return <div className="wall wall_main_page">
     <MainTitle />
     <hr/>
-    <div className="midbox big">Авторизируйтесь</div>
+    {/*<Welcome/>*/}
+    <div className='sheet'>
+      <p className='big'>Study<mark className='blue bold'>SHEET</mark> - удобный сервис для представления расписаний</p>
+    </div>
+    <div className='sheet'>
+      <p className='big'>Показ ближайшего события в реальном времени позволяет легче планировать своё время</p>
+    </div>
+    
+    {sheet ? <NavLink to={`/info/${testId}`}><OnlineTable table={sheet}/></NavLink> : ""}
+    <div className='sheet'>
+      <p className='big'>Нажмите выше, чтобы развернуть расписание</p>
+    </div>
+    <div className='sheet'>
+      <p className='big'>Своим расписанием можно делиться по ссылке - легко распространить</p>
+    </div>
+    <div className='sheet'>
+      <p className='big'>Чтобы добавить расписание, <mark className='bold'>авторизуйтесь</mark></p>
+    </div>
     <AuthAsk/>
   </div>
-
+}
 const AddSomeSchedule = () =>
   <div className="wall">
     <MainTitle />

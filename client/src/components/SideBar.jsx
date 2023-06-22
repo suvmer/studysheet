@@ -30,6 +30,6 @@ export const SideBar = () => {
           <NavLink onClick={() => closeMenu()} draggable="false" to="/" className={({isActive}) => isActive ? "active": ""}>Главная</NavLink>
           <NavLink onClick={() => closeMenu()} draggable="false" to="/my" className={({isActive}) => isActive ? "active": ""}>Моё расписание</NavLink>
           <NavLink onClick={() => closeMenu()} draggable="false" to="/account" className={({isActive}) => isActive ? "active": ""}>Аккаунт</NavLink>
-          <a href="https://vk.com/suvmer" className="link small center">© vk.com/suvmer</a>
+          <a target="_BLANK" href="https://vk.com/suvmer" className="link small center">© vk.com/suvmer</a>
         </aside>;
   }

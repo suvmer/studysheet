@@ -58,7 +58,10 @@ export const InfoPage = () => {
         <>
         {errorText ? <p className="error_label mid">{errorText}</p> : ""}
         <div className="wall_info_icons">
-            <AiOutlineArrowLeft onClick={() => navigate(-1)} className="icons"/>
+            <div className='box_nobg box_nobg_align'>
+                <AiOutlineArrowLeft onClick={() => navigate(-1)} className="icons"/>
+                <a className='big'>О расписании</a>
+            </div>
             <div>
                 {permission ? <DarkRepeatButton onClick={() => deleteSheet(table.id)}>Удалить</DarkRepeatButton> : ""}
             </div>
