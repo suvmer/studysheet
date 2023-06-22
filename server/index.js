@@ -30,7 +30,7 @@ const start = () => {
         console.log(e);
     }
 }
-
+/*
 router.get('/get/:id', async (req, res) => {
     const { id } = req.params
     const { rows } = await connection.query('SELECT * FROM sheets WHERE id = $1', [id])
@@ -53,7 +53,7 @@ router.get('/delete/:id', async (req, res) => {
 router.get('/users/add/:name/:email/:password/:info/', async (req, res) => {
     //const { name, email, password, info } = req.params
     res.send(await registration(...Object.values(req.params)))
-  })
+  })*/
 
 start();
 

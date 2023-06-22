@@ -147,6 +147,9 @@ class utils {
                 
                 toStore.tables[ind].push(tab);
               })
+              if(toStore.tables[ind].length > 10)
+                throw ApiError.BadRequest("Должно быть не более 10 событий в день");
+              
           });
               /*table.tables.forEach(elem => elem.forEach(el => {
             if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)

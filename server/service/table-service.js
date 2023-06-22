@@ -6,6 +6,10 @@ const ApiError = require('../exceptions/api-error');
 
 class TableService {
     async addSchedule(user, schedule) {
+        const fetchTables = await connection.query(`SELECT sheets.id, sheets.name, json_build_object('id', users.id, 'name', users.name, 'info', users.info) AS creator, sheets.members, sheets.groups, sheets.info, sheets.public, sheets.tables, sheets.created from sheets JOIN users ON sheets.creator = users.id AND users.id = $1`, [user.id]);
+        if(fetchTables.rowCount >= 3)
+            throw ApiError.BadRequest("Разрешено иметь не более трёх расписаний");
+
         const toStore = {...utils.checkSchedule(schedule), creator: user.id};
         const addQuery = await connection.query('INSERT INTO sheets(name, creator, tables, created, public) VALUES ($1, $2, $3, $4, $5)', [toStore.name, user.id, JSON.stringify(toStore.tables), Date.now(), toStore.public]);
         if(!addQuery.rowCount)
