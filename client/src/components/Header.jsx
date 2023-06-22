@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { setLogin, setMenuOpen, setTime } from "../store/uiReducer";
 import {AiOutlineMenu, AiOutlineUser} from 'react-icons/ai'
 import {BiLogIn} from 'react-icons/bi'
+import UIService from "../services/UIService";
 
 
 export const Header = () => {
@@ -30,7 +31,7 @@ export const Header = () => {
     </div>
     {isLogged ?
       <Link to="/account"><AiOutlineUser className="header_icon" onClick={() => {}} /></Link> :
-      <BiLogIn className="header_icon" onClick={() => dispatch(setLogin(true))} />
+      <BiLogIn className="header_icon" onClick={() => UIService.openAuthForm(true)} />
     }
   </header>;
 }

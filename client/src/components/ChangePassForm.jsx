@@ -1,12 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { setChpw } from "../store/uiReducer";
-import { useOnClickOutside } from "../utils/ownHooks";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { sendChpw } from "./actions/users";
 import { DarkButton } from "./UI/Buttons";
+import UIService from "../services/UIService";
 
-const Form = () => {
+export const ChangePassForm = () => {
   const [formData, setformData] = useState({});
   const [isSuccess, setSuccess] = useState(false);
   const [errorText, setErrorText] = useState("");
@@ -25,10 +23,14 @@ const Form = () => {
     if(formData.password !== formData.repeatpassword)
         return setErrorText("Пароли не совпадают!");
     dispatch(sendChpw(formData))
-      .then(() => setSuccess(true), e => setErrorText(e.response?.data?.message));
+      .then(
+        () => {
+            UIService.showPopup("Пароль был успешно сменён!")
+        },
+        e => setErrorText(e.response?.data?.message)
+    );
   }
-    return <form onSubmit={(e) => e.preventDefault()} className="portal">
-        {!isSuccess ? <>
+    return <form onSubmit={(e) => e.preventDefault()} className="modal_in">
         <p className="mid">Смена пароля</p>
         {errorText ? <p className="error_label">{errorText}</p> : ""}
         <input 
@@ -56,26 +58,5 @@ const Form = () => {
             autoComplete="on"
             required/>
         <DarkButton type="submit" onClick={() => sendData()}>Сменить пароль</DarkButton>
-        </> : <>
-            <div className="box">
-                <p className="big">Пароль был успешно сменён!</p>
-            </div>
-        </>}
     </form>
 }
-export const ChangePassPortal = () => {
-  const mount = document.getElementById("portal");
-  const el = document.createElement("div");
-
-  useEffect(() => {
-    mount.appendChild(el);
-    return () => mount.removeChild(el);
-  }, [el, mount]);
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, setChpw, ["ui", "chpwOpen"]);
-
-  return createPortal(<div ref={ref}>
-    <Form/>
-  </div>, el);
-};

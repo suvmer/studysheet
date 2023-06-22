@@ -4,11 +4,8 @@ import { Outlet } from "react-router-dom";
 import { SideBar } from "./components/SideBar";
 import { Header } from "./components/Header";
 import { useDispatch, useSelector } from "react-redux";
-import { AuthForm } from "./components/AuthForm";
-import { Portal } from "./components/Portal";
 import { checkAuth } from "./components/actions/users";
-import { ChangePassPortal } from "./components/ChangePassPortal";
-import { ChangeInfoPortal } from "./components/ChangeInfoPortal";
+import { ModalPortal } from "./components/ModalPortal";
 
 
 /* near TODO:
@@ -20,14 +17,12 @@ useMemo(оптимизация)
 
 */
 const Modals = () => {
-  const chpwOpen = useSelector(state => state.ui.chpwOpen);
-  const infoOpen = useSelector(state => state.ui.infoOpen);
-  return <>{chpwOpen ? <ChangePassPortal/> : ""}
-  {infoOpen ? <ChangeInfoPortal/> : ""}</>;
+  const modal = useSelector(state => state.ui.modal);
+  return <ModalPortal content={modal}/>;
 }
 
 function App() {
-  const loginOpen = useSelector(state => state.ui.loginOpen); 
+  //const loginOpen = useSelector(state => state.ui.loginOpen); 
   const dispatch = useDispatch();
   useEffect(() => {
     console.log(localStorage.getItem('token'))
@@ -38,7 +33,7 @@ function App() {
     <>
       <Header/>
       <Modals/>
-      {loginOpen ? <Portal><AuthForm/></Portal> : <></>}
+      {/*loginOpen ? <Portal><AuthForm/></Portal> : <></>*/}
       <main>
         <SideBar/>
         <Outlet/>

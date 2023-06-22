@@ -1,5 +1,6 @@
 const defaultState = {
     time: Date.now(),
+    modal: null,
     loginOpen: false,
     chpwOpen: false,
     infoOpen: false,
@@ -11,7 +12,7 @@ export const SETLOGIN = "SETLOGIN";
 export const SETCHWP = "SETCHWP";
 export const SETINFOOPEN = "SETINFOOPEN";
 export const SETMENUOPEN = "SETMENUOPEN";
-
+export const SETMODAL = "SETMODAL";
   
 export const uiReducer = (state = defaultState, action) => {
     switch (action.type) {
@@ -25,6 +26,8 @@ export const uiReducer = (state = defaultState, action) => {
             return {...state, infoOpen: action.payload};
         case SETMENUOPEN:
             return {...state, menuOpen: action.payload};
+        case SETMODAL:
+            return {...state, modal: action.payload};
     }
     return state;
 };
@@ -34,3 +37,4 @@ export const setLogin = (open) => ({type: SETLOGIN, payload: open});
 export const setChpw = (open) => ({type: SETCHWP, payload: open});
 export const setInfoOpen = (open) => ({type: SETINFOOPEN, payload: open});
 export const setMenuOpen = (open) => ({type: SETMENUOPEN, payload: open});
+export const setModal = (content) => ({type: SETMODAL, payload: content});

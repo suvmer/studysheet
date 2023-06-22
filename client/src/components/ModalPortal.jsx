@@ -31,7 +31,7 @@ export const ModalPortal = ({content}) => {
   }, []);
 
   return createPortal(<div className={content ? "modal modal_open" : "modal"}>
-        <div className="modal_in" ref={ref}>
+        <div ref={ref}>
             {content ?? ""}
         </div>
   </div>, mount);

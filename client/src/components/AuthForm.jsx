@@ -5,10 +5,11 @@ import { sendLogin, sendReg } from "./actions/users";
 import { validateLoginData, validateRegData } from "../utils/utils";
 //import { useNavigate } from "react-router-dom";
 import { setLogin } from "../store/uiReducer";
+import UIService from "../services/UIService";
 
-export const AuthForm = () => {
+export const AuthForm = (props) => {
   const [formData, setformData] = useState({"info": {}});
-  const [isSignIn, setSign] = useState(false);
+  const [isSignIn, setSign] = useState(props.login ?? false);
   const [errorText, setErrorText] = useState("");
   //const navigate = useNavigate();
 
@@ -20,22 +21,18 @@ export const AuthForm = () => {
   }
 
   const dispatch = useDispatch();
-  const closeAll = (succ) => {
-    dispatch(setLogin(false))
-    //navigate("/")
-  };
   const sendSignIn = () => {
     if(validateLoginData(formData))
       dispatch(sendLogin(formData.email, formData.password))
-        .then(closeAll, e => setErrorText(e.response?.data?.message));
+        .then(UIService.closeModals, e => setErrorText(e.response?.data?.message));
   }
   const sendSignUp = () => {
     if(validateRegData(formData))
       dispatch(sendReg(formData.name, formData.email, formData.password, formData.info))
-        .then(closeAll, e => setErrorText(e.response?.data?.message));
+        .then(UIService.closeModals, e => setErrorText(e.response?.data?.message));
   }
 
-  return <form onSubmit={(e) => e.preventDefault()} className="portal">
+  return <form onSubmit={(e) => e.preventDefault()} className="modal_in">
     {isSignIn ? <>
       <p>Авторизируйтесь</p>
       {errorText ? <p className="error_label">{errorText}</p> : ""}

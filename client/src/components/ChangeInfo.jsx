@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { setInfoOpen } from "../store/uiReducer";
-import { useOnClickOutside } from "../utils/ownHooks";
 import { useDispatch, useSelector } from "react-redux";
 import { sendNewInfo } from "./actions/users";
 import { DarkButton } from "./UI/Buttons";
+import UIService from "../services/UIService";
 
-const Form = () => {
+export const ChangeInfoForm = () => {
   const user = useSelector(state => state.profile.user);
   const [formData, setformData] = useState({university: user.info.university, city: user.info.city});
   const [isSuccess, setSuccess] = useState(false);
@@ -26,11 +24,9 @@ const Form = () => {
     if(!formData.university || !formData.city)
         return setErrorText("Введите корректные данные");
     dispatch(sendNewInfo(formData))
-      .then((res) => setSuccess(true), e => setErrorText(e.response?.data?.message));
+      .then((res) => UIService.showPopup("Данные успешно изменены!"), e => setErrorText(e.response?.data?.message));
   }
-    console.log(isSuccess)
-    return <form onSubmit={(e) => e.preventDefault()} className="portal">
-        {!isSuccess ? <>
+    return <form onSubmit={(e) => e.preventDefault()} className="modal_in">
         <p className="mid">Редактирование профиля</p>
         {errorText ? <p className="error_label">{errorText}</p> : ""}
         <label htmlFor="city">Город</label>
@@ -62,26 +58,5 @@ const Form = () => {
             autoComplete="on"
             required/>
         <DarkButton type="submit" onClick={() => sendData()}>Изменить данные</DarkButton>
-        </> : <>
-            <div className="box">
-                <p className="big">Данные успешно изменены!</p>
-            </div>
-        </>}
     </form>
 }
-export const ChangeInfoPortal = () => {
-  const mount = document.getElementById("portal");
-  const el = document.createElement("div");
-
-  useEffect(() => {
-    mount.appendChild(el);
-    return () => mount.removeChild(el);
-  }, [el, mount]);
-
-  const ref = useRef(null);
-  useOnClickOutside(ref, setInfoOpen, ["ui", "infoOpen"]);
-
-  return createPortal(<div ref={ref}>
-    <Form/>
-  </div>, el);
-};

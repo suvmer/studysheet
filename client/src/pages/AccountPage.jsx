@@ -7,6 +7,7 @@ import { DarkButton, LightButton } from '../components/UI/Buttons';
 import { logout } from '../components/actions/users';
 import { getOwnTables } from '../components/actions/tables';
 import { setChpw, setInfoOpen } from '../store/uiReducer';
+import UIService from '../services/UIService';
 
 export const AccountPage = () => {
     const dispatch = useDispatch();
@@ -40,8 +41,8 @@ export const AccountPage = () => {
             {user.info?.city ? <p className="mid">Город: {user.info?.city}</p> : ""}
             {user.info?.university ? <p className="mid">Учёба: {user.info?.university}</p> : ""}
             <div className='event_footer'>
-                <DarkButton onClick={() => dispatch(setChpw(true))}>Изменить пароль</DarkButton>
-                <DarkButton onClick={() => dispatch(setInfoOpen(true))}>Редактировать профиль</DarkButton>
+                <DarkButton onClick={UIService.openChangePass}>Изменить пароль</DarkButton>
+                <DarkButton onClick={UIService.openChangeInfo}>Редактировать профиль</DarkButton>
             </div>
         </div>}
         
