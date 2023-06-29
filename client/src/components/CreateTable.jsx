@@ -109,6 +109,7 @@ export const CreateTable = (props = null) => {
   }
 
   const moveSubject = (idChange, idFor, up) => {
+    console.log("Moving ", idChange, idFor, up)
     if(sheet.tables[idChange].length <= 1)
       return;
     if(up && idFor == 0)
@@ -190,9 +191,11 @@ export const CreateTable = (props = null) => {
                       key={`inp_time${index}${ind}${subj.id}`}
                       defaultValue={[dayjs(subj.start), dayjs(subj.end)]} 
                       onChange={(a, b) => {
-                      handleChange(index, ind, 'start', a[0].valueOf()); 
-                      handleChange(index, ind, 'end', a[1].valueOf())
-                    }} 
+                        if(!a)
+                          return;
+                        handleChange(index, ind, 'start', a[0].valueOf()); 
+                        handleChange(index, ind, 'end', a[1].valueOf())
+                      }} 
                     format={"HH:mm"}
                     minuteStep={5} 
                     placeholder={["Начало", "Конец"]} />
