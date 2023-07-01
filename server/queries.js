@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS users (
   "ownTables" INTEGER[],
   groups INTEGER[],
   regtime BIGINT,
-  CONSTRAINT user_unique UNIQUE (id, email)
+  CONSTRAINT "user_unique" UNIQUE ("email")
 )
 `);
 
