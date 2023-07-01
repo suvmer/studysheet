@@ -2,8 +2,8 @@ import axios from "axios";
 import { checkAuth } from "../components/actions/users";
 import { store } from "../store";
 
-export const API_URL = 'http://studysheet.ru/api';
-export const CURRENT_URL = 'http://studysheet.ru';
+export const API_URL = 'https://studysheet.ru/api';
+export const CURRENT_URL = 'https://studysheet.ru';
 
 const api = axios.create({
     withCredentials: true, //auto cookie attachment
