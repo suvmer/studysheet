@@ -44,7 +44,7 @@ const Authorize = () => {
     <div className='sheet'>
       <p className='big'>Чтобы добавить расписание, <mark className='bold'>авторизуйтесь</mark></p>
     </div>
-    <AuthAsk/>
+    <AuthAsk autoFocus={false}/>
   </div>
 }
 const AddSomeSchedule = () =>
