@@ -8,6 +8,8 @@ import dayjs from 'dayjs';
 import { OnlineTable } from '../components/OnlineTable';
 import { AuthAsk } from '../components/AuthAsk';
 import { InfoBar } from '../components/InfoBar';
+import { DarkButton } from '../components/UI/Buttons';
+import UIService from '../services/UIService';
 
 
 const Welcome = () =>  <></>
@@ -44,7 +46,7 @@ const Authorize = () => {
     <div className='sheet'>
       <p className='big'>Чтобы добавить расписание, <mark className='bold'>авторизуйтесь</mark></p>
     </div>
-    <AuthAsk autoFocus={false}/>
+    <DarkButton onClick={() => UIService.openAuthForm()}>Регистрация</DarkButton>
   </div>
 }
 const AddSomeSchedule = () =>
