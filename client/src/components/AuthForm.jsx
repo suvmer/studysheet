@@ -38,7 +38,7 @@ export const AuthForm = (props) => {
       {errorText ? <p className="error_label">{errorText}</p> : ""}
       <input
         placeholder="Почта"
-        autoFocus={props.autoFocus ?? false}
+        autoFocus
         onChange={changeEv} 
         name="email" 
         type="email" 
