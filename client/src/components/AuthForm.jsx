@@ -62,7 +62,6 @@ export const AuthForm = (props) => {
       {errorText ? <p className="error_label">{errorText}</p> : ""}
       <input
         placeholder="Имя(Фамилия)"
-        autoFocus
         onChange={changeEv}
         name="name"
         type="text"
