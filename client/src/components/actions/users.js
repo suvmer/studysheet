@@ -2,8 +2,8 @@ import { changeInfoAct, fetchUser, login, logoutAct, selectSheetAct } from '../.
 import AuthService from '../../services/AuthService';
 import UtilsService from '../../services/UtilsService';
 import axios from 'axios';
-import { API_URL } from '../../http';
 import UserService from '../../services/UserService';
+import { API_URL } from '../../config';
 
 const users =
 [

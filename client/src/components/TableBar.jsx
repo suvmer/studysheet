@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { DarkButton, DarkSmallButton, SmallButton } from './UI/Buttons';
-import { CURRENT_URL } from '../http';
+import { CURRENT_URL } from '../config';
 
 export const TableBar = ({table, selected, isOpen, permission}) => {
     const dispatch = useDispatch();
