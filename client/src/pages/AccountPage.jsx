@@ -6,7 +6,6 @@ import { AuthForm } from '../components/AuthForm';
 import { DarkButton, LightButton } from '../components/UI/Buttons';
 import { logout } from '../components/actions/users';
 import { getOwnTables } from '../components/actions/tables';
-import { setChpw, setInfoOpen } from '../store/uiReducer';
 import UIService from '../services/UIService';
 
 export const AccountPage = () => {
