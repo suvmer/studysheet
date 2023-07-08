@@ -13,35 +13,40 @@ import { AuthAsk } from "./AuthAsk";
 
 var globid = 0;
 
-export const CreateTable = (props = null) => {
-  const [page, setPage] = useState(0);
-  const [isEdit, setEdit] = useState(false);
-  const defs = useSelector(state => state.table.defs[0]);
-  const getDefaultSchedule = (ind) => {
-    ind = Math.min(defs.length-1, ind);
-    const [starthour, startminute] = defs[ind][0].split(':').map(el => +el);
-    const [endhour, endminute] = defs[ind][1].split(':').map(el => +el);
-    return [dayjs().hour(starthour).minute(startminute), dayjs().hour(endhour).minute(endminute)];
-    //return [dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][0]), dayjs('01.01.01 '+defs[Math.min(defs.length-1, ind)][1])];
-  }
-  const [defPlace, setDefPlace] = useState("");
-  const getField = (i = 0) => ({
+export const CreateTable = (props = null) => { //Sry for bad eng:)
+  const [errorText, setErrorText] = useState(""); //red text under the title 
+  const [page, setPage] = useState(0); //1 page to fill info(title, permissions), 2 page to fill a schedule
+  const [isEdit, setEdit] = useState(false); //Is component used for creating or editing a schedule.
+  const [defaultPlace, setDefaultPlace] = useState(""); //used with text field to autofill a Place when adding new subjects 
+  const defaultStartEnd = useSelector(state => state.table.defs[0]);
+  const [startEndTime, setStartEndTime] = useState(() => { //autofill start/end time for 1st, 2nd, ..., subject
+    console.log("Bab");
+    const converted = defaultStartEnd.map(el =>  //"15:10" -> [15, 10]
+      [el[0].split(':').map(el => +el), el[1].split(':').map(el => +el)]
+    )
+    return defaultStartEnd.map((el, ind) => {
+      const [startHour, startMinute] = converted[ind][0];
+      const [endHour, endMinute] = converted[ind][1];
+      return [dayjs().hour(startHour).minute(startMinute), dayjs().hour(endHour).minute(endMinute)];
+    })
+  });
+  const getDefaultSchedule = (ind) => startEndTime[Math.min(defaultStartEnd.length-1, ind)];
+  const getField = (i = 0) => ({ //returns empty field for new subject
     start: getDefaultSchedule(i)[0].valueOf(),
     end: getDefaultSchedule(i)[1].valueOf(),
     name: "",
     cabinet: "",
     teacher: "",
-    id: globid++,
-    place: defPlace });
-
-  const [weekPart, setWeekPart] = useState(-1);
-  const [storedSheet, storeSheet] = useState({
+    id: globid++, //hack
+    place: defaultPlace
+  });
+  const [storedSheet, storeSheet] = useState({ //schedule template to be filled in by user
     name: "",
     public: true,
     tables: [
-    //...Array(7).fill([getField()]) //no new instances
-    ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //new instances
+    ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //fill the first with empty field
   ]});
+
   useEffect(() => {
     if(props?.toedit != null) {
       setEdit(true);
@@ -53,12 +58,10 @@ export const CreateTable = (props = null) => {
   const sheet = storedSheet;
   console.log(sheet);
 
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0); //hack for optimization
   const addSubj = (index) => {
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
     doSort(index);
-    //storeSheet(sheet);
-    //forceUpdate();
     console.log(storedSheet)
   };
   const changeEv = event => {
@@ -70,14 +73,14 @@ export const CreateTable = (props = null) => {
     //console.log()
     sheet.tables[id].sort((e1, e2) => e1.start - e2.start);
     console.log(sheet.tables[id])
-    storeSheet(sheet);
-    forceUpdate();
+    storeSheet({...sheet});
+    //forceUpdate();
   }
 
   const handleChange = (idChange, idFor, namer, value) => {
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
     if(namer == "defPlace") {
-      setDefPlace(value);
+      setDefaultPlace(value);
       return;
     }
     if(namer == "start" || namer == "end") {
@@ -85,7 +88,8 @@ export const CreateTable = (props = null) => {
     }
     if(namer == "sheetName") {
       sheet['name'] = value;
-      forceUpdate();
+      storeSheet({...sheet});
+      //forceUpdate();
       return;
     }
     if(namer == "pub") { //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
@@ -97,19 +101,13 @@ export const CreateTable = (props = null) => {
     if(namer == 'start')
       doSort(idChange);
   }
-  const deleteSubject = (idChange, idFor) => {
-    console.log({...sheet.tables[idChange]})
-    //for(var i = 0; i < sheet.tables[idChange].length - 1; i++)
-    //  sheet.tables[idChange][i] = sheet.tables[idChange][i+1];
+  const deleteSubject = (idChange, idFor) => { //remove subject in day list
     sheet.tables[idChange] = sheet.tables[idChange].filter((e, i) => (i != idFor));
-    console.log({...sheet.tables[idChange]})
-    console.log(idChange, idFor)
-    storeSheet(sheet);
-    forceUpdate();
+    storeSheet({...sheet});
+    //forceUpdate();
   }
 
-  const moveSubject = (idChange, idFor, up) => {
-    console.log("Moving ", idChange, idFor, up)
+  const moveSubject = (idChange, idFor, up) => { //move subject in day list
     if(sheet.tables[idChange].length <= 1)
       return;
     if(up && idFor == 0)
@@ -120,12 +118,12 @@ export const CreateTable = (props = null) => {
     [sheet.tables[idChange][idFor], sheet.tables[idChange][newid]] = [sheet.tables[idChange][newid], sheet.tables[idChange][idFor]];
     [sheet.tables[idChange][idFor].start, sheet.tables[idChange][newid].start] = [sheet.tables[idChange][newid].start, sheet.tables[idChange][idFor].start];
     [sheet.tables[idChange][idFor].end, sheet.tables[idChange][newid].end] = [sheet.tables[idChange][newid].end, sheet.tables[idChange][idFor].end];
-    storeSheet(sheet);
-    forceUpdate();
+    storeSheet({...sheet}); //TODO: Why updates only on {...sheet}(not sheet)?
+    //forceUpdate();
   }
 
   const navigate = useNavigate();
-  const [errorText, setErrorText] = useState("");
+
   const dispatch = useDispatch();
   const sendSchedule = () => {
     if(validateTableData(sheet.tables))
@@ -137,13 +135,12 @@ export const CreateTable = (props = null) => {
       dispatch(editTable(sheet))
         .then((succ) => navigate(`/info/${sheet.id}`), e => setErrorText(e.response?.data?.message));
   }
-
   
+  console.log("Updated");
+
   const user = useSelector(state => state.profile.user);
   if(!user?.id)
     return <div className="wall"><p className="big">Чтобы создавать расписания, войдите:</p><AuthAsk/></div>;
-
-  console.log("Updated");
   return (<div className="wall wall_subjects">
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
           <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : shortTo(sheet.name, 40)}</p>
@@ -152,7 +149,7 @@ export const CreateTable = (props = null) => {
       
       {errorText ? <p className="error_label">{errorText}</p> : ""}
       {page == 0 ? <>
-      <label for="sheetName">Название</label>
+      <label htmlFor="sheetName">Название</label>
         <input
           key="sheetName"
           id="sheetName"
@@ -169,13 +166,10 @@ export const CreateTable = (props = null) => {
       </>: <>
       <div className="box_nobg box_nobg_gap">
           <FiArrowLeft className="icons" onClick={() => setPage(0)}/>
-          {/*{weekPart != -1 ? <FiTrash2 className="icons icons_delete" onClick={() => setWeekPart(-1)}/> : ""}
-          {weekPart == -1 ? <FiPlus className="icons icons_add" onClick={() => setWeekPart(0)}/> : (weekPart == 0 ? <DarkButton>Числитель</DarkButton> : <LightButton onClick={() => setWeekPart(0)}>Числитель</LightButton>)}
-      {weekPart == -1 ? "" : (weekPart == 1 ? <DarkButton>Знаменатель</DarkButton> : <LightButton onClick={() => setWeekPart(1)}>Знаменатель</LightButton>)}*/}
       </div>
       <input 
           onChange={changeEv} 
-          value={defPlace}
+          value={defaultPlace}
           name="defPlace"
           placeholder="Место(автоматически при добавлении)" />
       <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
@@ -200,7 +194,6 @@ export const CreateTable = (props = null) => {
                     minuteStep={5} 
                     placeholder={["Начало", "Конец"]} />
                     <div className="subject_panel_icons">
-                      {weekPart != -1 ? <FiRefreshCcw/> : ""}
                       <AiOutlineArrowUp onClick={() => moveSubject(index, ind, true)}/>
                       <AiOutlineArrowDown onClick={() => moveSubject(index, ind, false)}/>
                       <FiTrash2 onClick={() => deleteSubject(index, ind)}/>
