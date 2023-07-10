@@ -54,7 +54,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
       setEdit(true);
       storeSheet({...props.toedit, tables: props.toedit.tables.map(el => el.map(subel => ({...subel, id: globid++})))});
     }
-  }, []);
+  }, [props?.toedit]);
   
   const addSubj = (index) => { //put an empty subject into the day
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
