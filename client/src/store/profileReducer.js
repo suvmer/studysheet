@@ -1,7 +1,3 @@
-/* near TODO:
-1) Получать данные с сервака сначала про ид таблиц, которыми владеет пользователь
-2) Затем получать с сервака инфу о нужном расписании
-*/
 const GET_USER = "GET_USER";
 const LOGIN = "LOGIN";
 const LOGOUT = "LOGOUT";
@@ -19,8 +15,8 @@ export const profileReducer = (state = defaultState, action) => {
     case GET_USER:
       if(!action.payload)
         return state;
-      let fndd = state.users.findIndex(el => el.id == action.payload.id);
-      if(fndd == -1)
+      let fndd = state.users.findIndex(el => el.id === action.payload.id);
+      if(fndd === -1)
         return {
           ...state,
           users: [...state.users, action.payload]
@@ -28,26 +24,28 @@ export const profileReducer = (state = defaultState, action) => {
 
       return {
         ...state,
-        users: state.users.map((user, id) => id == fndd ? action.payload : user)
+        users: state.users.map((user, id) => id === fndd ? action.payload : user)
       };
+
     case LOGIN:
       if(state.isLogged || !action.payload)
         return state;
-      //console.log("LOGIN ACTION: SETTED token TO ", action.payload.accessToken)
-      //localStorage.setItem('token', action.payload.accessToken);
-      //console.log(action.payload.user);
       return {...state, isLogged: true, user: {...action.payload.user, info: JSON.parse(action.payload.user.info)}};
+
     case LOGOUT:
       localStorage.removeItem('token');
       return {...state, isLogged: false, user: {}};
+
     case SELECTSHEET:
       if(!state.isLogged || !action.payload)
         return state;
       return {...state, user: {...state.user, currentTable: action.payload}};
+
     case CHANGEINFO:
       if(!state.isLogged || !action.payload)
         return state;
       return {...state, user: {...state.user, info: action.payload}};
+
     default:
       return state;
   }

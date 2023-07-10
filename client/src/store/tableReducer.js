@@ -20,10 +20,10 @@ export const tableReducer = (state = defaultState, action) => {
         tables: action.payload
       };
     case GET_TABLE:
-      if(action.payload == undefined)
+      if(!action.payload)
         return state;
-      let fnd = state.schedules.findIndex(el => el.id == action.payload.id);
-      if(fnd == -1)
+      let fnd = state.schedules.findIndex(el => el.id === action.payload.id);
+      if(fnd === -1)
         return {
           ...state,
           schedules: [...state.schedules, action.payload]
@@ -31,7 +31,7 @@ export const tableReducer = (state = defaultState, action) => {
 
       return {
         ...state,
-        schedules: state.schedules.map((schedule, id) => id == fnd ? action.payload : schedule)
+        schedules: state.schedules.map((schedule, id) => id === fnd ? action.payload : schedule)
       };
     default:
       return state;

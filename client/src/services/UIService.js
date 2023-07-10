@@ -5,10 +5,12 @@ import { setModal } from "../store/uiReducer";
 import { ChangePassForm } from "../components/ChangePassForm";
 import { ChangeInfoForm } from "../components/ChangeInfo";
 
-const Popup = ({children}) => <div className="modal_in"><div className="box">
-                        <p className="big">{children}</p>
-                    </div>
-                </div>
+const Popup = ({children}) => <div className="modal_in">
+    <div className="box">
+        <p className="big">{children}</p>
+    </div>
+</div>
+
 export default class UIService {
     static openAuthForm(login = false) {
         store.dispatch(setModal(<AuthForm login={login}/>));

@@ -20,8 +20,9 @@ export const uiReducer = (state = defaultState, action) => {
             return {...state, menuOpen: action.payload};
         case SETMODAL:
             return {...state, modal: action.payload};
+        default:
+            return state;
     }
-    return state;
 };
 
 export const setTime = (time) => ({type: SETTIME, payload: time});

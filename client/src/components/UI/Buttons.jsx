@@ -14,10 +14,10 @@ export const SmallButton = ({type, onClick, children}) => {
 }
 export const DarkRepeatButton = ({type, onClick, children}) => {
     const [stage, setStage] = useState(0);
-    if(stage == 0)
+    if(stage === 0)
         return <button type={type} onClick={()=>setStage(1)} className="btn btn_dark">{children}</button>
-    if(stage == 1)
+    if(stage === 1)
         return <button type={type} onClick={()=>setStage(2)} className="btn btn_dark">Уверены?</button>
-    if(stage == 2)
+    if(stage === 2)
         return <button type={type} onClick={onClick} className="btn btn_dark">Точно?</button>
 }

@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { DarkButton, DarkButtonMid, DarkSmallButton, SmallButton } from "./UI/Buttons";
+import { DarkButton, SmallButton } from "./UI/Buttons";
 import { useDispatch } from "react-redux";
 import { sendLogin, sendReg } from "./actions/users";
 import { validateLoginData, validateRegData } from "../utils/utils";
-//import { useNavigate } from "react-router-dom";
-import { setLogin } from "../store/uiReducer";
 import UIService from "../services/UIService";
 
 export const AuthForm = (props) => {
   const [formData, setformData] = useState({"info": {}});
   const [isSignIn, setSign] = useState(props.login ?? false);
   const [errorText, setErrorText] = useState("");
-  //const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const changeEv = event =>
     handleChange(event.target.name, event.target.value, event.target.getAttribute('forer'));
@@ -20,7 +18,6 @@ export const AuthForm = (props) => {
     forer ? setformData({...formData, info: {...formData.info, [name]: newvalue}}) : setformData({...formData, [name]: newvalue})
   }
 
-  const dispatch = useDispatch();
   const sendSignIn = () => {
     if(validateLoginData(formData))
       dispatch(sendLogin(formData.email, formData.password))

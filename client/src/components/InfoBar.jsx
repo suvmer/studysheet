@@ -7,9 +7,9 @@ export const InfoBar = ({tables}) => <div className="info">
                     <p className="big center">{days[day]}</p>
                     <br/>
                     <hr/>
-                    {element.length == 0 ? <p className="mid center">Занятий нет</p> : ""}
+                    {element.length === 0 ? <p className="mid center">Занятий нет</p> : ""}
                     {element.map((el, num) => {
-                        if(num == 0)
+                        if(num === 0)
                             return <SubjectBar key={`sbj${day} ${num}`} {...{...el, num: num+1}}/>
                         return <>
                             <hr/>

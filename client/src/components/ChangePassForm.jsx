@@ -6,7 +6,6 @@ import UIService from "../services/UIService";
 
 export const ChangePassForm = () => {
   const [formData, setformData] = useState({});
-  const [isSuccess, setSuccess] = useState(false);
   const [errorText, setErrorText] = useState("");
   
   const changeEv = event =>

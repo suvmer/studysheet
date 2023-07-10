@@ -1,10 +1,10 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TimePicker } from 'antd';
 import * as dayjs from 'dayjs'
 import { useDispatch, useSelector } from "react-redux";
 import { dateToString, days, shortTo, validateTableData } from "../utils/utils";
-import { DarkButton, LightButton, SmallButton } from "./UI/Buttons";
-import {FiTrash2, FiRefreshCcw, FiPlus, FiArrowLeft} from 'react-icons/fi'
+import { DarkButton, LightButton } from "./UI/Buttons";
+import {FiTrash2, FiArrowLeft} from 'react-icons/fi'
 import {AiOutlineArrowUp, AiOutlineArrowDown} from 'react-icons/ai'
 import { editTable, sendTable } from "./actions/tables";
 import { useNavigate } from "react-router-dom";
@@ -19,7 +19,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
   const [isEdit, setEdit] = useState(false); //Is component used for creating or editing a schedule.
   const [defaultPlace, setDefaultPlace] = useState(""); //used with text field to autofill a Place when adding new subjects 
   const defaultStartEnd = useSelector(state => state.table.defs[0]);
-  const [startEndTime, setStartEndTime] = useState(() => { //autofill start/end time for 1st, 2nd, ..., subject
+  const startEndTime = useState(() => { //autofill start/end time for 1st, 2nd, ..., subject
     const converted = defaultStartEnd.map(el =>  //"15:10" -> [15, 10]
       [el[0].split(':').map(el => +el), el[1].split(':').map(el => +el)]
     )
@@ -28,7 +28,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
       const [endHour, endMinute] = converted[ind][1];
       return [dayjs().hour(startHour).minute(startMinute), dayjs().hour(endHour).minute(endMinute)];
     })
-  });
+  })[0];
   const getDefaultSchedule = (ind) => startEndTime[Math.min(defaultStartEnd.length-1, ind)];
   const getField = (i = 0) => ({ //returns empty field for new subject
     start: getDefaultSchedule(i)[0].valueOf(),
@@ -43,9 +43,11 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     name: "",
     public: true,
     tables: [
-    ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //fill the first with empty field
+    ...Array(7).fill().map((el, ind) => ind === 0 ? [getField()] : []) //fill the first with empty field
   ]});
   const sheet = {...storedSheet};
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if(props?.toedit != null) {
@@ -57,7 +59,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
   
   console.log(sheet);
 
-  const addSubj = (index) => {
+  const addSubj = (index) => { //put an empty subject into the day
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
     doSort(index);
   };
@@ -68,40 +70,40 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     storeSheet(sheet);
   }
 
-  const changeEv = event =>
+  const changeEv = event =>  //handle input values
     handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
   
   const handleChange = (idChange, idFor, namer, value) => { //set value from input
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
-    if(namer == "defaultPlace") { //used with text field to autofill a Place when adding new subjects 
+    if(namer === "defaultPlace") { //used with text field to autofill a Place when adding new subjects 
       setDefaultPlace(value);
       return;
     }
-    if(namer == "sheetName") { 
+    if(namer === "sheetName") { 
       sheet['name'] = value;
       storeSheet(sheet);
       return;
     }
-    if(namer == "pub") { //is sheet public   //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
+    if(namer === "pub") { //is sheet public   //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
       //TODO: если вуз - числитель и знаменатель или просто пары, название заведения (50%: УЧИТЕЛЯ И ПРЕПОДАВАТЕЛИ К РАСПИСАНИЮ)
       sheet['isPublic'] = value;
       return;
     }
     sheet.tables[idChange][idFor] = {...(sheet.tables[idChange][idFor]), [namer]: value};
-    if(namer == 'start')
+    if(namer === 'start')
       doSort(idChange);
   }
   const deleteSubject = (idChange, idFor) => { //remove subject in day list
-    sheet.tables[idChange] = sheet.tables[idChange].filter((e, i) => (i != idFor));
+    sheet.tables[idChange] = sheet.tables[idChange].filter((e, i) => (i !== idFor));
     storeSheet(sheet);
   }
 
   const moveSubject = (idChange, idFor, up) => { //move subject in day list
     if(sheet.tables[idChange].length <= 1)
       return;
-    if(up && idFor == 0)
+    if(up && idFor === 0)
       return;
-    if(!up && idFor == sheet.tables[idChange].length-1)
+    if(!up && idFor === sheet.tables[idChange].length-1)
       return;
     var newid = up ? (idFor - 1) : (idFor + 1);
     [sheet.tables[idChange][idFor], sheet.tables[idChange][newid]] = [sheet.tables[idChange][newid], sheet.tables[idChange][idFor]];
@@ -110,15 +112,12 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     storeSheet(sheet);
   }
 
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-  const sendSchedule = () => {
+  const sendSchedule = () => { //send data to the server
     if(validateTableData(sheet.tables))
       dispatch(sendTable(sheet))
         .then((succ) => navigate("/my"), e => setErrorText(e.response?.data?.message));
   }
-  const editSchedule = () => {
+  const editSchedule = () => { //send data to the server
     if(validateTableData(sheet.tables))
       dispatch(editTable(sheet))
         .then((succ) => navigate(`/info/${sheet.id}`), e => setErrorText(e.response?.data?.message));
@@ -131,9 +130,12 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     return <div className="wall"><p className="big">Чтобы создавать расписания, войдите:</p><AuthAsk/></div>;
   return (<div className="wall wall_subjects">
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
-          <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : shortTo(sheet.name, 40)}</p>
+          <p>{page === 0 ?
+                (isEdit ? "Редактирование расписания" : "Создание расписания") :
+                shortTo(sheet.name, 40)
+          }</p>
       </div>
-      {page == 1 ?
+      {page === 1 ?
         <p className="center gray">Автор: {storedSheet.creator ? storedSheet.creator.name : "Вы"}</p> :
         ""
       }
@@ -143,7 +145,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
         ""
       }
 
-      {page == 0 ? <>
+      {page === 0 ? <>
       <label htmlFor="sheetName">Название</label>
         <input
           key="sheetName"
@@ -160,7 +162,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
             <LightButton onClick={() => storeSheet({...storedSheet, public: true})}>Видят только участники</LightButton>
           }
         </div>
-        <br/><LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] == "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
+        <br/><LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] === "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
       </>: <>
       <div className="box_nobg box_nobg_gap">
           <FiArrowLeft className="icons" onClick={() => setPage(0)}/>
@@ -171,12 +173,11 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
           name="defaultPlace"
           placeholder="Место(автоматически при добавлении)" />
 
-      <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
-        {storedSheet.tables.map((elem, index) => {
-          return (<div className="newsubject" key={index}>
+      <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page === 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
+        {storedSheet.tables.map((elem, index) => (<div className="newsubject" key={index}>
             <div className="newsubject_in">
               <mark className="big center">{days[index]}</mark>
-              {elem.length == 0 ? <><hr/><mark className="mid center">Нет занятий</mark></> : ""}
+              {elem.length === 0 ? <><hr/><mark className="mid center">Нет занятий</mark></> : ""}
               {elem.map((subj, ind) => (
                 <div indx={index} indxer={ind} key={subj.id} className="subject">
                   <div className="subject_panel">
@@ -234,8 +235,11 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
             <DarkButton type="button" key={index+100000} onClick={() => addSubj(index)}>Добавить предмет</DarkButton>
             </div>
           )
-        })}
-        {errorText ? <p className="error_label">{errorText}</p> : ""}
+        )}
+        {errorText ?
+          <p className="error_label">{errorText}</p> :
+          ""
+        }
         <LightButton type="submit" onClick={isEdit ? editSchedule : sendSchedule}>{isEdit ? "Изменить" : "Создать"}</LightButton>
       </form></>}
     </div>

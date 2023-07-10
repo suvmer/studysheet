@@ -6,20 +6,17 @@ import {LightButton} from '../components/UI/Buttons';
 import { AuthAsk } from './AuthAsk';
 import { TableBar } from './TableBar';
 
-var a = 5;
 export const ListTables = () => {
     const dispatch = useDispatch();
     const user = useSelector(state => state.profile.user);
     const current = user?.currentTable ?? -1;
     const [list, setList] = useState([]);
-    console.log(current);
-
+    const isLogged = useSelector(state => state.profile.isLogged);
     useEffect(() => {
         dispatch(getOwnTables()).then((res) => res && setList(res.tables), (err) => setList([]));
-    }, [useSelector(state => state.profile.isLogged)]);
+    }, [isLogged, dispatch]);
 
     
-    console.log("Rerender listtables ", a++);
     return <div className="wall wall_list">
     {!user?.id ? <AuthAsk text="Войдите для сохранения расписаний"/> :
         list.length > 0 ?
@@ -28,7 +25,7 @@ export const ListTables = () => {
                     <p>Ваши расписания</p>
                     <NavLink to="/my/add/"><LightButton>Добавить</LightButton></NavLink>
                 </div>
-                {list.map(el => <TableBar key={el.id} table={el} selected={el.id == current} isOpen={false} permission={true}/>)}
+                {list.map(el => <TableBar key={el.id} table={el} selected={el.id === current} isOpen={false} permission={true}/>)}
             </>
         :
             <div className="midbox">

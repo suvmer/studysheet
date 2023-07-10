@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { dateToString } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
-import { InfoBlock } from '../components/InfoBlock';
 import { AuthForm } from '../components/AuthForm';
 import { DarkButton, LightButton } from '../components/UI/Buttons';
 import { logout } from '../components/actions/users';
@@ -19,31 +18,30 @@ export const AccountPage = () => {
             return;
           setCount(res.tables.length);
         },
-        (err) => {
-            return setCount(0);
-        });
-      }, [useSelector(state => state.profile.isLogged)]);
-    //console.log(user);
+        (err) => setCount(0)
+        );
+      }, [isLogged, dispatch]);
     return <div className="wall">
         <div className="box_nobg box_nobg_header box_nobg_big">
             <p>Ваш аккаунт</p>
             {isLogged ? <LightButton onClick={() => dispatch(logout())}>Выйти</LightButton> : ""}
         </div>
-        {!isLogged ? <AuthForm/> : <div className="event">
-                <InfoBlock text="">{user.name}</InfoBlock>
-
-            <div className="eventTitle">Дата регистрации: {dateToString(+user.regtime).join(" ")}</div>
-            <div className="eventTitle">Почта: {user.email} {user.isActivated ? <a className='good_label'>Подтверждена</a> : <a className='error_label'>Не подтверждена</a>}</div>
-            <br/>
-            
-            <p className="mid">Расписаний: {count}</p>
-            {user.info?.city ? <p className="mid">Город: {user.info?.city}</p> : ""}
-            {user.info?.university ? <p className="mid">Учёба: {user.info?.university}</p> : ""}
-            <div className='event_footer'>
-                <DarkButton onClick={UIService.openChangePass}>Изменить пароль</DarkButton>
-                <DarkButton onClick={UIService.openChangeInfo}>Редактировать профиль</DarkButton>
-            </div>
-        </div>}
-        
+        {!isLogged ?
+            <AuthForm/>
+        :
+            <div className="event">
+                <p><mark className="big">{user.name}</mark></p>
+                <div className="event_title">Дата регистрации: {dateToString(+user.regtime).join(" ")}</div>
+                <div className="event_title">Почта: {user.email} {user.isActivated ? <p className='good_label event_mail'>Подтверждена</p> : <p className='error_label event_mail'>Не подтверждена</p>}</div>
+                <br/>
+                
+                <p className="mid">Расписаний: {count}</p>
+                {user.info?.city ? <p className="mid">Город: {user.info?.city}</p> : ""}
+                {user.info?.university ? <p className="mid">Учёба: {user.info?.university}</p> : ""}
+                <div className='event_footer'>
+                    <DarkButton onClick={UIService.openChangePass}>Изменить пароль</DarkButton>
+                    <DarkButton onClick={UIService.openChangeInfo}>Редактировать профиль</DarkButton>
+                </div>
+            </div>}
     </div>;
 }

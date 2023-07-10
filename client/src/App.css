@@ -506,9 +506,13 @@ input:invalid {
   background-color: var(--soon);
 }
 
-.eventTitle {
+.event_title {
   color: var(--darkgray);
   text-align: center;
+}
+.event_mail {
+  display: inline;
+  font-size: inherit!important;
 }
 
 .time {

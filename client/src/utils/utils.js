@@ -1,52 +1,38 @@
 import dayjs from "dayjs";
 
-Number.prototype.width = function () {
-  return this.toString().length;
-};
-Number.prototype.toWidth = function (width) {
-  return width - this.width() <= 0
-    ? this
-    : new String("0", width - this.width()) + this;
-};
+const width = (num) => num.toString().length;
+const toWidth = (num, len) => len - width(num) <= 0 ? num.toString() : "0".repeat(len - width(num)) + num.toString();
 
 export const dateToString = (stamp, nosecs = false) => {
   var a = new Date(stamp);
   return [
-    `${a.getDate().toWidth(2)}.${(a.getMonth() + 1).toWidth(2)}.${a
-      .getFullYear()
-      .toWidth(2)}`,
-    `${a.getHours().toWidth(2)}:${a.getMinutes().toWidth(2)}${nosecs ? `` : `:${a
-      .getSeconds()
-      .toWidth(2)}`}`,
+    `${toWidth(a.getDate(), 2)}.${toWidth((a.getMonth() + 1), 2)}.${toWidth(a.getFullYear(), 2)}`,
+    `${toWidth(a.getHours(), 2)}:${toWidth(a.getMinutes(), 2)}${nosecs ? `` : `:${toWidth(a.getSeconds(), 2)}`}`,
   ];
 };
 
 export const checkField = (fieldName, str) => {
-  var message = "Некорректные данные";
   var pattern = /\S*/;
   var min = 0;
   var max = 50;
   switch(fieldName) {
       case "name":
-          message = "Некорректное имя";
-          pattern = /^[a-zA-Zа-яА-Я_\-]{2,20}( [a-zA-Zа-яА-Я_\-]{2,20})?$/;
+          pattern = /^[a-zA-Zа-яА-Я_-]{2,20}( [a-zA-Zа-яА-Я_-]{2,20})?$/;
           break;
       case "email":
-          message = "Некорректная почта";
-          pattern = /^\w+([\.\-]?\w+)*@\w+([\.\-]?\w+)*(\.\w{2,3})+$/;
+          pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
           break;
       case "university":
-          message = "Некорректное место";
           pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
           break;
       case "city":
-          message = "Некорректный город";
           pattern = /^[a-zA-Zа-яА-Я _-]{2,20}$/;
           break;
       case "ip":
-          message = "Некорректный ip";
           pattern = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
           break;
+      default:
+        break;
   }
   
   if(typeof str != 'string')
@@ -58,20 +44,7 @@ export const checkField = (fieldName, str) => {
   return true;
 };
 
-export const validateTableData = (table) => {
-  return true;
-};
-/*
-{
-    "info": {
-        "unversity": "Вуз",  ^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$
-        "city": ""  ^[a-zA-Zа-яА-Я _\-]{2,20}$
-    },
-    "name": "fa",  ^[a-zA-Zа-яА-Я_\-]{2,20}$
-    "email": "fda", ^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$
-    "password": "fda"
-}
-*/
+export const validateTableData = (table) => true; //Todo :) (currently only server-side checking works + html inputs browser validation)
 export const validateLoginData = (formData) => {
   return (
     formData
@@ -108,7 +81,7 @@ export const msToWords = (ms) => {
     return `${days > 0 ? days.toString() + (CountForm(days, [" день ", " дня ", " часа "])) : ''}
             ${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
             ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
-            ${days == 0 && sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
+            ${days === 0 && sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
 };
 export const msToNumbers = (ms) => {
     var ss = Math.round(Math.max(0, ms/1000));
@@ -116,7 +89,7 @@ export const msToNumbers = (ms) => {
     ss %= 3600;
     const mins = Math.floor(ss / 60);
     const sec = ss % 60;
-    return `${hours.toWidth(2)}:${mins.toWidth(2)}:${sec.toWidth(2)}`;
+    return `${toWidth(hours, 2)}:${toWidth(mins,2)}:${toWidth(sec, 2)}`;
   };
   
 export const CountForm = (number, titles = ["секунду", "секунды", "секунд"]) => {
@@ -169,8 +142,8 @@ export const getClosestSubject = (list, time = Date.now()) => {
           }
       }
       if(el.start + dif > time) {
-          if(mode != 1) {
-              if(cursubj == null || el.start < cursubj.start) {
+          if(mode !== 1) {
+              if(cursubj === null || el.start < cursubj.start) {
                   cursubj = el;
                   mode = 0;
               }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendNewInfo } from "./actions/users";
 import { DarkButton } from "./UI/Buttons";
@@ -7,9 +7,7 @@ import UIService from "../services/UIService";
 export const ChangeInfoForm = () => {
   const user = useSelector(state => state.profile.user);
   const [formData, setformData] = useState({university: user.info.university, city: user.info.city});
-  const [isSuccess, setSuccess] = useState(false);
   const [errorText, setErrorText] = useState("");
-  //setformData({university: user.info.university, city: user.info.city});
  
   const changeEv = event =>
     handleChange(event.target.name, event.target.value);

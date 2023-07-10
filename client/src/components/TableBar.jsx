@@ -1,47 +1,40 @@
 import dayjs from 'dayjs';
 import { AiFillPushpin, AiOutlinePushpin } from 'react-icons/ai';
 import { selectSheet } from './actions/users';
-import { dateToString, getClosest, msToNumbers, msToWords } from '../utils/utils';
-import {BsPeople, BsPeopleFill} from 'react-icons/bs'
+import { getClosest, msToNumbers, msToWords } from '../utils/utils';
+import { BsPeople, BsPeopleFill } from 'react-icons/bs'
 import { editTable } from '../components/actions/tables';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { DarkButton, DarkSmallButton, SmallButton } from './UI/Buttons';
+import { DarkButton, DarkSmallButton } from './UI/Buttons';
 import { CURRENT_URL } from '../config';
 
 export const TableBar = ({table, selected, isOpen, permission}) => {
     const dispatch = useDispatch();
-    console.log("rerender")
     const curdate = useSelector(state => state.ui.time); 
     const [isPublic, setPublic] = useState(table.public);
-    if(table == undefined)
+    if(!table)
         return <div>Загрузка...</div>;   
 
-    const subj = getClosest(table.tables)[0];
     var closest = "-";
+    const subj = getClosest(table.tables)[0];
     if(subj != null)
         closest = msToWords(subj.start - curdate);
 
     const sendPublic = (val) => {
         setPublic(val);
-        //if(table.public == val)
-        //    return;
         dispatch(editTable({...table, public: val})).then(succ => console.log(succ), err => console.log(err));
     }
     
     return <NavLink className={isOpen ? "sheet_disabled" : ""} onClick={(e) => isOpen && e.preventDefault() } to={`/info/${table.id}`}>
             <div className={`sheet${selected ? ` sheet_selected` : ``}`}>
             <div className="sheet_panel">
-                {/*selected ? <AiFillPushpin onClick={(e) => e.preventDefault() } className="icons"/> : <AiOutlinePushpin onClick={(e) => { e.preventDefault(); dispatch(selectSheet(table.id))}} className="icons"/>*/}
                 <p className="sheet_panel_title">{table.name}</p>
-                {/*<AiFillPushpin visibility="hidden" className="icons"/>*/}
             </div>
-                <div className="eventTitle">Автор: {table.creator.name}</div>
-                <div className="eventTitle">Создано: {dayjs(+table.created).format("DD.MM.YYYY HH:mm:ss")}</div>
-
+                <div className="event_title">Автор: {table.creator.name}</div>
+                <div className="event_title">Создано: {dayjs(+table.created).format("DD.MM.YYYY HH:mm:ss")}</div>
                 <br/>
-
                 <p className="mid center">Событий в неделю: {table.tables.reduce((acc, cur) => acc+cur.length, 0)}</p>
                 <p className="mid center">Общая длительность: {msToNumbers(table.tables.reduce((acc, cur) => acc+ cur.reduce((allTime, subj) => Math.abs(subj.end - subj.start), 0), 0))}</p>
                 {subj ? <p className="mid center">До ближайшего: {closest}</p> : ""}
