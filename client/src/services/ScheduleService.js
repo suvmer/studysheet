@@ -17,7 +17,6 @@ export default class ScheduleService {
         return api.put('/schedule/edit', {table});
     }
     static async deleteTable(id) {
-        console.log("Send to del ", id)
         return api.delete(`/schedule/delete`, {data: {id: id}});
     }
 }
