@@ -1,18 +1,6 @@
 const ApiError = require('../exceptions/api-error');
 const tableService = require('../service/table-service');
-const {dayjs, utils} = require('../utils');
 
-/*
-{
-    "start": 978328800000,
-    "end": 978334500000,
-    "name": "Aboba",
-    "cabinet": "500",
-    "teacher": "Fdaf",
-    "id": 0,
-    "place": "7 корпус(Союзная 144)"
-}
-*/
 class TableController {
   async addTable(req, res, next) {
     try{
@@ -27,7 +15,6 @@ class TableController {
     try{
       const {id} = req.body;
       const table = await tableService.getTable(id);
-      //console.log("Returning table ", table);
       if(table.table?.public || table.table?.creator.id == req.user?.id)
         return res.status(table.status).json(table);
       throw ApiError.NoPermission("Нет прав на просмотр данного расписания");
@@ -42,16 +29,6 @@ class TableController {
       if(table.table?.public)
         return res.status(table.status).json(table);
       throw ApiError.UnauthorizedError();
-    } catch(e) {
-      next(e);
-    }
-  }
-  async getTables(req, res, next) {
-    try{
-      const userid = req.params.userid;
-      const tables = await tableService.getTables(userid);
-      
-      return res.json(tables);
     } catch(e) {
       next(e);
     }

@@ -20,7 +20,6 @@ router.post('/schedule/add', authMiddleWare, TableController.addTable);
 router.delete('/schedule/delete', authMiddleWare, TableController.deleteTable);
 router.put('/schedule/edit', authMiddleWare, TableController.editTable);
 router.post('/schedule/get', optionalAuthMiddleWare, TableController.getTable);
-router.post('/schedule/getfrom', authMiddleWare, TableController.getTables);
 router.post('/schedule/my', authMiddleWare, TableController.getMyTables);
 router.post('/schedule/select', authMiddleWare, UserController.selectSheet);
 
