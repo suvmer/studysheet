@@ -1,34 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { dateToString, days } from '../utils/utils';
+import { dateToString } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { InfoBlock } from '../components/InfoBlock';
 import { NavLink, useNavigate, useOutlet, useParams } from 'react-router-dom';
-import { deleteTable, getTable } from '../components/actions/tables';
-import dayjs from 'dayjs';
-import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineEdit } from 'react-icons/ai';
-import { FiTrash2 } from 'react-icons/fi';
-import { DarkButton, LightButton } from '../components/UI/Buttons';
+import { getTable } from '../components/actions/tables';
+import { DarkButton } from '../components/UI/Buttons';
 import { AuthAsk } from '../components/AuthAsk';
 import { CreateTable } from '../components/CreateTable';
 
-export const SubjectBar = (props) => {
-    return <div className='subjectBar'><p>{props.num}. {props.name}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
-}
-
-
-
-/*
-TODO: кликом на предмет модальное окно с редактированием предмета(кабинет, время, ...)
-
-
-*/
-
-
-
-
-
-
-
+export const SubjectBar = (props) => <div className='subjectBar'><p>{props.num}. {props.name}</p><p>{dateToString(props.start, true)[1]} - {dateToString(props.end, true)[1]}</p></div>
 
 
 export const EditPage = () => {
@@ -56,7 +36,7 @@ export const EditPage = () => {
             <div className="infoTitle infoTitle_error">
                 <div>
                     <InfoBlock text="">{response[0]}</InfoBlock>
-                    <div className="eventTitle">Автор: ---</div>
+                    <div className="event_title">Автор: ---</div>
                 </div>
                 {response[2] == 404 ? <>
                     <InfoBlock text="">Вы можете</InfoBlock>
