@@ -22,8 +22,6 @@ class UserController {
   async login(req, res, next) {
     try{
       const {email, password} = req.body;
-      //console.log("||", email, password, "||");
-
       const userData = await userService.login(email, password);
       console.log("adding to cookie ", userData.refreshToken);
       res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true});
@@ -63,7 +61,6 @@ class UserController {
   }
   async activate(req, res, next) {
     try{
-      //return res.json(await userService.activate(req.params.link));
       await userService.activate(req.params.link)
       return res.redirect(process.env.CLIENT_URL);
     } catch(e) {
@@ -74,12 +71,10 @@ class UserController {
   async refresh(req, res, next) {
     try{
       const {refreshToken} = req.cookies;
-      //console.log(req.cookies)
       if(!refreshToken) {
         console.log("returning nope")
         return res.status(500).json({message: "nope"});
       }
-      //  throw ApiError.UnauthorizedError();
       const userData = await userService.refresh(refreshToken);
       res.cookie('refreshToken', userData.refreshToken, {maxAge: 30*24*60*60*1000, httpOnly: true});
       return res.status(userData.status).json(userData);
@@ -107,7 +102,6 @@ class UserController {
       const ip = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || req.connection.remoteAddress).split(':')[3];
       let response = await fetch(`https://2domains.ru/api/web-tools/geoip?ip=${ip}`);
       let forcity = await response.json();
-      //console.log(req.connection.remoteAddress, response)
       if(!forcity || !forcity['city'])
         throw Error("Невозможно определить город");
       return res.status(200).json({status: utils.HttpCodes.success, city: forcity['city']});
@@ -115,19 +109,6 @@ class UserController {
       next(e);
     }
   }
-  /*async getUsers(req, res) {
-      try {
-        
-        connection.query('SELECT * FROM posts', function(err, rows, fields) {
-          if (err) throw err;
-          console.log('Zapros getUsers. Sended rows:', rows['rows'].length);
-          res.json(rows['rows']);
-        });
-      } catch(e) {
-          console.log(e); 
-      }
-  }*/
-  
   async getUsers(req, res, next) {
     try{
       const users = await userService.getAllUsers();

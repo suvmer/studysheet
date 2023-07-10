@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
+//process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0;
 class MailService {
   constructor() {
     this.transporter = nodemailer.createTransport({

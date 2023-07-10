@@ -58,23 +58,18 @@ class utils {
                 break;
             case "subjectName":
                 message = "Некорректное название предмета";
-                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,30}$/;
                 break;
             case "sheetName":
                 message = "Некорректное название расписания";
-                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
                 break;
             case "sheetCabinet":
                 message = "Некорректный кабинет";
-                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
                 break;
             case "sheetTeacher":
                 message = "Некорректное имя педагога";
-                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
                 break;
             case "sheetPlace":
                 message = "Некорректное название места";
-                //pattern = /^[a-zA-Zа-яА-Я_ \-0-9]{2,20}$/;
                 break;
                 /*{
                     "start": 978328800000,
@@ -151,25 +146,6 @@ class utils {
                 throw ApiError.BadRequest("Должно быть не более 10 событий в день");
               
           });
-              /*table.tables.forEach(elem => elem.forEach(el => {
-            if(!el.start || !el.end || !el.name || el.cabinet == undefined || el.teacher == undefined || el.place == undefined)
-              throw ApiError.BadRequest(`Неполные данные`);
-            const tab = {
-              "start": el.start,
-              "end": el.end,
-              "name": "",
-              "cabinet": "",
-              "teacher": "",
-              "place": ""
-            };
-            if(isNaN(tab.start) || isNaN(tab.end) || dayjs(tab.start) >= dayjs(tab.end))
-              throw ApiError.BadRequest("Некорректное время начала");
-            tab['name'] = checkField("sheetName", el.name, true);
-            tab['cabinet'] = checkField("sheetCabinet", el.cabinet, true, true);
-            tab['teacher'] = checkField("sheetTeacher", el.teacher, true, true);
-            tab['place'] = checkField("sheetPlace", el.place, true, true);
-            toStore.tables.push(elem);
-          }));*/
           return toStore;
     }
 
