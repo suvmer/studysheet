@@ -7,25 +7,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { checkAuth } from "./components/actions/users";
 import { ModalPortal } from "./components/ModalPortal";
 
-
-/* near TODO:
-
-ROUTER(навигация по страницам + /view/:id)
-
-useMemo(оптимизация)
-
-
-*/
 const Modals = () => {
   const modal = useSelector(state => state.ui.modal);
   return <ModalPortal content={modal}/>;
 }
 
 function App() {
-  //const loginOpen = useSelector(state => state.ui.loginOpen); 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log(localStorage.getItem('token'))
     if(localStorage.getItem('token'))
       dispatch(checkAuth());
   }, []);
@@ -33,7 +22,6 @@ function App() {
     <>
       <Header/>
       <Modals/>
-      {/*loginOpen ? <Portal><AuthForm/></Portal> : <></>*/}
       <main>
         <SideBar/>
         <Outlet/>
