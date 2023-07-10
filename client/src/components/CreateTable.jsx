@@ -20,7 +20,6 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
   const [defaultPlace, setDefaultPlace] = useState(""); //used with text field to autofill a Place when adding new subjects 
   const defaultStartEnd = useSelector(state => state.table.defs[0]);
   const [startEndTime, setStartEndTime] = useState(() => { //autofill start/end time for 1st, 2nd, ..., subject
-    console.log("Bab");
     const converted = defaultStartEnd.map(el =>  //"15:10" -> [15, 10]
       [el[0].split(':').map(el => +el), el[1].split(':').map(el => +el)]
     )
@@ -46,6 +45,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     tables: [
     ...Array(7).fill().map((el, ind) => ind == 0 ? [getField()] : []) //fill the first with empty field
   ]});
+  const sheet = {...storedSheet};
 
   useEffect(() => {
     if(props?.toedit != null) {
@@ -55,44 +55,34 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
   }, []);
   
   
-  const sheet = storedSheet;
   console.log(sheet);
 
-  const [ignored, forceUpdate] = useReducer(x => x + 1, 0); //hack for optimization
   const addSubj = (index) => {
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
     doSort(index);
-    console.log(storedSheet)
   };
-  const changeEv = event => {
-    handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
-  }
 
-
-  const doSort = (id) => {
-    //console.log()
+  const doSort = (id) => { //sort subjects by start time after adding 
     sheet.tables[id].sort((e1, e2) => e1.start - e2.start);
     console.log(sheet.tables[id])
-    storeSheet({...sheet});
-    //forceUpdate();
+    storeSheet(sheet);
   }
 
-  const handleChange = (idChange, idFor, namer, value) => {
+  const changeEv = event =>
+    handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
+  
+  const handleChange = (idChange, idFor, namer, value) => { //set value from input
     console.log(`${idChange} ${idFor} ${namer}: ${value}`);
-    if(namer == "defPlace") {
+    if(namer == "defaultPlace") { //used with text field to autofill a Place when adding new subjects 
       setDefaultPlace(value);
       return;
     }
-    if(namer == "start" || namer == "end") {
-      console.log(namer, ":", dayjs(value).format("DD.MM.YYYY HH:mm"))
-    }
-    if(namer == "sheetName") {
+    if(namer == "sheetName") { 
       sheet['name'] = value;
-      storeSheet({...sheet});
-      //forceUpdate();
+      storeSheet(sheet);
       return;
     }
-    if(namer == "pub") { //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
+    if(namer == "pub") { //is sheet public   //TODO: публичное ли расписание, школа/вуз/колледж(лучше выбор уроки/пары),
       //TODO: если вуз - числитель и знаменатель или просто пары, название заведения (50%: УЧИТЕЛЯ И ПРЕПОДАВАТЕЛИ К РАСПИСАНИЮ)
       sheet['isPublic'] = value;
       return;
@@ -103,8 +93,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
   }
   const deleteSubject = (idChange, idFor) => { //remove subject in day list
     sheet.tables[idChange] = sheet.tables[idChange].filter((e, i) => (i != idFor));
-    storeSheet({...sheet});
-    //forceUpdate();
+    storeSheet(sheet);
   }
 
   const moveSubject = (idChange, idFor, up) => { //move subject in day list
@@ -118,8 +107,7 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     [sheet.tables[idChange][idFor], sheet.tables[idChange][newid]] = [sheet.tables[idChange][newid], sheet.tables[idChange][idFor]];
     [sheet.tables[idChange][idFor].start, sheet.tables[idChange][newid].start] = [sheet.tables[idChange][newid].start, sheet.tables[idChange][idFor].start];
     [sheet.tables[idChange][idFor].end, sheet.tables[idChange][newid].end] = [sheet.tables[idChange][newid].end, sheet.tables[idChange][idFor].end];
-    storeSheet({...sheet}); //TODO: Why updates only on {...sheet}(not sheet)?
-    //forceUpdate();
+    storeSheet(sheet);
   }
 
   const navigate = useNavigate();
@@ -145,9 +133,16 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
       <div className="box_nobg box_nobg_header box_nobg_big box_nobg_center">
           <p>{page == 0 ? (isEdit ? "Редактирование расписания" : "Создание расписания") : shortTo(sheet.name, 40)}</p>
       </div>
-      {page == 1 ? <p className="center gray">Автор: {storedSheet.creator ? storedSheet.creator.name : "Вы"}</p> : ""}
+      {page == 1 ?
+        <p className="center gray">Автор: {storedSheet.creator ? storedSheet.creator.name : "Вы"}</p> :
+        ""
+      }
       
-      {errorText ? <p className="error_label">{errorText}</p> : ""}
+      {errorText ?
+        <p className="error_label">{errorText}</p> :
+        ""
+      }
+
       {page == 0 ? <>
       <label htmlFor="sheetName">Название</label>
         <input
@@ -160,7 +155,10 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
           required
           autoFocus/>
         <div>
-          {storedSheet.public ? <DarkButton onClick={() => storeSheet({...storedSheet, public: false}) }>Видят все</DarkButton> : <LightButton onClick={() => storeSheet({...storedSheet, public: true})}>Видят только участники</LightButton>}
+          {storedSheet.public ?
+            <DarkButton onClick={() => storeSheet({...storedSheet, public: false}) }>Видят все</DarkButton> :
+            <LightButton onClick={() => storeSheet({...storedSheet, public: true})}>Видят только участники</LightButton>
+          }
         </div>
         <br/><LightButton type="submit" onClick={() => { sheet['name'] = sheet['name'] == "" ? `Расписание от ${dateToString(Date.now())[0]}` : sheet['name']; setPage(1) }}>Далее</LightButton>
       </>: <>
@@ -170,8 +168,9 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
       <input 
           onChange={changeEv} 
           value={defaultPlace}
-          name="defPlace"
+          name="defaultPlace"
           placeholder="Место(автоматически при добавлении)" />
+
       <form onSubmit={(e) => e.preventDefault()} className={`wall_subjects_list ${page == 0 ? "wall_subjects_list_first" : "wall_subjects_list_second"}`}>
         {storedSheet.tables.map((elem, index) => {
           return (<div className="newsubject" key={index}>
@@ -180,15 +179,15 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
               {elem.length == 0 ? <><hr/><mark className="mid center">Нет занятий</mark></> : ""}
               {elem.map((subj, ind) => (
                 <div indx={index} indxer={ind} key={subj.id} className="subject">
-                  <div className="subject_panel"> {/* EVERY INPUT MUST HAVE UNIQUE KEY TO BE REPLACED ON DELETE */}
+                  <div className="subject_panel">
                     <TimePicker.RangePicker 
                       key={`inp_time${index}${ind}${subj.id}`}
                       defaultValue={[dayjs(subj.start), dayjs(subj.end)]} 
-                      onChange={(a, b) => {
-                        if(!a)
+                      onChange={time => {
+                        if(!time)
                           return;
-                        handleChange(index, ind, 'start', a[0].valueOf()); 
-                        handleChange(index, ind, 'end', a[1].valueOf())
+                        handleChange(index, ind, 'start', time[0].valueOf()); 
+                        handleChange(index, ind, 'end', time[1].valueOf())
                       }} 
                     format={"HH:mm"}
                     minuteStep={5} 
