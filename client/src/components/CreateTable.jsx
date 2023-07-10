@@ -56,9 +56,6 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     }
   }, []);
   
-  
-  console.log(sheet);
-
   const addSubj = (index) => { //put an empty subject into the day
     sheet.tables[index] = [...sheet.tables[index], getField(sheet.tables[index].length)];
     doSort(index);
@@ -66,7 +63,6 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
 
   const doSort = (id) => { //sort subjects by start time after adding 
     sheet.tables[id].sort((e1, e2) => e1.start - e2.start);
-    console.log(sheet.tables[id])
     storeSheet(sheet);
   }
 
@@ -74,7 +70,6 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
     handleChange(+(event.target.parentNode.parentNode.getAttribute('indx')), +(event.target.parentNode.parentNode.getAttribute('indxer')), event.target.name, event.target.value);
   
   const handleChange = (idChange, idFor, namer, value) => { //set value from input
-    console.log(`${idChange} ${idFor} ${namer}: ${value}`);
     if(namer === "defaultPlace") { //used with text field to autofill a Place when adding new subjects 
       setDefaultPlace(value);
       return;
@@ -123,8 +118,6 @@ export const CreateTable = (props = null) => { //Sry for bad eng:)
         .then((succ) => navigate(`/info/${sheet.id}`), e => setErrorText(e.response?.data?.message));
   }
   
-  console.log("Updated");
-
   const user = useSelector(state => state.profile.user);
   if(!user?.id)
     return <div className="wall"><p className="big">Чтобы создавать расписания, войдите:</p><AuthAsk/></div>;
