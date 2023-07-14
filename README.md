@@ -1,2 +1,3 @@
 # studysheet
-A realtime events scheduler
+An opensource realtime events scheduler
+https://studysheet.ru
