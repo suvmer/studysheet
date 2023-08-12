@@ -7,7 +7,7 @@ import { logout } from '../components/actions/users';
 import { getOwnTables } from '../components/actions/tables';
 import UIService from '../services/UIService';
 
-export const AccountPage = () => { //TODO: отрефакторить стили и компоненты
+export const AccountPage = () => { //TODO: отрефакторить стили и компоненты 
     const dispatch = useDispatch();
     const isLogged = useSelector(state => state.profile.isLogged);
     const user = useSelector(state => state.profile.user);
