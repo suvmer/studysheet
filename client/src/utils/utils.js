@@ -78,10 +78,10 @@ export const msToWords = (ms) => {
     ss %= 3600;
     const mins = Math.floor(ss / 60);
     const sec = ss % 60;
-    return `${days > 0 ? days.toString() + (CountForm(days, [" день ", " дня ", " часа "])) : ''}
+    return `${days > 0 ? days.toString() + (CountForm(days, [" день ", " дня ", " дней "])) : ''}
             ${hours > 0 ? hours.toString() + (CountForm(hours, [" час ", " часа ", " часов "])) : ''}
             ${mins > 0 ? mins.toString() + (CountForm(mins, [" минута ", " минуты ", " минут "])) : ''}
-            ${days === 0 && sec > 0 ? sec + " " + (CountForm(sec, ["секунда", "секунды", "секунд"])) : ''}`;
+            ${days === 0 && sec > 0 ? sec + " " + (CountForm(sec, [" секунда ", " секунды ", " секунд "])) : ''}`;
 };
 export const msToNumbers = (ms) => {
     var ss = Math.round(Math.max(0, ms/1000));
